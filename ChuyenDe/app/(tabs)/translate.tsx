@@ -4,6 +4,7 @@ import { Searchbar } from 'react-native-paper';
 import { Feather } from '@expo/vector-icons';
 import useSWR from 'swr';
 import { Word } from '@/model/searchEntity';
+import playSound from '@/component/sound';
 const fetcher = async (url:string) => {
     const response = await fetch(url);
     if (!response.ok) {
@@ -47,12 +48,12 @@ const Translate = () => {
                 <View style={styles.container}>
                 <View style={styles.row}>
                     <Text style={styles.boldText}>{word.word}</Text>
-                    <View style={styles.iconContainer}>
+                    <TouchableOpacity style={styles.iconContainer} onPress={()=>playSound(word.phonetics[0].audio)}>
                         <Feather name="volume-2" size={24} color="#888" />
-                    </View>
+                    </TouchableOpacity>
                 </View>
                 <Text style={styles.lightText}>{word.phonetics[0].text}</Text>
-                {word.meanings.map((meaning)=>(
+                {word.meanings.map((meaning,key)=>(
                     <>
                     <View style={styles.row}>
                         <View style={styles.textContainer}>
@@ -60,20 +61,18 @@ const Translate = () => {
                         </View>
                     </View>
                     {meaning.definitions.map((definition, index) => (
-                        <>
+                        <View key={index}>
+                            <Text style={styles.description}>
+                                -{definition.definition}
+                            </Text>
                             {definition.example && (
-                                <View key={index}>
-                                    <Text style={styles.description}>
-                                        {definition.definition}
+                                <View style={styles.infoBox}>
+                                    <Text style={styles.italicText}>
+                                        {definition.example}
                                     </Text>
-                                    <View style={styles.infoBox}>
-                                        <Text style={styles.italicText}>
-                                            {definition.example}
-                                        </Text>
-                                    </View>
                                 </View>
                             )}
-                        </>
+                        </View>
                     ))}
 
                     
