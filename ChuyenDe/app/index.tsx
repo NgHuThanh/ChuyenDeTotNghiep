@@ -1,4 +1,5 @@
 
+import CustomButton from '@/component/CustomButton';
 import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ScrollView, StyleSheet, Text, View,Image, Button } from 'react-native';
@@ -16,8 +17,12 @@ export default function App() {
           resizeMode="cover" // resizeMode để chỉ định cách ảnh sẽ được căn chỉnh khi hiển thị (cover, contain, stretch, ...)
             />
         <Text style={styles.text}>English App</Text>
-        
+        <CustomButton
+        title={"Let start"}
+        handelPress={"/home"}
+        ></CustomButton>
         </View>
+        {/* <StatusBar backgroundColor='' style='light'></StatusBar> */}
       </ScrollView>
     </SafeAreaView>
     // <View style={styles.container}>
