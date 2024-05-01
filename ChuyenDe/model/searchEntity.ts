@@ -10,6 +10,7 @@ export interface Meaning{
 }
 export interface Phonetic{
   audio:string;
+  text:string;
 }
 export interface Definition{
   definition:string;

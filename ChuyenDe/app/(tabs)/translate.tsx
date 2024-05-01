@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { Searchbar } from 'react-native-paper';
 import { Feather } from '@expo/vector-icons';
@@ -17,9 +17,11 @@ const Translate = () => {
     const { data, isLoading,error } = useSWR<Word[]>(`https://api.dictionaryapi.dev/api/v2/entries/en/${query}`, fetcher);
     const [searchQuery, setSearchQuery] = React.useState('');
     const handlePress = () => {
-        if(searchQuery!==null)
-            if(data?.[0]?.word!==searchQuery)
-        setQuery(searchQuery);
+        if(searchQuery!=null)
+            if(searchQuery!==query){
+                setQuery(searchQuery);
+            }
+        
     }
     if (isLoading) {
         return <Text>Loading ...</Text>
@@ -37,9 +39,10 @@ const Translate = () => {
                 onChangeText={setSearchQuery}
                 value={searchQuery}
             />
-            <TouchableOpacity onPress={handlePress} activeOpacity={0.7}>
-                <Text>Search{query}</Text>
+            <TouchableOpacity style={styles.button} onPress={handlePress} activeOpacity={0.7}>
+                <Text style={styles.buttonText}>Search</Text>
             </TouchableOpacity>
+            <ScrollView>
             {data.map((word, index,key) => (
                 <View style={styles.container}>
                 <View style={styles.row}>
@@ -48,24 +51,41 @@ const Translate = () => {
                         <Feather name="volume-2" size={24} color="#888" />
                     </View>
                 </View>
-                <View style={styles.row}>
-                    <View style={styles.textContainer}>
-                        <Text style={styles.lightText}>pos</Text>
-                        <Text style={styles.lightText}>/sample/</Text>
+                <Text style={styles.lightText}>{word.phonetics[0].text}</Text>
+                {word.meanings.map((meaning)=>(
+                    <>
+                    <View style={styles.row}>
+                        <View style={styles.textContainer}>
+                            <Text style={styles.lightText}>{meaning.partOfSpeech}</Text>
+                        </View>
                     </View>
-                </View>
-                <Text style={styles.description}>
-                    A facial expression comprised by flexing the muscles of both ends of one's mouth,
-                    often showing the front teeth, without vocalisation, and in humans is a common
-                    involuntary or voluntary expression of happiness, pleasure, amusement or anxiety.
-                </Text>
-                <View style={styles.infoBox}>
-                    <Text style={styles.italicText}>
-                        A facial expression comprised by flexing the muscles of both ends of one's mouth
-                    </Text>
-                </View>
+                    {meaning.definitions.map((definition, index) => (
+                        <>
+                            {definition.example && (
+                                <View key={index}>
+                                    <Text style={styles.description}>
+                                        {definition.definition}
+                                    </Text>
+                                    <View style={styles.infoBox}>
+                                        <Text style={styles.italicText}>
+                                            {definition.example}
+                                        </Text>
+                                    </View>
+                                </View>
+                            )}
+                        </>
+                    ))}
+
+                    
+                    </>
+                
+                ))}
+                
+                
+                
             </View>
             ))}
+            </ScrollView>
             
         </View>
     )
@@ -100,7 +120,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     description: {
-        marginTop: 5,
+        marginTop: 30,
     },
     infoBox: {
         marginTop: 10,
@@ -113,4 +133,18 @@ const styles = StyleSheet.create({
     italicText: {
         fontStyle: 'italic',
     },
+    button: {
+        
+        backgroundColor: '#410fa3', // Màu nền của button
+        borderRadius: 8, // Bo góc của button
+        height: 50, // Chiều cao của button
+        justifyContent: 'center', // Căn chỉnh theo chiều dọc
+        alignItems: 'center', // Căn chỉnh theo chiều ngang
+        
+      },
+      buttonText: {
+        color: 'white',
+        fontWeight:"bold", // Màu chữ của button
+        fontSize: 18, // Kích thước chữ của button
+      },
 })
