@@ -13,40 +13,72 @@ const TabIcon = (props:{name:string,focused:boolean}) =>{
     // Determine which icon to display based on the route name
     if (props.name === 'home') {
         if(props.focused==false){
-            return <Octicons name="home" size={22} color={color} />
+            return <><Octicons name="home" size={22} color={color} /><Text style={{ color: color }}>Home</Text>
+            </>
         }
         else {
-            return <MaterialCommunityIcons name="home-variant" size={24} color={color} />
+            return <><MaterialCommunityIcons name="home-variant" size={24} color={color} />
+            <Text style={{ color: color }}>Home</Text></>
+        }
+    }
+    
+    if (props.name === 'bookmark') {
+        if(props.focused==false){
+            return <><Feather name="book" size={24} color={color} />
+            <Text style={{ color: color }}>BookMark</Text>
+            </>
+        }
+        else {
+            return <><FontAwesome5 name="book-open" size={24} color={color} />
+            <Text style={{ color: color }}>BookMark</Text>
+            </>
+            
         }
     }
     if (props.name === 'person') {
         if(props.focused==false){
-            return <Ionicons name="person-outline" size={24} color={color} />
+            return <><Ionicons name="person-outline" size={24} color={color} />
+            <Text style={{ color: color }}>Profile</Text>
+            </>
         }
         else {
-            return <Ionicons name="person-sharp" size={24} color={color} />
-        }
-    }
-    if (props.name === 'bookmark') {
-        if(props.focused==false){
-            return <Feather name="book" size={24} color={color} />
-        }
-        else {
-            return <FontAwesome5 name="book-open" size={24} color={color} />
+            return <><Ionicons name="person" size={24} color={color} />
+            <Text style={{ color: color }}>Profile</Text></>
         }
     }
 }
 const TabsLayout = () => {
   return (
     <>
-        <Tabs>
+        <Tabs
+        screenOptions={{
+            tabBarShowLabel:false,
+            tabBarInactiveTintColor:'#CDCDE0',
+            tabBarStyle:{
+                backgroundColor:'#161622'
+            }
+        }}
+        >
             <Tabs.Screen
             name="home"
             options={{
                 title:'Home',
+                headerTintColor:'#6d99ff',
                 headerShown:false,
                 tabBarIcon:({color,focused})=>(
                     <TabIcon name={"home"}
+                    focused={focused}/>
+                )
+            }}  
+            />
+            
+            <Tabs.Screen
+            name="bookmark"
+            options={{
+                title:'Book Mark',
+                headerShown:false,
+                tabBarIcon:({color,focused})=>(
+                    <TabIcon name={"bookmark"}
                     focused={focused}/>
                 )
             }}  
@@ -58,17 +90,6 @@ const TabsLayout = () => {
                 headerShown:false,
                 tabBarIcon:({color,focused})=>(
                     <TabIcon name={"person"}
-                    focused={focused}/>
-                )
-            }}  
-            />
-            <Tabs.Screen
-            name="bookmark"
-            options={{
-                title:'Book Mark',
-                headerShown:false,
-                tabBarIcon:({color,focused})=>(
-                    <TabIcon name={"bookmark"}
                     focused={focused}/>
                 )
             }}  
