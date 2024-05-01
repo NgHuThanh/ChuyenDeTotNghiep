@@ -1,10 +1,35 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useState } from 'react'
 import { Searchbar } from 'react-native-paper';
 import { Feather } from '@expo/vector-icons';
+import useSWR from 'swr';
+import { Word } from '@/model/searchEntity';
+const fetcher = async (url:string) => {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Failed to fetch data');
+    }
+    return response.json();
+  };
 const url="https://api.dictionaryapi.dev/api/v2/entries/en/";
 const Translate = () => {
+    const [query, setQuery] = useState("hello");
+    const { data, isLoading,error } = useSWR<Word[]>(`https://api.dictionaryapi.dev/api/v2/entries/en/${query}`, fetcher);
     const [searchQuery, setSearchQuery] = React.useState('');
+    const handlePress = () => {
+        if(searchQuery!==null)
+            if(data?.[0]?.word!==searchQuery)
+        setQuery(searchQuery);
+    }
+    if (isLoading) {
+        return <Text>Loading ...</Text>
+    }
+    if (error) {
+        return <Text>Error loading data</Text>;
+      }
+      if (!data) {
+        return <Text>not found data</Text>;
+      }
     return (
         <View style={{ padding: 10 }}>
             <Searchbar
@@ -12,9 +37,13 @@ const Translate = () => {
                 onChangeText={setSearchQuery}
                 value={searchQuery}
             />
-            <View style={styles.container}>
+            <TouchableOpacity onPress={handlePress} activeOpacity={0.7}>
+                <Text>Search{query}</Text>
+            </TouchableOpacity>
+            {data.map((word, index,key) => (
+                <View style={styles.container}>
                 <View style={styles.row}>
-                    <Text style={styles.boldText}>Sample</Text>
+                    <Text style={styles.boldText}>{word.word}</Text>
                     <View style={styles.iconContainer}>
                         <Feather name="volume-2" size={24} color="#888" />
                     </View>
@@ -36,6 +65,8 @@ const Translate = () => {
                     </Text>
                 </View>
             </View>
+            ))}
+            
         </View>
     )
 }
