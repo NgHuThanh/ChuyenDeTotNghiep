@@ -7,7 +7,7 @@ const CustomButton = (props: {
     
   }) => {
   return (
-    <TouchableOpacity onPress={()=>router.push('/home')} style={styles.button}>
+    <TouchableOpacity onPress={()=>router.push('/home')} style={styles.button} activeOpacity={0.7}>
       <Text style={styles.buttonText}>{props.title}</Text>
     </TouchableOpacity>
   )

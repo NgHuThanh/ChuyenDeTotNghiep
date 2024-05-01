@@ -1,6 +1,6 @@
 
 import CustomButton from '@/component/CustomButton';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ScrollView, StyleSheet, Text, View,Image, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -19,7 +19,7 @@ export default function App() {
         <Text style={styles.text}>English App</Text>
         <CustomButton
         title={"Let start"}
-        handelPress={"/home"}
+        
         ></CustomButton>
         </View>
         {/* <StatusBar backgroundColor='' style='light'></StatusBar> */}
