@@ -1,6 +1,7 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, Image, ProgressBarAndroidBase, ProgressBarAndroidComponent } from 'react-native'
 import React from 'react'
 import { AntDesign } from '@expo/vector-icons';
+import { ProgressBar } from 'react-native-paper';
 const PracticeCourse = () => {
     const localImageUrl = require('../../assets/images/book.png');
     return (
@@ -9,15 +10,13 @@ const PracticeCourse = () => {
                 <Text style={styles.boldText}>Practice</Text>
                 <Text style={styles.boldText}>Your Word</Text>
                 <Text style={styles.secondaryText}>Do not forget</Text>
-                <Text style={styles.percentText}><AntDesign name="rocket1" size={24} color="green" />100%</Text>
+                <ProgressBar progress={0.2}/>
+                {/* <Text style={styles.percentText}><AntDesign name="rocket1" size={24} color="green" /></Text> */}
             </View>
             <View style={styles.imageContainer}>
-                <Image
-                    source={localImageUrl}
-                    style={styles.image}
-                    resizeMode="contain" // Đảm bảo hiển thị đủ ảnh
-                />
+            <Text style={styles.boldText2}>14/25</Text>
             </View>
+            
         </TouchableOpacity>
     )
 }
@@ -50,6 +49,11 @@ const styles = StyleSheet.create({
     boldText: {
         fontWeight: 'bold', // In đậm
         fontSize: 18, // Kích thước phông chữ
+        color: '#FFF', // Màu chữ trắng
+    },
+    boldText2: {
+        fontWeight: 'bold', // In đậm
+        fontSize: 38, // Kích thước phông chữ
         color: '#FFF', // Màu chữ trắng
     },
     secondaryText: {
