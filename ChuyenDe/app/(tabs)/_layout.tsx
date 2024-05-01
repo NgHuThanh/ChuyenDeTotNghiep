@@ -7,6 +7,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+
 const TabIcon = (props:{name:string,focused:boolean}) =>{
     let iconName="none";
     let color="#6d99ff"
@@ -19,6 +20,16 @@ const TabIcon = (props:{name:string,focused:boolean}) =>{
         else {
             return <><MaterialCommunityIcons name="home-variant" size={24} color={color} />
             <Text style={{ color: color }}>Home</Text></>
+        }
+    }
+    if (props.name === 'translate') {
+        if(props.focused==false){
+            return <><MaterialCommunityIcons name="file-find-outline" size={24} color={color} /><Text style={{ color: color }}>Translate</Text>
+            </>
+        }
+        else {
+            return <><MaterialIcons name="find-in-page" size={24} color={color} />
+            <Text style={{ color: color }}>Translate</Text></>
         }
     }
     
@@ -71,7 +82,18 @@ const TabsLayout = () => {
                 )
             }}  
             />
-            
+            <Tabs.Screen
+            name="translate"
+            options={{
+                title:'Translate',
+                headerTintColor:'#6d99ff',
+                headerShown:false,
+                tabBarIcon:({color,focused})=>(
+                    <TabIcon name={"translate"}
+                    focused={focused}/>
+                )
+            }}  
+            />
             <Tabs.Screen
             name="bookmark"
             options={{
