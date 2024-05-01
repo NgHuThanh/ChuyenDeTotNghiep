@@ -1,32 +1,83 @@
-import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
-
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
-
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+import { StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import { Tabs } from 'expo-router'
+import { MaterialIcons } from '@expo/vector-icons';
+import { Octicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
+const TabIcon = (props:{name:string,focused:boolean}) =>{
+    let iconName="none";
+    let color="#6d99ff"
+    // Determine which icon to display based on the route name
+    if (props.name === 'home') {
+        if(props.focused==false){
+            return <Octicons name="home" size={22} color={color} />
+        }
+        else {
+            return <MaterialCommunityIcons name="home-variant" size={24} color={color} />
+        }
+    }
+    if (props.name === 'person') {
+        if(props.focused==false){
+            return <Ionicons name="person-outline" size={24} color={color} />
+        }
+        else {
+            return <Ionicons name="person-sharp" size={24} color={color} />
+        }
+    }
+    if (props.name === 'bookmark') {
+        if(props.focused==false){
+            return <Feather name="book" size={24} color={color} />
+        }
+        else {
+            return <FontAwesome5 name="book-open" size={24} color={color} />
+        }
+    }
 }
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+const TabsLayout = () => {
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-      }}>
-      
-    </Tabs>
-  );
+    <>
+        <Tabs>
+            <Tabs.Screen
+            name="home"
+            options={{
+                title:'Home',
+                headerShown:false,
+                tabBarIcon:({color,focused})=>(
+                    <TabIcon name={"home"}
+                    focused={focused}/>
+                )
+            }}  
+            />
+            <Tabs.Screen
+            name="profile"
+            options={{
+                title:'Profile',
+                headerShown:false,
+                tabBarIcon:({color,focused})=>(
+                    <TabIcon name={"person"}
+                    focused={focused}/>
+                )
+            }}  
+            />
+            <Tabs.Screen
+            name="bookmark"
+            options={{
+                title:'Book Mark',
+                headerShown:false,
+                tabBarIcon:({color,focused})=>(
+                    <TabIcon name={"bookmark"}
+                    focused={focused}/>
+                )
+            }}  
+            />
+        </Tabs>
+    </>
+  )
 }
+
+export default TabsLayout
+
+const styles = StyleSheet.create({})
