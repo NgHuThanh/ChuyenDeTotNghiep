@@ -1,7 +1,3 @@
-export interface Definition{
-    definition:string;
-    example:string;
-  }
 export interface set{
     vocabs:vocab[];
     create:Date;
