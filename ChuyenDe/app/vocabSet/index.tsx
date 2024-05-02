@@ -1,13 +1,17 @@
 import CustomButton from '@/component/CustomButton';
-import { Feather } from '@expo/vector-icons';
+import { Feather, FontAwesome6 } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View,Image, Button, TouchableOpacity } from 'react-native';
-import { TextInput } from 'react-native-paper';
+import { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, Text, View,Image, Button, TouchableOpacity, ViewStyle } from 'react-native';
+import { Modal, PaperProvider, Portal, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useSWR from 'swr';
 import WordComponent from './wordComponent';
+import AddSetComponent from '../bookMarkComponent/addSet';
+import React from 'react';
+import AddVocabComponent from './addVocab';
+import { getVocabsInSet, vocab } from '@/model/word';
 
 const url="https://api.mymemory.translated.net/get?q=Hello World!&langpair=en|it";
 const fetcher = async (url:string) => {
@@ -18,15 +22,45 @@ const fetcher = async (url:string) => {
   return response.json();
 };
 
-export default function LongApp() {
+export default function SetDetail() {
+  const [vocabs, setVocabs] = useState<vocab[] | null>(null);
+  const fetchVocabs = async () => {
+    const allVocabs = await getVocabsInSet("Local");
+    setVocabs(allVocabs);
+  };
+  useEffect(() => {
+    fetchVocabs();
+  }, []);
     const [text, setText] = useState('');
     const handleInputChange = (inputText: string) => {
         setText(inputText);
         
       };
+      const [visible, setVisible] = React.useState(false);
+      const showModal = () => setVisible(true);
+      const hideModal = () => {
+        
+        setVisible(false)
+        fetchVocabs();
+      };
+      const containerStyle: ViewStyle = {
+        backgroundColor: 'white',
+        padding: 0,
+        width: 300,
+       
+        alignSelf: 'center',
+        justifyContent: 'center',
+      };
   return (
     <>
-        <SafeAreaView>
+        <SafeAreaView style={styles.container}>
+        <PaperProvider >
+            <Portal>
+                <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+                <AddVocabComponent/>
+                </Modal>
+            </Portal>
+        
             <View style={styles.headContainer}>
                 <Text style={styles.text}>Your set</Text>    
             </View>
@@ -36,14 +70,24 @@ export default function LongApp() {
             onChangeText={handleInputChange}
             />
             <ScrollView style={{padding:10}}>
-                <WordComponent></WordComponent>
+            {vocabs?.map((vocab, index) => (
+              <Text>{vocab.word}</Text>
+            ))}
+                {/* <WordComponent></WordComponent> */}
             </ScrollView>
+            </PaperProvider>
+            <TouchableOpacity style={styles.button} activeOpacity={0.7} >
+            <FontAwesome6 name="add" size={24} color="black"onPress={showModal}/>
+            </TouchableOpacity>
         </SafeAreaView>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+      },
     headContainer: {
         backgroundColor:'#410fa3',
         padding:5,
@@ -54,4 +98,15 @@ const styles = StyleSheet.create({
     fontWeight:"bold",
     fontSize: 18,
     },
+    button: {
+        backgroundColor: '#5b7bfe',
+        borderRadius: 150,
+        height: 50,
+        width: 50,
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
 });
