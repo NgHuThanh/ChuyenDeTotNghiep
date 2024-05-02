@@ -5,39 +5,38 @@ import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { SetModel, deleteSet } from '@/model/word';
 import { router } from 'expo-router';
-const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
+
+const WordComponent = () => {
     const localImageUrl = require('../../assets/images/book.png');
     const [exist,setExist]=useState(true)
     if(exist==false){
         return <></>;
     }
-    const handleDeleteSet = () => {
-        deleteSet(props.setVocab.name);
-        props.fetchSets();
-        setExist(false);
-    }
+    
     return (
         <TouchableOpacity style={styles.container} onPress={()=>router.push("/vocabSet/")}>
+            <View style={styles.infoContainer2}>
+            <TouchableOpacity>
+            <AntDesign name="hearto" size={24} color="black" />
+                </TouchableOpacity>
+            </View>
             <View style={styles.infoContainer}>
-                <Text style={styles.boldText}>{props.setVocab.name}</Text>
-                <Text style={styles.secondaryText}>{props.setVocab.vocabs?.length}/92 Cards memorized</Text>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button} activeOpacity={0.7}>
-                    <Text style={styles.buttonText}>Review</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} activeOpacity={0.7}>
-                    <Text style={styles.buttonText}>Practice</Text>
-                    </TouchableOpacity>
-                </View>
+                <Text style={styles.boldText}>Exampl</Text>
+                <Text style={styles.secondaryText}>ExampleExam</Text>
+                
             </View>
             <View style={styles.imageContainer}>
+            <View style={styles.container2}>
+                
+                <TouchableOpacity  activeOpacity={0.7} style={{marginRight:10}}>
+                <Feather name="edit" size={24} color="black" />
+                </TouchableOpacity>
+                
+                <TouchableOpacity  activeOpacity={0.7}>
+                <MaterialIcons name="delete" size={24} color="red" />
+                </TouchableOpacity>
+            </View>
             
-            <TouchableOpacity  activeOpacity={0.7}>
-            <MaterialIcons name="delete" size={24} color="#5b7bfe" onPress={handleDeleteSet} />
-            </TouchableOpacity>
-            <TouchableOpacity  activeOpacity={0.7}>
-            <Feather name="share" size={24} color="#5b7bfe" />
-            </TouchableOpacity>
             
             
             </View>
@@ -45,16 +44,16 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
     )
 }
 
-export default SetComponent
+export default WordComponent
 
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         backgroundColor: '#FFF', // Màu nền xanh
         borderRadius: 10, // Bo tròn góc
-        overflow: 'hidden', // Ẩn bất kỳ phần nào vượt ra ngoài giới hạn của container
+         // Ẩn bất kỳ phần nào vượt ra ngoài giới hạn của container
         marginBottom: 10, // Khoảng cách dưới cùng
-        height:130,
+        
         paddingLeft:20,
         paddingTop:10,
         shadowColor: '#000', // Màu của shadow
@@ -62,6 +61,7 @@ const styles = StyleSheet.create({
             width: 0,
             height: 3,
         },
+        
         shadowOpacity: 0.27, // Độ mờ của shadow
         shadowRadius: 4.65, // Độ đục của shadow
         elevation: 6, // Thêm elevation để hiển thị shadow trên Android
@@ -69,7 +69,11 @@ const styles = StyleSheet.create({
         borderLeftColor: '#410fa3', // Màu của border bên trái
     },
     
-    
+    container2: {
+        flexDirection: 'row',
+        marginRight:0,
+        overflow: 'hidden', // Ẩn bất kỳ phần nào vượt ra ngoài giới hạn của container
+    },
     imageContainer: {
         flex: 1, // Chiếm 60% chiều rộng
         alignItems: 'center',
@@ -78,8 +82,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5, // Khoảng cách ngang
     },
     infoContainer: {
-        flex: 5, // Chiếm 40% chiều rộng
+        flex: 3, // Chiếm 40% chiều rộng
         padding: 10, // Khoảng cách padding
+    },
+    infoContainer2: {
+        width:30, // Chiếm 40% chiều rộng
+        padding: 0, // Khoảng cách padding
+        justifyContent:"center",
+        bottom:10,
     },
     image: {
         width: '100%',
