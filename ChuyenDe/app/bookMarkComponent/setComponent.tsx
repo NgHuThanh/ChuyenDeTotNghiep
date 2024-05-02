@@ -4,7 +4,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { SetModel, deleteSet } from '@/model/word';
-const SetComponent = (props:{setVocab:SetModel}) => {
+import { router } from 'expo-router';
+const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
     const localImageUrl = require('../../assets/images/book.png');
     const [exist,setExist]=useState(true)
     if(exist==false){
@@ -12,6 +13,7 @@ const SetComponent = (props:{setVocab:SetModel}) => {
     }
     const handleDeleteSet = () => {
         deleteSet(props.setVocab.name);
+        props.fetchSets();
         setExist(false);
     }
     return (

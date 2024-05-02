@@ -19,14 +19,17 @@ const BookMark = () => {
   }, []);
   const handleInputChange = (inputText: string) => {
     setText(inputText);
+    fetchSets();
     const filteredSets = sets?.filter(set => set.name.toLowerCase().includes(inputText.toLowerCase()));
     setFilteredSets(filteredSets as SetModel[]);
   };
   const [visible, setVisible] = React.useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => {
-    fetchSets(),
+    fetchSets();
+    setFilteredSets(sets as SetModel[]);
     setVisible(false)
+    
   };
   const containerStyle: ViewStyle = {
     backgroundColor: 'white',
@@ -40,8 +43,8 @@ const BookMark = () => {
     <SafeAreaView style={styles.container}>
       <PaperProvider >
       <Portal>
-        <Modal visible={visible} onDismiss={hideModal}contentContainerStyle={containerStyle}>
-          <AddSetComponent></AddSetComponent>
+        <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+          <AddSetComponent fetchSets={fetchSets} />
         </Modal>
       </Portal>
       
@@ -56,7 +59,7 @@ const BookMark = () => {
       />
       <ScrollView style={{padding:10}}>
         {filteredSets?.map((set, index) => (
-          <SetComponent setVocab={set} key={index}></SetComponent>
+          <SetComponent setVocab={set} key={index} fetchSets={fetchSets}></SetComponent>
         ))}
       </ScrollView>
       <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={showModal}>

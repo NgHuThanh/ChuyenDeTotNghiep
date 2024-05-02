@@ -4,7 +4,7 @@ import { TextInput, useTheme } from 'react-native-paper'; // Sử dụng useThem
 import { SetModel, addSet } from '../../model/word';
 import { router } from 'expo-router';
 
-const AddSetComponent = () => {
+const AddSetComponent = (props:{fetchSets: () => void}) => {
     const [text, setText] = React.useState("");
     const theme = useTheme(); // Lấy theme từ PaperProvider
     const handleAddSet = async () => {
@@ -15,6 +15,7 @@ const AddSetComponent = () => {
         };
         await addSet(newSet); // Gọi hàm addSet để thêm set mới
         setText(''); // Xóa nội dung của TextInput sau khi thêm set thành công
+        props.fetchSets();
     };
     return (
         <View style={styles.container}>
