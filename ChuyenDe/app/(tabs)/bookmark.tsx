@@ -1,23 +1,38 @@
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Modal, PaperProvider, Portal, Surface, TextInput } from 'react-native-paper';
 import SetComponent from '../bookMarkComponent/setComponent';
 import { AntDesign } from '@expo/vector-icons';
+import AddSetComponent from '../bookMarkComponent/addSet';
+import { SetModel, getAllSets } from '@/model/word';
 
 const BookMark = () => {
   const [text, setText] = useState('');
-
-  const handleInputChange = (inputText:string) => {
+  const [sets, setSets] = useState<SetModel[] | null>(null);
+  const [filteredSets, setFilteredSets] = useState<SetModel[] | null>(null);
+  const fetchSets = async () => {
+    const allSets = await getAllSets();
+    setSets(allSets);
+  };
+  useEffect(() => {
+    fetchSets();
+  }, []);
+  const handleInputChange = (inputText: string) => {
     setText(inputText);
+    const filteredSets = sets?.filter(set => set.name.toLowerCase().includes(inputText.toLowerCase()));
+    setFilteredSets(filteredSets as SetModel[]);
   };
   const [visible, setVisible] = React.useState(false);
   const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
+  const hideModal = () => {
+    fetchSets(),
+    setVisible(false)
+  };
   const containerStyle: ViewStyle = {
     backgroundColor: 'white',
-    padding: 20,
+    padding: 0,
     width: 300,
-    height: 400,
+    height: 200,
     alignSelf: 'center',
     justifyContent: 'center',
   };
@@ -26,7 +41,7 @@ const BookMark = () => {
       <PaperProvider >
       <Portal>
         <Modal visible={visible} onDismiss={hideModal}contentContainerStyle={containerStyle}>
-          <Text>Example Modal.  Click outside this area to dismiss.</Text>
+          <AddSetComponent></AddSetComponent>
         </Modal>
       </Portal>
       
@@ -40,7 +55,9 @@ const BookMark = () => {
         onChangeText={handleInputChange}
       />
       <ScrollView style={{padding:10}}>
-        <SetComponent></SetComponent>
+        {filteredSets?.map((set, index) => (
+          <SetComponent setVocab={set} key={index}></SetComponent>
+        ))}
       </ScrollView>
       <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={showModal}>
         <AntDesign name="addfolder" size={24} color="#FFF" />

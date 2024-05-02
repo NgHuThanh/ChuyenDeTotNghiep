@@ -1,14 +1,23 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-const SetComponent = () => {
+import { SetModel, deleteSet } from '@/model/word';
+const SetComponent = (props:{setVocab:SetModel}) => {
     const localImageUrl = require('../../assets/images/book.png');
+    const [exist,setExist]=useState(true)
+    if(exist==false){
+        return <></>;
+    }
+    const handleDeleteSet = () => {
+        deleteSet(props.setVocab.name);
+        setExist(false);
+    }
     return (
         <TouchableOpacity style={styles.container}>
             <View style={styles.infoContainer}>
-                <Text style={styles.boldText}>Example</Text>
+                <Text style={styles.boldText}>{props.setVocab.name}</Text>
                 <Text style={styles.secondaryText}>0/92 Cards memorized</Text>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.button} activeOpacity={0.7}>
@@ -20,8 +29,15 @@ const SetComponent = () => {
                 </View>
             </View>
             <View style={styles.imageContainer}>
-            <MaterialIcons name="settings" size={24} color="#5b7bfe" />
+            
+            <TouchableOpacity  activeOpacity={0.7}>
+            <MaterialIcons name="delete" size={24} color="#5b7bfe" onPress={handleDeleteSet} />
+            </TouchableOpacity>
+            <TouchableOpacity  activeOpacity={0.7}>
             <Feather name="share" size={24} color="#5b7bfe" />
+            </TouchableOpacity>
+            
+            
             </View>
         </TouchableOpacity>
     )
