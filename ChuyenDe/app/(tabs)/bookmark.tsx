@@ -1,7 +1,8 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native'
 import React, { useState } from 'react'
-import { TextInput } from 'react-native-paper';
+import { Modal, PaperProvider, Portal, Surface, TextInput } from 'react-native-paper';
 import SetComponent from '../bookMarkComponent/setComponent';
+import { AntDesign } from '@expo/vector-icons';
 
 const BookMark = () => {
   const [text, setText] = useState('');
@@ -9,64 +10,85 @@ const BookMark = () => {
   const handleInputChange = (inputText:string) => {
     setText(inputText);
   };
+  const [visible, setVisible] = React.useState(false);
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+  const containerStyle: ViewStyle = {
+    backgroundColor: 'white',
+    padding: 20,
+    width: 300,
+    height: 400,
+    alignSelf: 'center',
+    justifyContent: 'center',
+  };
   return (
-    <SafeAreaView >
+    <SafeAreaView style={styles.container}>
+      <PaperProvider >
+      <Portal>
+        <Modal visible={visible} onDismiss={hideModal}contentContainerStyle={containerStyle}>
+          <Text>Example Modal.  Click outside this area to dismiss.</Text>
+        </Modal>
+      </Portal>
+      
+      
       <View style={styles.headContainer}>
-          <Text style={styles.text}>Your words</Text>    
+        <Text style={styles.text}>Your words</Text>    
       </View>
       <TextInput
-        label="Find you name set vocab"
+        label="Find your name set vocab"
         value={text}
         onChangeText={handleInputChange}
       />
       <ScrollView style={{padding:10}}>
         <SetComponent></SetComponent>
-        <SetComponent></SetComponent>
-        <SetComponent></SetComponent>
       </ScrollView>
+      <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={showModal}>
+        <AntDesign name="addfolder" size={24} color="#FFF" />
+      </TouchableOpacity>
+      </PaperProvider>
     </SafeAreaView>
-      
   )
 }
 
 export default BookMark
 
 const styles = StyleSheet.create({
-  imageContainer: {
-    width:50,
-    height:50,
-    borderWidth: 3, // Độ dày của viền
-    borderColor: 'white', // Màu của viền
-    borderRadius: 100, // Độ cong của viền để tạo border tròn
-    overflow: 'hidden', // Ẩn bất kỳ phần nào của hình ảnh vượt ra ngoài viền
+  container: {
+    flex: 1,
   },
+  
   headContainer: {
     backgroundColor:'#410fa3',
-    padding:20// Độ cong của viền để tạo border tròn
-     // Ẩn bất kỳ phần nào của hình ảnh vượt ra ngoài viền
+    padding:20,
   },
-  image: {
-    width: 50, // Chiều rộng của hình ảnh
-    height: 50, // Chiều cao của hình ảnh
+  button: {
+    backgroundColor: '#5b7bfe',
+    borderRadius: 150,
+    height: 50,
+    width: 50,
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   text: {
     marginTop:20,
     color: '#faf9fd',
-    fontWeight:"bold", // Màu chữ của button
-    fontSize: 18, // Kích thước chữ của button
+    fontWeight:"bold",
+    fontSize: 18,
   },
   text2: {
     marginTop:5,
     color: 'black',
-    fontWeight:"bold", // Màu chữ của button
+    fontWeight:"bold",
     fontSize: 18,
-    marginBottom:20, // Kích thước chữ của button
+    marginBottom:20,
   },
   textSmall: {
     marginTop:10,
     color: '#888',
-    fontWeight:"bold", // Màu chữ của button
-    fontSize: 12, // Kích thước chữ của button
+    fontWeight:"bold",
+    fontSize: 12,
   },
-  
 })
