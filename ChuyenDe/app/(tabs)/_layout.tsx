@@ -10,7 +10,8 @@ import { Feather } from '@expo/vector-icons';
 
 const TabIcon = (props:{name:string,focused:boolean}) =>{
     let iconName="none";
-    let color="#6d99ff"
+    let color="#6d99ff";
+    let colorFocus="#f77800";
     // Determine which icon to display based on the route name
     if (props.name === 'home') {
         if(props.focused==false){
@@ -18,8 +19,8 @@ const TabIcon = (props:{name:string,focused:boolean}) =>{
             </>
         }
         else {
-            return <><MaterialCommunityIcons name="home-variant" size={24} color={color} />
-            <Text style={{ color: color }}>Home</Text></>
+            return <><MaterialCommunityIcons name="home-variant" size={24} color={colorFocus} />
+            <Text style={{ color: colorFocus }}>Home</Text></>
         }
     }
     if (props.name === 'translate') {
@@ -28,8 +29,8 @@ const TabIcon = (props:{name:string,focused:boolean}) =>{
             </>
         }
         else {
-            return <><MaterialIcons name="find-in-page" size={24} color={color} />
-            <Text style={{ color: color }}>Translate</Text></>
+            return <><MaterialIcons name="find-in-page" size={24} color={colorFocus} />
+            <Text style={{ color: colorFocus }}>Translate</Text></>
         }
     }
     
@@ -40,8 +41,8 @@ const TabIcon = (props:{name:string,focused:boolean}) =>{
             </>
         }
         else {
-            return <><FontAwesome5 name="book-open" size={24} color={color} />
-            <Text style={{ color: color }}>BookMark</Text>
+            return <><FontAwesome5 name="book-open" size={24} color={colorFocus} />
+            <Text style={{ color: colorFocus }}>BookMark</Text>
             </>
             
         }
@@ -53,10 +54,11 @@ const TabIcon = (props:{name:string,focused:boolean}) =>{
             </>
         }
         else {
-            return <><Ionicons name="person" size={24} color={color} />
-            <Text style={{ color: color }}>Profile</Text></>
+            return <><Ionicons name="person" size={24} color={colorFocus} />
+            <Text style={{ color: colorFocus }}>Profile</Text></>
         }
     }
+   
 }
 const TabsLayout = () => {
   return (
@@ -94,6 +96,7 @@ const TabsLayout = () => {
                 )
             }}  
             />
+            
             <Tabs.Screen
             name="bookmark"
             options={{

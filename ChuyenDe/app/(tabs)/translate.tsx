@@ -5,6 +5,7 @@ import { Feather } from '@expo/vector-icons';
 import useSWR from 'swr';
 import { Word } from '@/model/searchEntity';
 import playSound from '@/component/sound';
+import { router } from 'expo-router';
 const fetcher = async (url:string) => {
     const response = await fetch(url);
     if (!response.ok) {
@@ -24,15 +25,53 @@ const Translate = () => {
             }
         
     }
+    const handlePress2 = () => {
+        router.push("/longstranslate/");
+        
+    }
     if (isLoading) {
-        return <Text>Loading ...</Text>
+        return <View><View style={{ padding: 10 }}>
+        <Searchbar
+            placeholder="Search"
+            onChangeText={setSearchQuery}
+            value={searchQuery}
+        />
+        <TouchableOpacity style={styles.button} onPress={handlePress} activeOpacity={0.7}>
+            <Text style={styles.buttonText}>Search</Text>
+        </TouchableOpacity>
+        
+        <Text>Loading...</Text>
+        </View>
+        </View>;
     }
     if (error) {
-        return <Text>Error loading data</Text>;
+        return <View><View style={{ padding: 10 }}>
+        <Searchbar
+            placeholder="Search"
+            onChangeText={setSearchQuery}
+            value={searchQuery}
+        />
+        <TouchableOpacity style={styles.button} onPress={handlePress} activeOpacity={0.7}>
+            <Text style={styles.buttonText}>Search</Text>
+        </TouchableOpacity>
+        <Text>No result</Text>
+        </View>
+        </View>;
       }
       if (!data) {
-        return <Text>not found data</Text>;
-      }
+        return <View>
+            <View style={{ padding: 10 }}>
+                <Searchbar
+                    placeholder="Search"
+                    onChangeText={setSearchQuery}
+                    value={searchQuery}
+                />
+                <TouchableOpacity style={styles.button} onPress={handlePress} activeOpacity={0.7}>
+                    <Text style={styles.buttonText}>Search</Text>
+                </TouchableOpacity>
+                </View>
+            </View>;
+        }
     return (
         <View style={{ padding: 10 }}>
             <Searchbar
@@ -43,6 +82,9 @@ const Translate = () => {
             <TouchableOpacity style={styles.button} onPress={handlePress} activeOpacity={0.7}>
                 <Text style={styles.buttonText}>Search</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handlePress2} activeOpacity={0.7}>
+            <Text style={styles.buttonText}>Search long text</Text>
+        </TouchableOpacity>
             <ScrollView>
             {data.map((word, index,key) => (
                 <View style={styles.container}>
@@ -60,7 +102,7 @@ const Translate = () => {
                             <Text style={styles.lightText}>{meaning.partOfSpeech}</Text>
                         </View>
                     </View>
-                    {meaning.definitions.map((definition, index) => (
+                    {meaning.definitions.map((definition, index,key) => (
                         <View key={index}>
                             <Text style={styles.description}>
                                 -{definition.definition}
