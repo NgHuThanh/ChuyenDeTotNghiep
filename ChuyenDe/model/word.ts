@@ -1,5 +1,5 @@
 export interface set{
-    vocabs:vocab[];
+    vocabs?:vocab[];
     create:Date;
     name:string;
 }
