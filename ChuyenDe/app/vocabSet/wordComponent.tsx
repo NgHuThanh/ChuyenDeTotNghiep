@@ -3,27 +3,70 @@ import React, { useState } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import { SetModel, deleteSet } from '@/model/word';
+import { SetModel, deleteSet, deleteVocab, updateVocabFavorite, vocab } from '@/model/word';
 import { router } from 'expo-router';
 
-const WordComponent = () => {
+const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void}) => {
     const localImageUrl = require('../../assets/images/book.png');
     const [exist,setExist]=useState(true)
+    const [fav,setFav]=useState<boolean>(props.vocab.favorite);
+    
+    let difficultColor = '#000'; // Màu mặc định (đen) nếu giá trị difficult không khớp với bất kỳ điều kiện nào
+    
+    const handleDeletePress = () => {
+         deleteVocab(props.nameSet, props.vocab.word);
+            // Gọi hàm fetchVocabs để cập nhật danh sách vocab sau khi xóa
+            props.fetchVocabs();
+        
+    };
+    
+    // Xác định màu sắc dựa trên giá trị của difficult
+    switch (props.vocab.difficult) {
+        case 'easy':
+            difficultColor = 'green';
+            break;
+        case 'medium':
+            difficultColor = 'yellow';
+            break;
+        case 'hard':
+            difficultColor = 'red';
+            break;
+        case 'skip':
+            difficultColor = 'black';
+            break;
+        default:
+            difficultColor = '#000'; // Màu mặc định
+    }
+
     if(exist==false){
         return <></>;
     }
-    
+    const handleFavoritePress = () => {
+        // Gọi hàm updateVocabFavorite và truyền setName, vocabWord và true làm đối số
+        
+        updateVocabFavorite(props.nameSet , props.vocab.word);
+        props.vocab.favorite=!props.vocab.favorite;
+        setFav(props.vocab.favorite);   
+        // Gọi hàm fetchVocabs để cập nhật danh sách vocab sau khi cập nhật trạng thái favorite
+        // props.fetchVocabs();
+        
+        
+    };
     return (
-        <TouchableOpacity style={styles.container} onPress={()=>router.push("/vocabSet/")}>
+        <TouchableOpacity style={styles.container}>
             <View style={styles.infoContainer2}>
-            <TouchableOpacity>
-            <AntDesign name="hearto" size={24} color="black" />
-                </TouchableOpacity>
+            <TouchableOpacity onPress={handleFavoritePress}>
+                {fav ? (
+                    <AntDesign name="hearto" size={24} color="red" />
+                ) : (
+                    <AntDesign name="hearto" size={24} color="black" />
+                )}
+            </TouchableOpacity>
             </View>
             <View style={styles.infoContainer}>
-                <Text style={styles.boldText}>Exampl</Text>
-                <Text style={styles.secondaryText}>ExampleExam</Text>
-                
+                <Text style={styles.boldText}>{props.vocab.word}</Text>
+                <Text style={styles.secondaryText}>{props.vocab.definition}</Text>
+                <Text style={[styles.secondaryText2, { color: difficultColor }]}>{props.vocab.difficult}</Text>
             </View>
             <View style={styles.imageContainer}>
             <View style={styles.container2}>
@@ -32,7 +75,7 @@ const WordComponent = () => {
                 <Feather name="edit" size={24} color="black" />
                 </TouchableOpacity>
                 
-                <TouchableOpacity  activeOpacity={0.7}>
+                <TouchableOpacity  activeOpacity={0.7} onPress={handleDeletePress}>
                 <MaterialIcons name="delete" size={24} color="red" />
                 </TouchableOpacity>
             </View>
@@ -106,8 +149,12 @@ const styles = StyleSheet.create({
         color: '#1e2636', // Màu chữ trắng
     },
     secondaryText: {
-        marginBottom:20,
+        
         color: '#888', // Màu #888
+    },
+    secondaryText2: {
+        
+         // Màu #888
     },
     percentText: {
         marginBottom:20,

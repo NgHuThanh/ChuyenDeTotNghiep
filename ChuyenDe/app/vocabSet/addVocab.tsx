@@ -4,7 +4,7 @@ import { TextInput, useTheme } from 'react-native-paper'; // Sử dụng useThem
 import { SetModel, addVocabToSet } from '../../model/word';
 import { FontAwesome6 } from '@expo/vector-icons';
 
-const AddVocabComponent = () => {
+const AddVocabComponent = (props:{nameSet:string}) => {
     const [textWord, setTextWord] = React.useState("");
     const [textDefinition, setTextDefinition] = React.useState("");
     const theme = useTheme(); // Lấy theme từ PaperProvider
@@ -20,7 +20,7 @@ const AddVocabComponent = () => {
         };
 
         // Gọi hàm addVocabToSet để thêm từ vựng mới vào set
-        await addVocabToSet("Local", newVocab);
+        await addVocabToSet(props.nameSet, newVocab);
         
         // Sau khi thêm thành công, reset các trường input về giá trị mặc định
         setTextWord("");

@@ -16,8 +16,12 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
         props.fetchSets();
         setExist(false);
     }
+    const goToDestination = () => {
+        router.push(`/vocabSet/${props.setVocab.name}`);
+    };
+    
     return (
-        <TouchableOpacity style={styles.container} onPress={()=>router.push("/vocabSet/")}>
+        <TouchableOpacity style={styles.container} onPress={goToDestination}>
             <View style={styles.infoContainer}>
                 <Text style={styles.boldText}>{props.setVocab.name}</Text>
                 <Text style={styles.secondaryText}>{props.setVocab.vocabs?.length}/92 Cards memorized</Text>

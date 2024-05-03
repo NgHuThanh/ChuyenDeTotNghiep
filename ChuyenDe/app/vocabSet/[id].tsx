@@ -1,6 +1,6 @@
 import CustomButton from '@/component/CustomButton';
 import { Feather, FontAwesome6 } from '@expo/vector-icons';
-import { Link, router } from 'expo-router';
+import { Link, router, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View,Image, Button, TouchableOpacity, ViewStyle } from 'react-native';
@@ -12,6 +12,7 @@ import AddSetComponent from '../bookMarkComponent/addSet';
 import React from 'react';
 import AddVocabComponent from './addVocab';
 import { getVocabsInSet, vocab } from '@/model/word';
+import { useLocalSearchParams } from 'expo-router';
 
 const url="https://api.mymemory.translated.net/get?q=Hello World!&langpair=en|it";
 const fetcher = async (url:string) => {
@@ -22,15 +23,20 @@ const fetcher = async (url:string) => {
   return response.json();
 };
 
+    
 export default function SetDetail() {
+  const {id}=useLocalSearchParams();
   const [vocabs, setVocabs] = useState<vocab[] | null>(null);
   const fetchVocabs = async () => {
-    const allVocabs = await getVocabsInSet("Local");
+    const allVocabs = await getVocabsInSet(id as string);
     setVocabs(allVocabs);
   };
   useEffect(() => {
     fetchVocabs();
   }, []);
+  const router = useRouter();
+  
+    
     const [text, setText] = useState('');
     const handleInputChange = (inputText: string) => {
         setText(inputText);
@@ -57,12 +63,12 @@ export default function SetDetail() {
         <PaperProvider >
             <Portal>
                 <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
-                <AddVocabComponent/>
+                <AddVocabComponent nameSet={id as string}/>
                 </Modal>
             </Portal>
         
             <View style={styles.headContainer}>
-                <Text style={styles.text}>Your set</Text>    
+                <Text style={styles.text}>{id}</Text>    
             </View>
             <TextInput
             label="Find your vocablary"
@@ -70,15 +76,16 @@ export default function SetDetail() {
             onChangeText={handleInputChange}
             />
             <ScrollView style={{padding:10}}>
-            {vocabs?.map((vocab, index) => (
-              <Text>{vocab.word}</Text>
+            {vocabs?.map((vocab, index,key) => (
+              <WordComponent nameSet={id as string} vocab={vocab} fetchVocabs={fetchVocabs}></WordComponent>
             ))}
-                {/* <WordComponent></WordComponent> */}
+                
             </ScrollView>
             </PaperProvider>
             <TouchableOpacity style={styles.button} activeOpacity={0.7} >
             <FontAwesome6 name="add" size={24} color="black"onPress={showModal}/>
             </TouchableOpacity>
+            
         </SafeAreaView>
     </>
   );

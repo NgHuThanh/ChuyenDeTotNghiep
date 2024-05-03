@@ -81,3 +81,42 @@ export const getVocabsInSet = async (setName: string): Promise<vocab[] | null> =
         return null;
     }
 };
+export const deleteVocab = async (setName: string, vocabWord: string) => {
+    try {
+        const existingSets = await AsyncStorage.getItem('sets');
+        let sets: SetModel[] = existingSets ? JSON.parse(existingSets) : [];
+        const setIndex = sets.findIndex(set => set.name === setName);
+        if (setIndex !== -1) {
+            sets[setIndex].vocabs = sets[setIndex].vocabs?.filter(vocab => vocab.word !== vocabWord);
+            await AsyncStorage.setItem('sets', JSON.stringify(sets));
+            console.log('Vocab deleted successfully!');
+        } else {
+            console.error('Set not found!');
+        }
+    } catch (error) {
+        console.error('Error deleting vocab:', error);
+    }
+};
+export const updateVocabFavorite = async (setName: string, vocabWord: string) => {
+    try {
+        let sets: SetModel[] = [];
+        const existingSets = await AsyncStorage.getItem('sets');
+        if (existingSets) {
+            sets = JSON.parse(existingSets).map((set: SetModel) => {
+                if (set.name === setName && set.vocabs) {
+                    set.vocabs = set.vocabs.map((vocab: vocab) => {
+                        if (vocab.word === vocabWord) {
+                            vocab.favorite = !vocab.favorite;
+                        }
+                        return vocab;
+                    });
+                }
+                return set;
+            });
+            await AsyncStorage.setItem('sets', JSON.stringify(sets));
+            console.log('Vocab favorite status updated successfully!');
+        }
+    } catch (error) {
+        console.error('Error updating vocab favorite status:', error);
+    }
+};
