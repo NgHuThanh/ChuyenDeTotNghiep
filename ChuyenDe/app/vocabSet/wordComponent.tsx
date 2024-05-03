@@ -5,6 +5,9 @@ import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { SetModel, deleteSet, deleteVocab, updateVocabFavorite, vocab } from '@/model/word';
 import { router } from 'expo-router';
+import Tts from 'react-native-tts';
+import { speak } from '../textToSpech';
+
 
 const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void}) => {
     const localImageUrl = require('../../assets/images/book.png');
@@ -52,6 +55,7 @@ const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void
         
         
     };
+    
     return (
         <TouchableOpacity style={styles.container}>
             <View style={styles.infoContainer2}>
