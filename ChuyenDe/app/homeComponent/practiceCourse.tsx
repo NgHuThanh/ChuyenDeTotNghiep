@@ -2,10 +2,14 @@ import { StyleSheet, Text, TouchableOpacity, View, Image, ProgressBarAndroidBase
 import React from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { ProgressBar } from 'react-native-paper';
+import { addDocument } from '../firebase/config';
 const PracticeCourse = () => {
     const localImageUrl = require('../../assets/images/book.png');
+    const handlePress=async()=>{
+        addDocument();
+    }
     return (
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity style={styles.container} onPress={handlePress}>
             <View style={styles.infoContainer}>
                 <Text style={styles.boldText}>Practice</Text>
                 <Text style={styles.boldText}>Your Word</Text>
