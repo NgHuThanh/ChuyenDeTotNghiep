@@ -11,7 +11,7 @@ const BookMark = () => {
   const [sets, setSets] = useState<SetModel[] | null>(null);
   const [filteredSets, setFilteredSets] = useState<SetModel[] | null>(null);
   const fetchSets = async () => {
-    const allSets = await getAllSets();
+    const allSets  = await getAllSets();
     setSets(allSets);
   };
   useEffect(() => {
