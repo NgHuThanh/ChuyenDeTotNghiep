@@ -13,6 +13,7 @@ const BookMark = () => {
   const fetchSets = async () => {
     const allSets  = await getAllSets();
     setSets(allSets);
+    setFilteredSets(allSets);
   };
   useEffect(() => {
     fetchSets();
