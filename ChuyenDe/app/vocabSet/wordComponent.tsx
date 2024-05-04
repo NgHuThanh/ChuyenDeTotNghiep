@@ -28,7 +28,7 @@ const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void
         case 'easy':
             difficultColor = 'green';
             break;
-        case 'medium':
+        case 'good':
             difficultColor = 'yellow';
             break;
         case 'hard':

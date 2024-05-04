@@ -125,3 +125,26 @@ export const updateVocabFavorite = async (setName: string, vocabWord: string) =>
         console.error('Error updating vocab favorite status:', error);
     }
 };
+const updateVocabDifficulty = async (setName: string, vocabWord: string, difficulty: string) => {
+    try {
+        let sets: SetModel[] = [];
+        const existingSets = await AsyncStorage.getItem('sets');
+        if (existingSets) {
+            sets = JSON.parse(existingSets).map((set: SetModel) => {
+                if (set.name === setName && set.vocabs) {
+                    set.vocabs = set.vocabs.map((vocab: vocab) => {
+                        if (vocab.word === vocabWord) {
+                            vocab.difficult = difficulty;
+                        }
+                        return vocab;
+                    });
+                }
+                return set;
+            });
+            await AsyncStorage.setItem('sets', JSON.stringify(sets));
+            console.log('Vocab difficulty updated successfully!');
+        }
+    } catch (error) {
+        console.error('Error updating vocab difficulty:', error);
+    }
+};
