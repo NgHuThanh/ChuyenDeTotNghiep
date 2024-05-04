@@ -2,10 +2,11 @@ import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
 import React from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { grammar } from '@/model/grammar';
 
-const GrammarComponent = () => {
+const GrammarComponent = (props:{grammar:grammar}) => {
     const goToDestination = () => {
-        router.push(`/grammarDetail/`);
+        router.push(`/grammarDetail/${props.grammar.id}`);
     };
     return (
         <TouchableOpacity style={styles.container} onPress={goToDestination}>
@@ -16,7 +17,7 @@ const GrammarComponent = () => {
             </TouchableOpacity>
             </View>
             <View style={styles.infoContainer}>
-                <Text style={styles.boldText}>Singular and plural nounsSingular and plural noun</Text>
+                <Text style={styles.boldText}>{props.grammar.title}</Text>
                 
             </View>
             
