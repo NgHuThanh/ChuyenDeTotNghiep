@@ -14,7 +14,7 @@ const PracticeCourse = () => {
                 <Text style={styles.boldText}>Practice</Text>
                 <Text style={styles.boldText}>Your Word</Text>
                 <Text style={styles.secondaryText}>Do not forget</Text>
-                <ProgressBar progress={0.2}/>
+                <ProgressBar progress={0.8}/>
                 {/* <Text style={styles.percentText}><AntDesign name="rocket1" size={24} color="green" /></Text> */}
             </View>
             <View style={styles.imageContainer}>

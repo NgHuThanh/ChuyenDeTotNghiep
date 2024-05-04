@@ -1,6 +1,6 @@
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { Modal, PaperProvider, Portal, Surface, TextInput } from 'react-native-paper';
+import { Modal, PaperProvider, Portal, ProgressBar, Surface, TextInput } from 'react-native-paper';
 import SetComponent from '../bookMarkComponent/setComponent';
 import { AntDesign } from '@expo/vector-icons';
 import AddSetComponent from '../bookMarkComponent/addSet';

@@ -7,13 +7,13 @@ import { SetModel, deleteSet, deleteVocab, updateVocabFavorite, vocab } from '@/
 import { router } from 'expo-router';
 import Tts from 'react-native-tts';
 import { speak } from '../textToSpech';
-
+import { format } from 'date-fns';
 
 const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void}) => {
     const localImageUrl = require('../../assets/images/book.png');
     const [exist,setExist]=useState(true)
     const [fav,setFav]=useState<boolean>(props.vocab.favorite);
-    
+    const formattedDate = format(props.vocab.lastPractice, 'dd/MM/yyyy');
     let difficultColor = '#000'; // Màu mặc định (đen) nếu giá trị difficult không khớp với bất kỳ điều kiện nào
     
     const handleDeletePress = () => {
@@ -67,10 +67,12 @@ const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void
                 )}
             </TouchableOpacity>
             </View>
+            
             <View style={styles.infoContainer}>
                 <Text style={styles.boldText}>{props.vocab.word}</Text>
                 <Text style={styles.secondaryText}>{props.vocab.definition}</Text>
                 <Text style={[styles.secondaryText2, { color: difficultColor }]}>{props.vocab.difficult}</Text>
+                <Text style={{paddingRight:0}}>Practice at: {formattedDate}</Text>
             </View>
             <View style={styles.imageContainer}>
             <View style={styles.container2}>

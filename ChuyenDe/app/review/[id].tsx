@@ -1,9 +1,11 @@
+import SwipeGestureHandler from "@/component/swifHandle";
 import { SetModel, getVocabsInSet, updateVocabDifficulty, updateVocabFavorite, vocab } from "@/model/word";
 import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, router } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View, Image, Button, TouchableOpacity, ViewStyle } from 'react-native';
+import { ProgressBar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Review() {
@@ -11,19 +13,33 @@ export default function Review() {
     const [vocabs, setVocabs] = useState<vocab[] | null>(null);
     const [currentVocabIndex, setCurrentVocabIndex] = useState<number>(0);
     const [showDefinition, setShowDefinition] = useState<boolean>(false);
-
+    const [finishedReview, setFinishedReview] = useState(false);
     const fetchVocabs = async () => {
         const allVocabs = await getVocabsInSet(id as string);
         setVocabs(allVocabs);
     };
-
+    const handleSwipeLeft = () => {
+        handleGoBack();
+      };
+    
+      const handleSwipeRight = () => {
+        handleNext();
+      };
     useEffect(() => {
         fetchVocabs();
     }, []);
 
     const handleNext = () => {
-        setCurrentVocabIndex((prevIndex) => (prevIndex + 1) % (vocabs ? vocabs.length : 0));
-        setShowDefinition(false); // Reset showDefinition khi chuyển sang từ tiếp theo
+        if (currentVocabIndex === (vocabs ? vocabs.length - 1 : 0)) {
+            setFinishedReview(true);
+            // Thực hiện hàm callback sau 3 giây để thực hiện router.back()
+            setTimeout(() => {
+                router.back();
+            }, 3000);
+        } else {
+            setCurrentVocabIndex((prevIndex) => prevIndex + 1);
+            setShowDefinition(false); // Reset showDefinition khi chuyển sang từ tiếp theo
+        }
     };
 
     const handleToggleDefinition = () => {
@@ -59,6 +75,18 @@ export default function Review() {
                             set.vocabs = set.vocabs.map((vocab: vocab) => {
                                 if (vocab.word === vocabWord) {
                                     vocab.difficult = difficulty;
+                                    // Cập nhật ngày lastPractice
+                                    const today = new Date();
+                                    let daysToAdd = 0;
+                                    if (difficulty === "easy") {
+                                        daysToAdd = 10;
+                                    } else if (difficulty === "good") {
+                                        daysToAdd = 7;
+                                    } else if (difficulty === "hard") {
+                                        daysToAdd = 3;
+                                    }
+                                    const futureDate = new Date(today.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
+                                    vocab.lastPractice = futureDate;
                                 }
                                 return vocab;
                             });
@@ -76,17 +104,29 @@ export default function Review() {
         }
         handleNext();
     };
-
+    
+    
+    if(finishedReview){
+        return <View style={styles.finishedContainer}>
+        <Text style={styles.finishedText}>You finished practice {vocabs?.length} word</Text>
+        <TouchableOpacity style={styles.finishedButton} onPress={() => router.back()}>
+            <Text style={styles.finishedButtonText}>Finished</Text>
+        </TouchableOpacity>
+    </View>
+    }
     return (
         <>
             {vocabs && (
                 <SafeAreaView style={styles.container}>
+                    <View style={styles.progressContainer}>
+                        <ProgressBar progress={currentVocabIndex / (vocabs ? vocabs.length : 1)} color={'green'} style={{ height: 20, borderRadius: 20,width:280,borderWidth:1 }} />
+                    </View>
+                    <View style={styles.wordContainer}>
                     <View style={styles.favoriteIcon}>
                         <TouchableOpacity onPress={handleToggleFavorite}>
                             <AntDesign name={vocabs[currentVocabIndex].favorite ? "heart" : "hearto"} size={24} color={vocabs[currentVocabIndex].favorite ? "red" : "black"} />
                         </TouchableOpacity>
                     </View>
-                    <View style={styles.wordContainer}>
                         <Text style={styles.wordText}>{vocabs[currentVocabIndex].word}</Text>
                         {showDefinition && (
                             <Text style={styles.definitionText}>Definition: {vocabs[currentVocabIndex].definition}</Text>
@@ -114,6 +154,8 @@ export default function Review() {
                             </TouchableOpacity>
                         </View>
                     </View>
+                    
+                    <SwipeGestureHandler onSwipeLeft={handleSwipeLeft} onSwipeRight={handleSwipeRight} />
                 </SafeAreaView>
             )}
         </>
@@ -130,13 +172,33 @@ const styles = StyleSheet.create({
         backgroundColor: '#eaeaea', // Màu nền
     },
     wordContainer: {
-        flex: 6, // Chiếm 60% chiều cao
+        flex: 7, // Chiếm 70% chiều cao (tổng cộng 10 phần)
         justifyContent: 'center',
         alignItems: 'center',
+        borderWidth: 2,
+        borderRadius: 20,
+        marginVertical: 10, // Margin dọc (top và bottom)
+        marginHorizontal: 20, // Margin ngang (left và right)
+        borderColor: "black",
+        minWidth: 300,
+        backgroundColor: "#91afed",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        borderLeftWidth: 10,
+        borderLeftColor: "black",
     },
+    
     wordText: {
-        fontSize: 24,
+        fontSize: 32,
         textAlign: 'center',
+        fontWeight:"bold",
+        color:"#FFF"
     },
     definitionText: {
         fontSize: 18,
@@ -144,12 +206,16 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     buttonsContainer: {
-        flex: 1, // Chiếm 10% chiều cao
+        flex: 2, // Chiếm 10% chiều cao
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
         marginBottom: 20,
         width: '100%', // Chiếm 100% chiều rộng
+    },
+    progressContainer:{
+        flex:1,
+        marginTop:15,
     },
     buttonWrapper: {
         width: '33.33%', // Chiếm 33.33% chiều rộng
@@ -178,5 +244,28 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 10,
         right: 10,
+    },
+    finishedContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 20,
+    },
+    finishedText: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: 'black',
+        textAlign: 'center',
+        marginBottom: 20,
+    },
+    finishedButton: {
+        backgroundColor: 'green',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 20,
+    },
+    finishedButtonText: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
     },
 });
