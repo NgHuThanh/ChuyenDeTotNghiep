@@ -16,6 +16,9 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
         props.fetchSets();
         setExist(false);
     }
+    const handleReview=()=>{
+        router.push(`/review/${props.setVocab.name}`)
+    }
     const goToDestination = () => {
         router.push(`/vocabSet/${props.setVocab.name}`);
     };
@@ -27,7 +30,7 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
                 <Text style={styles.secondaryText}>{props.setVocab.vocabs?.length}/92 Cards memorized</Text>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.button} activeOpacity={0.7}>
-                    <Text style={styles.buttonText}>Review</Text>
+                    <Text style={styles.buttonText} onPress={handleReview}>Review</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button} activeOpacity={0.7}>
                     <Text style={styles.buttonText}>Practice</Text>

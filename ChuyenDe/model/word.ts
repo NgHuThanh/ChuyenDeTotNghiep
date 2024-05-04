@@ -11,6 +11,11 @@ export interface vocab{
     difficult:string;
     favorite:boolean;
 } 
+// export const vocabConverter = {
+//     toFirestore: (product: vocab) => {
+
+//     }
+// }
 export const addSet = async (newSet: SetModel) => {
     try {
         const existingSets = await AsyncStorage.getItem('sets');

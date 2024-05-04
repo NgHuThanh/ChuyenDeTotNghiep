@@ -18,7 +18,7 @@ const Home = () => {
               resizeMode="cover"
             />
           </View>
-          <Text style={styles.text}>Hello, Thanh</Text>
+          <Text style={styles.text}>Hello, Thanhs</Text>
           <Text style={styles.textSmall} >What would you like to learn to day ?</Text>
         </View>
         <View style={{padding:20}}>
