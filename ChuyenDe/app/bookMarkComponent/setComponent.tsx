@@ -7,7 +7,11 @@ import { SetModel, deleteSet } from '@/model/word';
 import { router } from 'expo-router';
 const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
     const localImageUrl = require('../../assets/images/book.png');
-    const [exist,setExist]=useState(true)
+    const [exist,setExist]=useState(true);
+    const [practicePressed, setPracticePressed] = useState(false);
+    const handlePractice = () => {
+        setPracticePressed(true);
+    };
     if(exist==false){
         return <></>;
     }
@@ -19,6 +23,15 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
     const handleReview=()=>{
         router.push(`/review/${props.setVocab.name}`)
     }
+    const handleMultipleChoice=()=>{
+        router.push(`/muitiplechoice/${props.setVocab.name}`)
+    }
+    const handleMatchChoice=()=>{
+        router.push(`/match/${props.setVocab.name}`)
+    }
+    const handleImagePractice=()=>{
+        router.push(`/imagePractice/${props.setVocab.name}`)
+    }
     const goToDestination = () => {
         router.push(`/vocabSet/${props.setVocab.name}`);
     };
@@ -27,15 +40,34 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
         <TouchableOpacity style={styles.container} onPress={goToDestination}>
             <View style={styles.infoContainer}>
                 <Text style={styles.boldText}>{props.setVocab.name}</Text>
-                <Text style={styles.secondaryText}>{props.setVocab.vocabs?.length}/92 Cards memorized</Text>
+                <Text style={styles.secondaryText}>{props.setVocab.vocabs?.length} Cards</Text>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.button} activeOpacity={0.7}>
                     <Text style={styles.buttonText} onPress={handleReview}>Review</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} activeOpacity={0.7}>
-                    <Text style={styles.buttonText}>Practice</Text>
+                    <TouchableOpacity
+                        style={[styles.button, { opacity: practicePressed ? 0.5 : 1 }]}
+                        activeOpacity={practicePressed ? 1 : 0.7}
+                        disabled={practicePressed}
+                        onPress={handlePractice}
+                    >
+                        <Text style={styles.buttonText}>Practice</Text>
                     </TouchableOpacity>
                 </View>
+                
+                {practicePressed && (
+                    <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.button2} activeOpacity={0.7}>
+                    <Text style={styles.buttonText} onPress={handleMultipleChoice}>Multiples</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button2} activeOpacity={0.7}>
+                    <Text style={styles.buttonText} onPress={handleMatchChoice}>Match</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button2} activeOpacity={0.7}>
+                    <Text style={styles.buttonText} onPress={handleImagePractice}>Image</Text>
+                    </TouchableOpacity>
+                </View>
+                )}
             </View>
             <View style={styles.imageContainer}>
             
@@ -59,9 +91,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: '#FFF', // Màu nền xanh
         borderRadius: 10, // Bo tròn góc
-        overflow: 'hidden', // Ẩn bất kỳ phần nào vượt ra ngoài giới hạn của container
+         // Ẩn bất kỳ phần nào vượt ra ngoài giới hạn của container
         marginBottom: 10, // Khoảng cách dưới cùng
-        height:130,
+        
         paddingLeft:20,
         paddingTop:10,
         shadowColor: '#000', // Màu của shadow
@@ -115,6 +147,14 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         height:'200%',
         width: '48%', // Chiếm 48% chiều rộng của parent (SafeAreaView)
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      button2: {
+        backgroundColor: '#5b7bfe',
+        borderRadius: 8,
+        height:'200%',
+        width: '30%', // Chiếm 48% chiều rộng của parent (SafeAreaView)
         justifyContent: 'center',
         alignItems: 'center',
       },

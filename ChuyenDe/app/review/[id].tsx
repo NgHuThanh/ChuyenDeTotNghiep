@@ -79,11 +79,11 @@ export default function Review() {
                                     const today = new Date();
                                     let daysToAdd = 0;
                                     if (difficulty === "easy") {
-                                        daysToAdd = 10;
+                                        daysToAdd = 3;
                                     } else if (difficulty === "good") {
                                         daysToAdd = 7;
                                     } else if (difficulty === "hard") {
-                                        daysToAdd = 3;
+                                        daysToAdd = 10;
                                     }
                                     const futureDate = new Date(today.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
                                     vocab.lastPractice = futureDate;

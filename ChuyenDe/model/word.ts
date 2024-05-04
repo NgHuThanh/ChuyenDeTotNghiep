@@ -125,7 +125,7 @@ export const updateVocabFavorite = async (setName: string, vocabWord: string) =>
         console.error('Error updating vocab favorite status:', error);
     }
 };
-const updateVocabDifficulty = async (setName: string, vocabWord: string, difficulty: string) => {
+export const updateVocabDifficulty = async (setName: string, vocabWord: string, difficulty: string) => {
     try {
         let sets: SetModel[] = [];
         const existingSets = await AsyncStorage.getItem('sets');
