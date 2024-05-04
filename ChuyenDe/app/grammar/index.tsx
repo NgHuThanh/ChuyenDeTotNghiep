@@ -39,7 +39,7 @@ export default function GrammarHome() {
     return <View>Loading...</View>; // Hiển thị thông báo tải dữ liệu
   }
   return (
-    <SafeAreaView style={{backgroundColor:"#364175",height:"100%",padding:10}}>
+    <SafeAreaView style={{backgroundColor:"#FFF",height:"100%",padding:10}}>
         <ScrollView>
           {grammars.map((grammar) => (
             <GrammarComponent key={grammar.id} grammar={grammar} />

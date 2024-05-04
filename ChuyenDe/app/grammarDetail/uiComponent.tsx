@@ -4,9 +4,11 @@ import { AntDesign } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
 import { contentAndQuestion } from '@/model/grammar';
 import { getContentAndQuestionList } from '../firebase/config';
+import ContentComponent from './contentComponent';
+import QuestionComponent from './questionCompnent';
 
 const UiComponent = (props:{id:string,caq:contentAndQuestion}) => {
-    const [contentAndQuestions, setcontentAndQuestions] = useState<contentAndQuestion[]>([]);
+    const [contents, setcontentAndQuestions] = useState<contentAndQuestion[]>([]);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         async function fetchData() {
@@ -24,41 +26,19 @@ const UiComponent = (props:{id:string,caq:contentAndQuestion}) => {
         return <View>Loading...</View>; // Hiển thị thông báo tải dữ liệu
       }
     return (
-        <View>
+        <View style={{marginBottom:20}}>
             
                 <View>
                 <View style={styles.container}>
                     <Text style={styles.title}>{props.caq.main}</Text>
                     {/* Lập */}
-                    <View style={styles.item}>
-                        <View style={styles.subItem}>
-                            <Text style={styles.text}><Octicons name="light-bulb" size={20} color="black" style={{marginRight:5}} />A noun is a word that indentifes a person, a place, a thing, or an idea.</Text>
-                        </View>
-                        <View style={[styles.example]}>
-                            <Text style={[styles.text, styles.exampleText]}>A person: a place, a thing or an idea</Text>
-                            
-                        </View>
-                    </View>
+                    <ContentComponent id={props.id} caq={props.caq.id} />
                 </View>
                 
                 
                 <View>
-                                {/* Lập */}
-                    <View style={styles.item}>
-                    <View style={styles.subItem}>
-                        <Text style={styles.title}>What is a noun</Text>
-                    </View>
-                    {/* Lập */}
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>A person, a place, a thing or an idea</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>A person, a place, a thing or an idea</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>A person, a place, a thing or an idea</Text>
-                    </TouchableOpacity>
-                    </View>
+                    <QuestionComponent id={props.id} caq={props.caq.id}/>
+                    
                 
                 </View>
                 
@@ -75,7 +55,7 @@ export default UiComponent;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#c88cec',
+        backgroundColor: '#3d1460',
         flex: 1,
         
         borderRadius:10,
@@ -87,6 +67,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         textAlign: 'center',
+        color:"#df678b",
     },
     item: {
         

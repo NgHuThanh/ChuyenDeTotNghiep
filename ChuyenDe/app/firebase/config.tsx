@@ -1,4 +1,4 @@
-import { contentAndQuestion, grammar } from '@/model/grammar';
+import { content, contentAndQuestion, grammar, question } from '@/model/grammar';
 import { initializeApp } from 'firebase/app';
 import { DocumentSnapshot, QuerySnapshot, addDoc, collection, doc, getDoc, getDocs, getFirestore } from 'firebase/firestore';
 const firebaseConfig = {
@@ -74,7 +74,45 @@ export const getContentAndQuestionList = async (props:{idGrammar:string}): Promi
           const grammarData: contentAndQuestion = {
             contents: [],
             questions: [],
-            main: data.main||'',
+            main: data.main || '',
+            id: doc.id,
+          };
+          grammars.push(grammarData);
+      });
+      return grammars;
+  } catch (error) {
+      console.error('Error getting documents: ', error);
+      return []; // Trả về một mảng trống nếu có lỗi
+  }
+};
+export const getContentList = async (props:{idGrammar:string,idCaq:string}): Promise<content[]> => {
+  try {
+      const querySnapshot = await getDocs(collection(firestore, 'grammar/'+props.idGrammar+'/contentAndQuestions/'+props.idCaq+"/contents/"));
+      const grammars: content[] = [];
+      querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const grammarData: content = {
+            content: data.content||'',
+            example: data.example||''
+          };
+          grammars.push(grammarData);
+      });
+      return grammars;
+  } catch (error) {
+      console.error('Error getting documents: ', error);
+      return []; // Trả về một mảng trống nếu có lỗi
+  }
+};
+export const getQuestionList = async (props:{idGrammar:string,idCaq:string}): Promise<question[]> => {
+  try {
+      const querySnapshot = await getDocs(collection(firestore, 'grammar/'+props.idGrammar+'/contentAndQuestions/'+props.idCaq+"/questions/"));
+      const grammars: question[] = [];
+      querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const grammarData: question = {
+            question: data.question,
+            answers: data.answers,
+            rightAnswer: data.rightAnswer
           };
           grammars.push(grammarData);
       });

@@ -1,31 +1,41 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { grammar } from '@/model/grammar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const GrammarComponent = (props:{grammar:grammar}) => {
     const goToDestination = () => {
         router.push(`/grammarDetail/${props.grammar.id}`);
     };
+    const [idGrammar, setIdGrammar] = useState<string>('');
+    const [isIdInArray, setIsIdInArray] = useState(false);
+    useEffect(() => {
+        async function checkIdInArray() {
+            try {
+                const existingIds = await AsyncStorage.getItem('idGrammars');
+                const idGrammars = existingIds ? JSON.parse(existingIds) : [];
+                setIsIdInArray(idGrammars.includes(props.grammar.id));
+            } catch (error) {
+                console.error("Error checking id in array: ", error);
+            }
+        }
+        checkIdInArray();
+    }, []);
     return (
         <TouchableOpacity style={styles.container} onPress={goToDestination}>
             <View style={styles.infoContainer2}>
-            <TouchableOpacity>
-            <AntDesign name="checkcircle" size={24} color="green" />
-            <AntDesign name="checkcircle" size={24} color="gray" />
-            </TouchableOpacity>
+            {isIdInArray ? (
+                    <AntDesign name="checkcircle" size={24} color="green" />
+                ) : (
+                    <AntDesign name="checkcircle" size={24} color="gray" />
+                )}
             </View>
             <View style={styles.infoContainer}>
                 <Text style={styles.boldText}>{props.grammar.title}</Text>
                 
             </View>
-            
-            
-            
-            
-            
-            
         </TouchableOpacity>
     )
 }
@@ -35,7 +45,7 @@ export default GrammarComponent
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        backgroundColor: '#410fa3', // Màu nền xanh
+        backgroundColor: '#3d1460', // Màu nền xanh
         borderRadius: 10, // Bo tròn góc
          // Ẩn bất kỳ phần nào vượt ra ngoài giới hạn của container
         marginBottom: 10, // Khoảng cách dưới cùng
@@ -50,8 +60,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.27, // Độ mờ của shadow
         shadowRadius: 4.65, // Độ đục của shadow
         elevation: 6, // Thêm elevation để hiển thị shadow trên Android
-        borderLeftWidth: 5, // Độ rộng của border bên trái
-        borderLeftColor: '#FFF', // Màu của border bên trái
+        borderLeftWidth: 7, // Độ rộng của border bên trái
+        borderLeftColor: '#df678b', // Màu của border bên trái
     },
     
     container2: {
@@ -80,7 +90,7 @@ const styles = StyleSheet.create({
     
     boldText: {
         fontWeight: 'bold', // In đậm
-        fontSize: 16, // Kích thước phông chữ
+        fontSize: 20, // Kích thước phông chữ
         color: '#FFF', // Màu chữ trắng
     },
     
