@@ -7,20 +7,12 @@ import FeatureCourse from '../homeComponent/featureCourse';
 import FeatureCourseWord from '../homeComponent/featureCourseWord';
 import PracticeCourse from '../homeComponent/practiceCourse';
 import PracticeDay, { getPracticeDays } from '@/model/practiceDay';
+import { exportData } from '@/model/asyncStorage';
 
 const Home = () => {
   const localImageUrl = require('../../assets/images/defaultAvatat.png');
   const [username, setUsername] = useState('');
-  const [practiced,setPracticed]=useState<PracticeDay[]>([]);
-  async function example() {
-    try {
-        const practiceDays = await getPracticeDays();
-        setPracticed(practiceDays);
-        console.log(practiceDays);
-    } catch (error) {
-        console.error('Error:', error);
-    }
-  }
+  exportData();
   useEffect(() => {
     // Lấy giá trị của 'username' từ AsyncStorage khi component được render
     const getUsername = async () => {
@@ -33,7 +25,7 @@ const Home = () => {
         console.error('Error retrieving username from AsyncStorage:', error);
       }
     };
-    example();
+    
     getUsername();
   }, []); // Chỉ chạy một lần khi component được render
 
@@ -48,9 +40,7 @@ const Home = () => {
               resizeMode="cover"
             />
           </View>
-          <View>
-          {practiced.map((practice)=><Text>{practice.count}</Text>)}
-          </View>
+          
           
           <Text style={styles.text}>Hello {username}</Text> {/* Hiển thị username */}
           <Text style={styles.textSmall}>What would you like to learn today?</Text>

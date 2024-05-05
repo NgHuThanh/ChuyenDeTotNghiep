@@ -3,9 +3,13 @@ import CustomButton from '@/component/CustomButton';
 import { router } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View,Image, Button, Touchable, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { updateUserSource } from './firebase/config';
 
 export default function App() {
   const localImageUrl = require('../assets/images/illustrations.png');
+  const handleExport=()=>{
+    updateUserSource()
+  }
   return (
     <SafeAreaView style={{backgroundColor:"#410fa3",height:"100%"}}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
@@ -22,6 +26,9 @@ export default function App() {
         ></CustomButton>
         <TouchableOpacity onPress={()=>router.push("/(tabs)/home")}>
           Skip
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleExport}>
+        updateUserSource
         </TouchableOpacity>
         
         </View>

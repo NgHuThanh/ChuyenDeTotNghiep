@@ -1,7 +1,8 @@
+import { exportData, importData } from '@/model/asyncStorage';
 import { content, contentAndQuestion, grammar, question } from '@/model/grammar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
-import {addDoc, collection, doc, getDoc, getDocs, getFirestore, query, where } from 'firebase/firestore';
+import {addDoc, collection, doc, getDoc, getDocs, getFirestore, query, updateDoc, where } from 'firebase/firestore';
 const firebaseConfig = {
     apiKey: "AIzaSyD4Bom8T2LsEnlv1uqgFMJJgq5Z6M0Y4Cg",
     authDomain: "databasechuyende.firebaseapp.com",
@@ -153,7 +154,7 @@ export const login = async (email:string, password:string) => {
 
       await AsyncStorage.setItem('userId', userId);
       await AsyncStorage.setItem('username', username);
-
+      importData(doc.data().source);
       // Trả về true
       return true;
     } else {
@@ -166,3 +167,31 @@ export const login = async (email:string, password:string) => {
     return false;
   }
 };
+export const updateUserSource = async () => {
+  try {
+      // Lấy userId từ AsyncStorage
+      const userId = await AsyncStorage.getItem('userId');
+      if (!userId) {
+          console.error('User ID not found in AsyncStorage.');
+          return;
+      }
+
+      // Thực hiện truy vấn để lấy tài liệu người dùng từ Firestore
+      const userDocRef = doc(firestore, 'users', userId);
+      const userDocSnap = await getDoc(userDocRef);
+      const data= await exportData();
+      // Nếu tài liệu tồn tại
+      if (userDocSnap.exists()) {
+          // Cập nhật thuộc tính "source" của tài liệu thành "Đã chuyển giao"
+          await updateDoc(userDocRef, {
+            source:data
+          });
+
+          console.log('User source updated successfully!');
+      } else {
+          console.error('User document does not exist in Firestore.');
+      }
+  } catch (error) {
+      console.error('Error updating user source:', error);
+  }
+}
