@@ -1,6 +1,6 @@
 import { content, contentAndQuestion, grammar, question } from '@/model/grammar';
 import { initializeApp } from 'firebase/app';
-import { DocumentSnapshot, QuerySnapshot, addDoc, collection, doc, getDoc, getDocs, getFirestore } from 'firebase/firestore';
+import {addDoc, collection, doc, getDoc, getDocs, getFirestore } from 'firebase/firestore';
 const firebaseConfig = {
     apiKey: "AIzaSyD4Bom8T2LsEnlv1uqgFMJJgq5Z6M0Y4Cg",
     authDomain: "databasechuyende.firebaseapp.com",

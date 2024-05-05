@@ -1,7 +1,5 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { AntDesign } from '@expo/vector-icons';
-import { Octicons } from '@expo/vector-icons';
 import { contentAndQuestion } from '@/model/grammar';
 import { getContentAndQuestionList } from '../firebase/config';
 import ContentComponent from './contentComponent';
@@ -23,7 +21,11 @@ const UiComponent = (props:{id:string,caq:contentAndQuestion}) => {
         fetchData();
       }, []);
       if (loading) {
-        return <View>Loading...</View>; // Hiển thị thông báo tải dữ liệu
+        return (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Loading...</Text>
+          </View>
+        );
       }
     return (
         <View style={{marginBottom:20}}>

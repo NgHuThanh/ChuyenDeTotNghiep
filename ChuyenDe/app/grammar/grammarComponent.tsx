@@ -9,7 +9,7 @@ const GrammarComponent = (props:{grammar:grammar}) => {
     const goToDestination = () => {
         router.push(`/grammarDetail/${props.grammar.id}`);
     };
-    const [idGrammar, setIdGrammar] = useState<string>('');
+    
     const [isIdInArray, setIsIdInArray] = useState(false);
     useEffect(() => {
         async function checkIdInArray() {

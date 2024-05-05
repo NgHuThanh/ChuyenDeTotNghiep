@@ -1,8 +1,6 @@
 
 import CustomButton from '@/component/CustomButton';
-import { Link, router } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { ScrollView, StyleSheet, Text, View,Image, Button } from 'react-native';
+import { ScrollView, StyleSheet, Text, View,Image, Button, Touchable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
@@ -21,6 +19,7 @@ export default function App() {
         title={"Let start"}
         
         ></CustomButton>
+        
         </View>
         {/* <StatusBar backgroundColor='' style='light'></StatusBar> */}
       </ScrollView>

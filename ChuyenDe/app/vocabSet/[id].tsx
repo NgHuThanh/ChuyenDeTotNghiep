@@ -1,14 +1,10 @@
-import CustomButton from '@/component/CustomButton';
-import { Feather, FontAwesome6 } from '@expo/vector-icons';
-import { Link, router, useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+import { FontAwesome6 } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View,Image, Button, TouchableOpacity, ViewStyle } from 'react-native';
+import { ScrollView, StyleSheet, Text, View,TouchableOpacity, ViewStyle } from 'react-native';
 import { Modal, PaperProvider, Portal, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import useSWR from 'swr';
 import WordComponent from './wordComponent';
-import AddSetComponent from '../bookMarkComponent/addSet';
 import React from 'react';
 import AddVocabComponent from './addVocab';
 import { getVocabsInSet, vocab } from '@/model/word';
@@ -40,7 +36,6 @@ export default function SetDetail() {
     const [text, setText] = useState('');
     const handleInputChange = (inputText: string) => {
         setText(inputText);
-        
       };
       const [visible, setVisible] = React.useState(false);
       const showModal = () => setVisible(true);
@@ -77,7 +72,7 @@ export default function SetDetail() {
             />
             <ScrollView style={{padding:10}}>
             {vocabs?.map((vocab, index,key) => (
-              <WordComponent nameSet={id as string} vocab={vocab} fetchVocabs={fetchVocabs}></WordComponent>
+              <WordComponent nameSet={id as string} key={vocab.word} vocab={vocab} fetchVocabs={fetchVocabs}></WordComponent>
             ))}
                 
             </ScrollView>

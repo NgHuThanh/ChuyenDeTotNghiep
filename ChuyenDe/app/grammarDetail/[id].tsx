@@ -52,7 +52,13 @@ export default function SetDetail() {
     const reloadPage = () => {
         setReloadKey(prevKey => prevKey + 1); // Tăng giá trị key để trigger useEffect
     };
-
+    if (loading) {
+        return (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Loading...</Text>
+          </View>
+        );
+      }
     return (
         <>
             <SafeAreaView style={{ backgroundColor: "#FFF", height: "100%", padding: 10 }}>

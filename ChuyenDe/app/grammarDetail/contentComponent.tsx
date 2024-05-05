@@ -1,9 +1,8 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { AntDesign } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
-import { content, contentAndQuestion } from '@/model/grammar';
-import { getContentAndQuestionList, getContentList } from '../firebase/config';
+import { content } from '@/model/grammar';
+import { getContentList } from '../firebase/config';
 
 const ContentComponent = (props:{id:string,caq:string}) => {
     const [contents, setContents] = useState<content[]>([]);
@@ -24,12 +23,17 @@ const ContentComponent = (props:{id:string,caq:string}) => {
         fetchData();
       }, []);
       if (loading) {
-        return <View>Loading...</View>; // Hiển thị thông báo tải dữ liệu
+        return (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Loading...</Text>
+          </View>
+        );
       }
     return (
         
         <View>
-            {contents.map((content,index)=>(
+            {contents.map((content,index,key)=>(
+                
                 <View style={styles.item}>
                 <View style={styles.subItem}>
                     <Text style={styles.text}><Octicons name="light-bulb" size={20} color="#703445" style={{marginRight:5}} />{content.content}</Text>

@@ -13,4 +13,4 @@ export const speak = async (text:string) => {
 };
 
 // Sử dụng hàm speak để phát âm thanh
-speak("Hello, how are you?");
+// speak("Hello, how are you?");

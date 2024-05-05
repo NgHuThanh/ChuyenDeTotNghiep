@@ -33,9 +33,7 @@ export default function Review() {
         if (currentVocabIndex === (vocabs ? vocabs.length - 1 : 0)) {
             setFinishedReview(true);
             // Thực hiện hàm callback sau 3 giây để thực hiện router.back()
-            setTimeout(() => {
-                router.back();
-            }, 3000);
+            
         } else {
             setCurrentVocabIndex((prevIndex) => prevIndex + 1);
             setShowDefinition(false); // Reset showDefinition khi chuyển sang từ tiếp theo

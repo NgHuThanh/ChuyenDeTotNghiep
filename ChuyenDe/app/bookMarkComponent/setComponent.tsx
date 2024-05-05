@@ -45,19 +45,19 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
                     <TouchableOpacity style={styles.button} activeOpacity={0.7}>
                     <Text style={styles.buttonText} onPress={handleReview}>Review</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         style={[styles.button, { opacity: practicePressed ? 0.5 : 1 }]}
                         activeOpacity={practicePressed ? 1 : 0.7}
                         disabled={practicePressed}
                         onPress={handlePractice}
                     >
                         <Text style={styles.buttonText}>Practice</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
                 
                 {practicePressed && (
                     <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button2} activeOpacity={0.7}>
+                    <TouchableOpacity style={styles.button2} activeOpacity={0.2}>
                     <Text style={styles.buttonText} onPress={handleMultipleChoice}>Multiples</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button2} activeOpacity={0.7}>

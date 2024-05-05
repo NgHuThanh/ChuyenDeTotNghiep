@@ -1,9 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { AntDesign } from '@expo/vector-icons';
-import { Octicons } from '@expo/vector-icons';
-import { content, contentAndQuestion, question } from '@/model/grammar';
-import { getContentAndQuestionList, getContentList, getQuestionList } from '../firebase/config';
+import { question } from '@/model/grammar';
+import { getQuestionList } from '../firebase/config';
 
 const QuestionComponent = (props:{id:string,caq:string}) => {
     const [questions, setQuestions] = useState<question[]>([]);
@@ -50,8 +48,12 @@ const QuestionComponent = (props:{id:string,caq:string}) => {
     };
 
     if (loading) {
-        return <View>Loading...</View>; // Hiển thị thông báo tải dữ liệu
-    }
+        return (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Loading...</Text>
+          </View>
+        );
+      }
 
     return (
         <View>

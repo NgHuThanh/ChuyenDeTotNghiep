@@ -58,9 +58,9 @@ const BookMark = () => {
         value={text}
         onChangeText={handleInputChange}
       />
-      <ScrollView style={{padding:10}}>
-        {filteredSets?.map((set, index) => (
-          <SetComponent setVocab={set} key={index} fetchSets={fetchSets}></SetComponent>
+      <ScrollView style={{ padding: 10 }}>
+        {filteredSets?.map((set) => (
+          <SetComponent setVocab={set} key={set.name} fetchSets={fetchSets}></SetComponent>
         ))}
       </ScrollView>
       <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={showModal}>
