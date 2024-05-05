@@ -20,13 +20,23 @@ export const addSet = async (newSet: SetModel) => {
     try {
         const existingSets = await AsyncStorage.getItem('sets');
         let sets: SetModel[] = existingSets ? JSON.parse(existingSets) : [];
-        sets.push(newSet);
-        await AsyncStorage.setItem('sets', JSON.stringify(sets));
-        console.log('Set added successfully!');
+
+        // Kiểm tra xem đã có set có tên giống trong existingSets hay không
+        const existingSetIndex = sets.findIndex(set => set.name === newSet.name);
+        
+        if (existingSetIndex === -1) {
+            // Nếu không tìm thấy set có tên giống, thêm newSet vào mảng sets
+            sets.push(newSet);
+            await AsyncStorage.setItem('sets', JSON.stringify(sets));
+            console.log('Set added successfully!');
+        } else {
+            console.log('Set with the same name already exists!');
+        }
     } catch (error) {
         console.error('Error adding set:', error);
     }
 };
+
 const getSet = async (setName: string): Promise<SetModel | null> => {
     try {
         const existingSets = await AsyncStorage.getItem('sets');
@@ -63,18 +73,42 @@ export const addVocabToSet = async (setName: string, newVocab: vocab) => {
     try {
         const existingSets = await AsyncStorage.getItem('sets');
         let sets: SetModel[] = existingSets ? JSON.parse(existingSets) : [];
-        const index = sets.findIndex(set => set.name === setName);
-        if (index !== -1) {
-            sets[index].vocabs?.push(newVocab);
-            await AsyncStorage.setItem('sets', JSON.stringify(sets));
-            console.log('Vocab added to set successfully!');
+        
+        // Tạo một biến để kiểm tra xem từ vựng mới có trùng với các từ vựng đã có hay không
+        let isVocabUnique = true;
+        
+        // Duyệt qua tất cả các set
+        sets.forEach((set) => {
+            // Kiểm tra xem set có tên setName không và có vocabs không
+            if (set.name === setName && set.vocabs) {
+                // Duyệt qua tất cả các từ vựng trong set
+                set.vocabs.forEach((vocab) => {
+                    // Kiểm tra xem từ vựng mới có trùng với từ vựng đã có không
+                    if (vocab.word === newVocab.word) {
+                        isVocabUnique = false;
+                    }
+                });
+            }
+        });
+
+        // Nếu từ vựng mới không trùng với bất kỳ từ vựng nào trong các set
+        if (isVocabUnique) {
+            const index = sets.findIndex(set => set.name === setName);
+            if (index !== -1) {
+                sets[index].vocabs?.push(newVocab);
+                await AsyncStorage.setItem('sets', JSON.stringify(sets));
+                console.log('Vocab added to set successfully!');
+            } else {
+                console.error('Set not found!');
+            }
         } else {
-            console.error('Set not found!');
+            console.log('Vocab already exists in one of the sets!');
         }
     } catch (error) {
         console.error('Error adding vocab to set:', error);
     }
 };
+
 export const getVocabsInSet = async (setName: string): Promise<vocab[] | null> => {
     try {
         const existingSets = await AsyncStorage.getItem('sets');

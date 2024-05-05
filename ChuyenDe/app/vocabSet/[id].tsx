@@ -72,7 +72,7 @@ export default function SetDetail() {
             />
             <ScrollView style={{padding:10}}>
             {vocabs?.map((vocab, index,key) => (
-              <WordComponent nameSet={id as string} key={vocab.word} vocab={vocab} fetchVocabs={fetchVocabs}></WordComponent>
+              <WordComponent nameSet={id as string} key={vocab.word}vocab={vocab} fetchVocabs={fetchVocabs}></WordComponent>
             ))}
                 
             </ScrollView>
