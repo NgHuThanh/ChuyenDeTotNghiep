@@ -1,6 +1,6 @@
 import { content, contentAndQuestion, grammar, question } from '@/model/grammar';
 import { initializeApp } from 'firebase/app';
-import {addDoc, collection, doc, getDoc, getDocs, getFirestore } from 'firebase/firestore';
+import {addDoc, collection, doc, getDoc, getDocs, getFirestore, query, where } from 'firebase/firestore';
 const firebaseConfig = {
     apiKey: "AIzaSyD4Bom8T2LsEnlv1uqgFMJJgq5Z6M0Y4Cg",
     authDomain: "databasechuyende.firebaseapp.com",
@@ -120,5 +120,38 @@ export const getQuestionList = async (props:{idGrammar:string,idCaq:string}): Pr
   } catch (error) {
       console.error('Error getting documents: ', error);
       return []; // Trả về một mảng trống nếu có lỗi
+  }
+};
+export const addUser = async ({ username, password, email }: { username: string; password: string; email: string; }) => {
+  try {
+    await addDoc(collection(firestore, 'users'), {
+      username: username,
+      password: password,
+      email: email
+    });
+    console.log('User added successfully!');
+  } catch (error) {
+    console.error('Error adding user: ', error);
+  }
+}
+export const login = async (email:string, password:string) => {
+  try {
+    // Tạo truy vấn để lấy tất cả tài khoản trong collection "users" có email và password khớp với thông tin đăng nhập
+    const q = query(collection(firestore, "users"), where("email", "==", email), where("password", "==", password));
+
+    // Thực hiện truy vấn
+    const querySnapshot = await getDocs(q);
+
+    // Nếu có bất kỳ tài khoản nào khớp với thông tin đăng nhập, trả về true
+    if (!querySnapshot.empty) {
+      return true;
+    } else {
+      // Nếu không có tài khoản nào khớp, trả về false
+      return false;
+    }
+  } catch (error) {
+    console.error("Error logging in:", error);
+    // Nếu xảy ra lỗi, trả về false
+    return false;
   }
 };
