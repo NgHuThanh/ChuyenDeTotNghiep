@@ -32,6 +32,7 @@ export default function Review() {
     const handleNext = () => {
         if (currentVocabIndex === (vocabs ? vocabs.length - 1 : 0)) {
             setFinishedReview(true);
+            
             // Thực hiện hàm callback sau 3 giây để thực hiện router.back()
             
         } else {
@@ -76,11 +77,11 @@ export default function Review() {
                                     // Cập nhật ngày lastPractice
                                     const today = new Date();
                                     let daysToAdd = 0;
-                                    if (difficulty === "easy") {
+                                    if (difficulty === "hard") {
                                         daysToAdd = 3;
                                     } else if (difficulty === "good") {
                                         daysToAdd = 7;
-                                    } else if (difficulty === "hard") {
+                                    } else if (difficulty === "easy") {
                                         daysToAdd = 10;
                                     }
                                     const futureDate = new Date(today.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
@@ -107,7 +108,7 @@ export default function Review() {
     if(finishedReview){
         return <View style={styles.finishedContainer}>
         <Text style={styles.finishedText}>You finished practice {vocabs?.length} word</Text>
-        <TouchableOpacity style={styles.finishedButton} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.finishedButton} onPress={() => router.push("/(tabs)/bookmark")}>
             <Text style={styles.finishedButtonText}>Finished</Text>
         </TouchableOpacity>
     </View>

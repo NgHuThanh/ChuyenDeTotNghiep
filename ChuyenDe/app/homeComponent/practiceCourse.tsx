@@ -1,13 +1,35 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image, ProgressBarAndroidBase, ProgressBarAndroidComponent } from 'react-native'
-import React from 'react'
+import React, { useEffect, useMemo, useState } from 'react';
+import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AntDesign } from '@expo/vector-icons';
 import { ProgressBar } from 'react-native-paper';
 import { addDocument } from '../firebase/config';
+import { findVocabsWithLastPracticeBeforeNow } from '@/model/word';
+
 const PracticeCourse = () => {
+    const [vocabCount, setVocabCount] = useState(0); 
+       
+    useEffect(() => {
+        const fetchVocabCount = async () => {
+            try {
+                const existingSets = findVocabsWithLastPracticeBeforeNow();
+                if((await existingSets).length!=null)
+                setVocabCount((await existingSets).length);
+            } catch (error) {
+                console.error('Error fetching vocab count:', error);
+            }
+        };
+
+        fetchVocabCount();
+    }, []);
+
     const localImageUrl = require('../../assets/images/book.png');
-    const handlePress=async()=>{
+
+    const handlePress = async () => {
         addDocument();
-    }
+    };
+
     return (
         <TouchableOpacity style={styles.container} onPress={handlePress}>
             <View style={styles.infoContainer}>
@@ -17,15 +39,22 @@ const PracticeCourse = () => {
                 <ProgressBar progress={0.8}/>
                 {/* <Text style={styles.percentText}><AntDesign name="rocket1" size={24} color="green" /></Text> */}
             </View>
-            <View style={styles.imageContainer}>
-            <Text style={styles.boldText2}>14/25</Text>
-            </View>
-            
-        </TouchableOpacity>
-    )
-}
 
-export default PracticeCourse
+            <View style={styles.imageContainer}>
+                {vocabCount ? (
+                    <>
+                        <Text style={styles.boldText2}>{vocabCount}</Text>
+                        <Text>Words need to practice</Text>
+                    </>
+                ) : (
+                    <Text>No Words to practice now</Text>
+                )}
+            </View>
+        </TouchableOpacity>
+    );
+};
+
+export default PracticeCourse;
 
 const styles = StyleSheet.create({
     container: {
@@ -46,10 +75,6 @@ const styles = StyleSheet.create({
         flex: 2, // Chiếm 40% chiều rộng
         padding: 10, // Khoảng cách padding
     },
-    image: {
-        width: '100%',
-        height: '100%',
-    },
     boldText: {
         fontWeight: 'bold', // In đậm
         fontSize: 18, // Kích thước phông chữ
@@ -68,4 +93,4 @@ const styles = StyleSheet.create({
         marginBottom:20,
         color: 'green', // Màu #888
     },
-})
+});

@@ -1,4 +1,5 @@
 import { content, contentAndQuestion, grammar, question } from '@/model/grammar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
 import {addDoc, collection, doc, getDoc, getDocs, getFirestore, query, where } from 'firebase/firestore';
 const firebaseConfig = {
@@ -134,6 +135,7 @@ export const addUser = async ({ username, password, email }: { username: string;
     console.error('Error adding user: ', error);
   }
 }
+
 export const login = async (email:string, password:string) => {
   try {
     // Tạo truy vấn để lấy tất cả tài khoản trong collection "users" có email và password khớp với thông tin đăng nhập
@@ -142,8 +144,17 @@ export const login = async (email:string, password:string) => {
     // Thực hiện truy vấn
     const querySnapshot = await getDocs(q);
 
-    // Nếu có bất kỳ tài khoản nào khớp với thông tin đăng nhập, trả về true
+    // Nếu có bất kỳ tài khoản nào khớp với thông tin đăng nhập
     if (!querySnapshot.empty) {
+      // Lưu thông tin người dùng vào AsyncStorage
+      const doc = querySnapshot.docs[0];
+      const userId = doc.id;
+      const username = doc.data().username;
+
+      await AsyncStorage.setItem('userId', userId);
+      await AsyncStorage.setItem('username', username);
+
+      // Trả về true
       return true;
     } else {
       // Nếu không có tài khoản nào khớp, trả về false

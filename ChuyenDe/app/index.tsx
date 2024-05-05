@@ -1,6 +1,7 @@
 
 import CustomButton from '@/component/CustomButton';
-import { ScrollView, StyleSheet, Text, View,Image, Button, Touchable } from 'react-native';
+import { router } from 'expo-router';
+import { ScrollView, StyleSheet, Text, View,Image, Button, Touchable, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
@@ -19,6 +20,9 @@ export default function App() {
         title={"Let start"}
         
         ></CustomButton>
+        <TouchableOpacity onPress={()=>router.push("/(tabs)/home")}>
+          Skip
+        </TouchableOpacity>
         
         </View>
         {/* <StatusBar backgroundColor='' style='light'></StatusBar> */}

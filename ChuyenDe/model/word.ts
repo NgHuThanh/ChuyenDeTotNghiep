@@ -148,3 +148,29 @@ export const updateVocabDifficulty = async (setName: string, vocabWord: string, 
         console.error('Error updating vocab difficulty:', error);
     }
 };
+export const findVocabsWithLastPracticeBeforeNow = async (): Promise<vocab[]> => {
+    try {
+        const existingSets = await AsyncStorage.getItem('sets');
+        const sets: SetModel[] = existingSets ? JSON.parse(existingSets) : [];
+
+        const now = new Date();
+        console.log(now.toString());
+        const vocabsWithLastPracticeBeforeNow: vocab[] = [];
+
+        sets.forEach((set: SetModel) => {
+            if (set.vocabs) {
+                set.vocabs.forEach((vocab: vocab) => {
+                    const lastPracticeDate = new Date(vocab.lastPractice);
+                    if (lastPracticeDate.getTime() < now.getTime()) {
+                        vocabsWithLastPracticeBeforeNow.push(vocab);
+                    }
+                });
+            }
+        });
+
+        return vocabsWithLastPracticeBeforeNow;
+    } catch (error) {
+        console.error('Error finding vocabs with last practice before now:', error);
+        return [];
+    }
+};

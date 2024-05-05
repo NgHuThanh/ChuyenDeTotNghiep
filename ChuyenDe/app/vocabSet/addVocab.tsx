@@ -14,7 +14,7 @@ const AddVocabComponent = (props:{nameSet:string}) => {
         const newVocab = {
             word: textWord,
             definition: textDefinition,
-            lastPractice: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // Thêm 3 ngày (3 * 24 giờ * 60 phút * 60 giây * 1000 milliseconds) vào thời gian hiện tại
+            lastPractice: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // Thêm 3 ngày (3 * 24 giờ * 60 phút * 60 giây * 1000 milliseconds) vào thời gian hiện tại
             difficult: 'easy', // Giá trị mặc định
             favorite: false, // Giá trị mặc định
         };
