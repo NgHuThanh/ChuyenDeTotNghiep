@@ -2,10 +2,9 @@ import { getVocabsInSet, vocab } from "@/model/word";
 import { useLocalSearchParams, router } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View, Image, Button, TouchableOpacity, ViewStyle } from 'react-native';
-import { ProgressBar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function MatchChoice() {
+export default function Match() {
     const { id } = useLocalSearchParams();
     const [vocabs, setVocabs] = useState<vocab[] | null>(null);
     const [currentVocabIndex, setCurrentVocabIndex] = useState<number>(0);
@@ -40,15 +39,19 @@ export default function MatchChoice() {
         <>
             {vocabs && (
                 <SafeAreaView>
-                    <View >
-                        <ProgressBar progress={currentVocabIndex / (vocabs ? vocabs.length : 1)} color={'green'} style={{ height: 20, borderRadius: 20,width:280,borderWidth:1 }} />
-                    </View>
-                   <View>
-                    {vocabs[currentVocabIndex].word}
-                   </View>
-                   <View>
-                   
-                   </View>
+                    <Text>{vocabs[currentVocabIndex].word}</Text>
+                    {showDefinition && (
+                        <Text>Definition: {vocabs[currentVocabIndex].definition}</Text>
+                    )}
+                    <TouchableOpacity onPress={handleToggleDefinition}>
+                        <Text>{showDefinition ? 'Hide' : 'Show'}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleNext}>
+                        <Text>Next</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleGoBack}>
+                        <Text>Back</Text>
+                    </TouchableOpacity>
                 </SafeAreaView>
             )}
         </>
