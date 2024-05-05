@@ -4,12 +4,17 @@ import { router } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View,Image, Button, Touchable, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { updateUserSource } from './firebase/config';
+import { clearAll } from '@/model/asyncStorage';
 
 export default function App() {
   const localImageUrl = require('../assets/images/illustrations.png');
   const handleExport=()=>{
     updateUserSource()
   }
+  const handleClear=()=>{
+    clearAll()
+  }
+  
   return (
     <SafeAreaView style={{backgroundColor:"#410fa3",height:"100%"}}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
@@ -29,6 +34,9 @@ export default function App() {
         </TouchableOpacity>
         <TouchableOpacity onPress={handleExport}>
         updateUserSource
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleClear}>
+        Clear
         </TouchableOpacity>
         
         </View>
