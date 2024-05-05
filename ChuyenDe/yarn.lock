@@ -5028,6 +5028,11 @@ expo-router@~3.4.10:
     react-native-helmet-async "2.0.4"
     schema-utils "^4.0.1"
 
+expo-speech@~11.7.0:
+  version "11.7.0"
+  resolved "https://registry.yarnpkg.com/expo-speech/-/expo-speech-11.7.0.tgz#5c441f6aaec260403f5c5b3e52b5f9a34bbc8061"
+  integrity sha512-D+57EqYgmmbceGyfQiCJGWj/FHIzaFOdzvUrz3EiqKTj3VqVCZZf0VvjmjpSh2q+5Ooh1M92l0mvMUbcsMgvPw==
+
 expo-splash-screen@~0.26.5:
   version "0.26.5"
   resolved "https://registry.npmjs.org/expo-splash-screen/-/expo-splash-screen-0.26.5.tgz"

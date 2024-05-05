@@ -8,6 +8,8 @@ import { router } from 'expo-router';
 import Tts from 'react-native-tts';
 import { speak } from '../textToSpech';
 import { format } from 'date-fns';
+import Speak from '@/component/Speech';
+// import Speak from '@/component/Speech';
 
 const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void}) => {
     const localImageUrl = require('../../assets/images/book.png');
@@ -67,7 +69,7 @@ const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void
                 )}
             </TouchableOpacity>
             </View>
-            
+            <Speak thingToSay={props.vocab.word}></Speak>
             <View style={styles.infoContainer}>
                 <Text style={styles.boldText}>{props.vocab.word}</Text>
                 <Text style={styles.secondaryText}>{props.vocab.definition}</Text>
