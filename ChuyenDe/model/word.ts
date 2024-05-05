@@ -10,6 +10,7 @@ export interface vocab{
     lastPractice:Date;
     difficult:string;
     favorite:boolean;
+    source:string;
 } 
 // export const vocabConverter = {
 //     toFirestore: (product: vocab) => {

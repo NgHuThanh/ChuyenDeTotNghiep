@@ -3,6 +3,7 @@ import React from 'react';
 import { TextInput, useTheme } from 'react-native-paper'; // Sử dụng useTheme để truy cập theme của Paper
 import { SetModel, addVocabToSet } from '../../model/word';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 const AddVocabComponent = (props:{nameSet:string}) => {
     const [textWord, setTextWord] = React.useState("");
@@ -14,14 +15,15 @@ const AddVocabComponent = (props:{nameSet:string}) => {
         const newVocab = {
             word: textWord,
             definition: textDefinition,
-            lastPractice: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // Thêm 3 ngày (3 * 24 giờ * 60 phút * 60 giây * 1000 milliseconds) vào thời gian hiện tại
+            lastPractice: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // Thêm 3 ngày (3 * 24 giờ * 60 phút * 60 giây * 1000 milliseconds) vào thời gian hiện tại
             difficult: 'easy', // Giá trị mặc định
             favorite: false, // Giá trị mặc định
+            source:props.nameSet
         };
 
         // Gọi hàm addVocabToSet để thêm từ vựng mới vào set
         await addVocabToSet(props.nameSet, newVocab);
-        
+        router.push(`/vocabSet/${props.nameSet}`);
         // Sau khi thêm thành công, reset các trường input về giá trị mặc định
         setTextWord("");
         setTextDefinition("");

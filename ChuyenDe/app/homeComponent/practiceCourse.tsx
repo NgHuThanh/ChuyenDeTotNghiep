@@ -6,6 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { ProgressBar } from 'react-native-paper';
 import { addDocument } from '../firebase/config';
 import { findVocabsWithLastPracticeBeforeNow } from '@/model/word';
+import { router } from 'expo-router';
 
 const PracticeCourse = () => {
     const [vocabCount, setVocabCount] = useState(0); 
@@ -26,12 +27,12 @@ const PracticeCourse = () => {
 
     const localImageUrl = require('../../assets/images/book.png');
 
-    const handlePress = async () => {
-        addDocument();
-    };
+    const handleReview=()=>{
+        router.push(`/review/practice`)
+    }
 
     return (
-        <TouchableOpacity style={styles.container} onPress={handlePress}>
+        <TouchableOpacity style={styles.container} onPress={handleReview}>
             <View style={styles.infoContainer}>
                 <Text style={styles.boldText}>Practice</Text>
                 <Text style={styles.boldText}>Your Word</Text>

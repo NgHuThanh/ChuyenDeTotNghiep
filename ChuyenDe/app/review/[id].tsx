@@ -1,5 +1,5 @@
 import SwipeGestureHandler from "@/component/swifHandle";
-import { SetModel, getVocabsInSet, updateVocabDifficulty, updateVocabFavorite, vocab } from "@/model/word";
+import { SetModel, findVocabsWithLastPracticeBeforeNow, getVocabsInSet, updateVocabDifficulty, updateVocabFavorite, vocab } from "@/model/word";
 import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, router } from "expo-router";
@@ -15,8 +15,14 @@ export default function Review() {
     const [showDefinition, setShowDefinition] = useState<boolean>(false);
     const [finishedReview, setFinishedReview] = useState(false);
     const fetchVocabs = async () => {
-        const allVocabs = await getVocabsInSet(id as string);
-        setVocabs(allVocabs);
+        if(id=="practice"){
+            const allVocabs = await findVocabsWithLastPracticeBeforeNow();
+            setVocabs(allVocabs);
+        }else{
+            const allVocabs = await getVocabsInSet(id as string);
+            setVocabs(allVocabs);
+        }
+        
     };
     const handleSwipeLeft = () => {
         handleGoBack();
@@ -58,13 +64,13 @@ export default function Review() {
             const vocabToUpdate = updatedVocabs[currentVocabIndex];
             vocabToUpdate.favorite = !vocabToUpdate.favorite;
             setVocabs(updatedVocabs);
-            await updateVocabFavorite(id as string, vocabToUpdate.word);
+            await updateVocabFavorite(vocabToUpdate.source, vocabToUpdate.word);
         }
     }; 
     const handleUpdateDifficulty = async (difficulty: string) => {
         if (vocabs && vocabs[currentVocabIndex]) {
             const vocabWord = vocabs[currentVocabIndex].word;
-            const setName = id; // Thay thế bằng tên của set của bạn
+            const setName = vocabs[currentVocabIndex].source; // Thay thế bằng tên của set của bạn
             try {
                 let sets: SetModel[] = [];
                 const existingSets = await AsyncStorage.getItem('sets');
