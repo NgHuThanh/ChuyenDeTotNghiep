@@ -1,4 +1,5 @@
 import SwipeGestureHandler from "@/component/swifHandle";
+import { updatePracticeDays } from "@/model/practiceDay";
 import { SetModel, findVocabsWithLastPracticeBeforeNow, getVocabsInSet, updateVocabDifficulty, updateVocabFavorite, vocab } from "@/model/word";
 import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -109,12 +110,15 @@ export default function Review() {
         }
         handleNext();
     };
-    
+    const handleFinish = () => {
+        updatePracticeDays({ times: vocabs?.length as number }); // Truyền số lần luyện tập cần cập nhật vào tham số `times`
+        router.push("/(tabs)/bookmark");
+    }
     
     if(finishedReview){
         return <View style={styles.finishedContainer}>
         <Text style={styles.finishedText}>You finished practice {vocabs?.length} word</Text>
-        <TouchableOpacity style={styles.finishedButton} onPress={() => router.push("/(tabs)/bookmark")}>
+        <TouchableOpacity style={styles.finishedButton} onPress={handleFinish}>
             <Text style={styles.finishedButtonText}>Finished</Text>
         </TouchableOpacity>
     </View>
