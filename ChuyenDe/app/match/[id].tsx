@@ -1,3 +1,4 @@
+import { updatePracticeDays } from "@/model/practiceDay";
 import { getVocabsInSet, vocab } from "@/model/word";
 import { useLocalSearchParams, router } from "expo-router";
 import { useEffect, useState } from "react";
@@ -14,6 +15,9 @@ export default function Match() {
     const [shuffled, setShuffled] = useState<boolean>(false);
     const [shuffelVL, setshuffelVL] = useState<vocab[] | null>(null);
     const [shuffelVR, setshuffelVR] = useState<vocab[] | null>(null);
+    const [selectedLeftIndex, setSelectedLeftIndex] = useState<number | null>(null);
+    const [selectedRightIndex, setSelectedRightIndex] = useState<number | null>(null);
+    const [finishedReview, setFinishedReview] = useState(false);
     const fetchVocabs = async () => {
         const allVocabs = await getVocabsInSet(id as string);
         setVocabs(allVocabs);
@@ -37,6 +41,13 @@ export default function Match() {
             // Xóa vocab từ shuffelVR
             const updatedShuffelVR = shuffelVR.filter(vocab => vocab.word != wordToDelete);
             setshuffelVR(updatedShuffelVR);
+            setCurrentVocabIndex(currentVocabIndex+1);
+            if (currentVocabIndex === (vocabs ? vocabs.length - 1 : 0)) {
+                setFinishedReview(true);
+                
+                // Thực hiện hàm callback sau 3 giây để thực hiện router.back()
+                
+            }
         }
     };
     useEffect(() => {
@@ -82,41 +93,60 @@ export default function Match() {
         // So sánh vocab.definition của vocab tìm được với cRight
         return selectedVocab.definition == right;
     };
-    const handlePressLeft=(word:string)=>{
-        if(cRight!="empty"){
-            if(checkRightChoice(word)){
+    const handlePressLeft = (word: string, index: number) => {
+        if (cRight !== "empty") {
+            if (checkRightChoice(word)) {
                 deleteVocabByWord(word);
                 console.log("Correct match");
-            }
-            else{
+                setSelectedRightIndex(null);
+                setSelectedLeftIndex(null);
+            } else {
                 console.log("Wrong match");
+                setSelectedRightIndex(null);
+                setSelectedLeftIndex(null);
             }
             setCLeft("empty");
             setCRight("empty");
-        }
-        else{
+        } else {
             setCLeft(word);
+            setSelectedLeftIndex(index);
         }
-    }
-    const handlePressRight=(definition:string)=>{
-        
-        if(cLeft!="empty"){
-            if(checkLeftChoice(definition)){
+    };
+    const handlePressRight = (definition: string, index: number) => {
+        if (cLeft !== "empty") {
+            if (checkLeftChoice(definition)) {
                 deleteVocabByWord(cLeft);
                 console.log("Correct match");
-            }
-            else{
+                setSelectedLeftIndex(null);
+                setSelectedRightIndex(null);
+                
+            } else {
                 console.log("Wrong match");
+                setSelectedLeftIndex(null);
+                setSelectedRightIndex(null);
+                
             }
             setCLeft("empty");
             setCRight("empty");
-        }
-        else{
+        } else {
             setCRight(definition);
+            setSelectedRightIndex(index);
         }
-        
-    }
+    };
     
+    const goToDestination = () => {
+        updatePracticeDays({ times: vocabs?.length as number }); // Truyền số lần luyện tập cần cập nhật vào tham số `times`
+
+        router.push(`/vocabSet/${id}`);
+    };
+    if(finishedReview){
+        return <View style={styles.finishedContainer}>
+        <Text style={styles.finishedText}>You finished practice {vocabs?.length} word</Text>
+        <TouchableOpacity style={styles.finishedButton} onPress={goToDestination}>
+            <Text style={styles.finishedButtonText}>Finished</Text>
+        </TouchableOpacity>
+    </View>
+    }
     return (
         <>
             {vocabs && (
@@ -137,17 +167,31 @@ export default function Match() {
                         <View style={styles.containerButton}>
                             
                         {shuffelVL?.map((vocab,index) => (
-                            <TouchableOpacity key={index} style={styles.buttonChoice} onPress={()=>handlePressLeft(vocab.word)}>
-                                <Text style={styles.buttonText}>{vocab.word}</Text>
-                            </TouchableOpacity>
+                            <TouchableOpacity
+                            key={index}
+                            style={[
+                                styles.buttonChoice,
+                                selectedLeftIndex === index  ? { backgroundColor: 'gray' } : null
+                            ]}
+                            onPress={() => handlePressLeft(vocab.word, index)}
+                        >
+                            <Text style={styles.buttonText}>{vocab.word}</Text>
+                        </TouchableOpacity>
                         ))}
                         </View>
                         <View style={styles.containerButton}>
                         
                         {shuffelVR?.map((vocab,index) => (
-                            <TouchableOpacity key={index} style={styles.buttonChoice} onPress={()=>handlePressRight(vocab.definition)}>
-                                <Text style={styles.buttonText}>{vocab.definition}</Text>
-                            </TouchableOpacity>
+                            <TouchableOpacity
+                            key={index}
+                            style={[
+                                styles.buttonChoice,
+                                selectedRightIndex === index  ? { backgroundColor: 'gray' } : null
+                            ]}
+                            onPress={() => handlePressRight(vocab.definition, index)}
+                        >
+                            <Text style={styles.buttonText}>{vocab.definition}</Text>
+                        </TouchableOpacity>
                         ))}    
                         </View>
                     </View>
@@ -189,6 +233,29 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         padding:20,
+    },
+    finishedContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 20,
+    },
+    finishedText: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: 'black',
+        textAlign: 'center',
+        marginBottom: 20,
+    },
+    finishedButton: {
+        backgroundColor: 'green',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 20,
+    },
+    finishedButtonText: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
     },
     container2: {
        
