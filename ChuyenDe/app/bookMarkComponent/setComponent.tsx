@@ -1,6 +1,5 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
-import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { SetModel, deleteSet } from '@/model/word';
@@ -45,14 +44,14 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
                     <TouchableOpacity style={styles.button} activeOpacity={0.7}>
                     <Text style={styles.buttonText} onPress={handleReview}>Review</Text>
                     </TouchableOpacity>
-                    {/* <TouchableOpacity
+                    <TouchableOpacity
                         style={[styles.button, { opacity: practicePressed ? 0.5 : 1 }]}
                         activeOpacity={practicePressed ? 1 : 0.7}
                         disabled={practicePressed}
                         onPress={handlePractice}
                     >
                         <Text style={styles.buttonText}>Practice</Text>
-                    </TouchableOpacity> */}
+                    </TouchableOpacity>
                 </View>
                 
                 {practicePressed && (

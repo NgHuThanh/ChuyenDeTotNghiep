@@ -2,6 +2,7 @@ import { getVocabsInSet, vocab } from "@/model/word";
 import { useLocalSearchParams, router } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View, Image, Button, TouchableOpacity, ViewStyle } from 'react-native';
+import { ProgressBar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Match() {
@@ -38,29 +39,87 @@ export default function Match() {
     return (
         <>
             {vocabs && (
-                <SafeAreaView>
-                    <Text>{vocabs[currentVocabIndex].word}</Text>
-                    {showDefinition && (
-                        <Text>Definition: {vocabs[currentVocabIndex].definition}</Text>
-                    )}
-                    <TouchableOpacity onPress={handleToggleDefinition}>
-                        <Text>{showDefinition ? 'Hide' : 'Show'}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleNext}>
-                        <Text>Next</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleGoBack}>
-                        <Text>Back</Text>
-                    </TouchableOpacity>
-                </SafeAreaView>
+                <SafeAreaView style={{ flex: 1 }}>
+                    <View style={styles.progressContainer}>
+                    <ProgressBar
+                        progress={currentVocabIndex / (vocabs ? vocabs.length : 1)}
+                        color={'green'}
+                        style={styles.progressBar}
+                    />
+                    </View>
+                    <View style={styles.container}>
+                    <View style={styles.containerButton}><Text>Word:</Text></View>
+                    <View style={styles.containerButton}><Text>Definition:</Text></View>
+                    </View>
+                <ScrollView horizontal={false} contentContainerStyle={styles.scrollViewContent}>
+                    <View style={styles.container}>
+                        <View style={styles.containerButton}>
+                            
+                            {vocabs.map((vocab) => (
+                                <TouchableOpacity style={styles.buttonChoice}>
+                                    <Text style={styles.buttonText}>{vocab.word}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                        <View style={styles.containerButton}>
+                        
+                            {vocabs.map((vocab) => (
+                                <TouchableOpacity style={styles.buttonChoice}>
+                                    <Text style={styles.buttonText}>{vocab.definition}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    </View>
+                </ScrollView>
+            </SafeAreaView>
+            
             )}
         </>
     );
 }
 
 const styles = StyleSheet.create({
+    progressContainer: {
+        alignItems: 'center', // căn giữa theo trục dọc
+        padding:10,
+    },
+    progressBar: {
+        
+        height:20,
+        borderRadius: 20,
+        borderWidth: 1,
+        marginHorizontal: 10, // Khoảng cách giữa lề trái và lề phải
+    },
     container: {
         flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding:20,
     },
-   
+    scrollViewContent: {
+        flexGrow: 1,
+    },
+    containerButton: {
+        flex: 1,
+        alignContent:"center"
+    },
+    buttonChoice: {
+        maxWidth:150,
+        backgroundColor: "#FFF",
+        alignItems:"center",
+        justifyContent:"center",
+        borderLeftColor: "#410fa3",
+        borderRadius: 10,
+        borderColor: "black",
+        borderWidth:1,
+        borderLeftWidth:6,
+        marginTop: 10,
+        minHeight: 100,
+    },
+    buttonText: {
+        fontWeight: 'bold', // In đậm chữ
+        fontSize: 16, // Đổi size chữ
+    },
 });
+
