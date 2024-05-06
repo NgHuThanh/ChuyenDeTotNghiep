@@ -151,7 +151,7 @@ export const login = async (email:string, password:string) => {
       const doc = querySnapshot.docs[0];
       const userId = doc.id;
       const username = doc.data().username;
-
+      await AsyncStorage.setItem('email',email)
       await AsyncStorage.setItem('userId', userId);
       await AsyncStorage.setItem('username', username);
       importData(doc.data().source);

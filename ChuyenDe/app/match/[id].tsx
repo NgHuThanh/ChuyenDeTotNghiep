@@ -139,6 +139,7 @@ export default function Match() {
 
         router.push(`/vocabSet/${id}`);
     };
+    
     if(finishedReview){
         return <View style={styles.finishedContainer}>
         <Text style={styles.finishedText}>You finished practice {vocabs?.length} word</Text>

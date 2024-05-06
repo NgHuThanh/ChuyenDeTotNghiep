@@ -5,11 +5,30 @@ import SetComponent from '../bookMarkComponent/setComponent';
 import { AntDesign } from '@expo/vector-icons';
 import AddSetComponent from '../bookMarkComponent/addSet';
 import { SetModel, getAllSets } from '@/model/word';
+import { exportData } from '@/model/asyncStorage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const BookMark = () => {
   const [text, setText] = useState('');
   const [sets, setSets] = useState<SetModel[] | null>(null);
   const [filteredSets, setFilteredSets] = useState<SetModel[] | null>(null);
+  const [username, setUsername] = useState('');
+  exportData();
+  useEffect(() => {
+    // Lấy giá trị của 'username' từ AsyncStorage khi component được render
+    const getUsername = async () => {
+      try {
+        const storedUsername = await AsyncStorage.getItem('username');
+        if (storedUsername !== null) {
+          setUsername(storedUsername);
+        }
+      } catch (error) {
+        console.error('Error retrieving username from AsyncStorage:', error);
+      }
+    };
+    
+    getUsername();
+  }, []);
   const fetchSets = async () => {
     const allSets  = await getAllSets();
     setSets(allSets);
@@ -51,7 +70,7 @@ const BookMark = () => {
       
       
       <View style={styles.headContainer}>
-        <Text style={styles.text}>Your words</Text>    
+        <Text style={styles.text}>Your words {username}</Text>    
       </View>
       <TextInput
         label="Find your name set vocab"
