@@ -9,32 +9,109 @@ export default function Match() {
     const { id } = useLocalSearchParams();
     const [vocabs, setVocabs] = useState<vocab[] | null>(null);
     const [currentVocabIndex, setCurrentVocabIndex] = useState<number>(0);
-    const [showDefinition, setShowDefinition] = useState<boolean>(false);
-
+    const [cLeft,setCLeft]=useState<string>("empty");
+    const [cRight,setCRight]=useState<string>("empty");
+    const [shuffled, setShuffled] = useState<boolean>(false);
+    const [shuffelVL, setshuffelVL] = useState<vocab[] | null>(null);
+    const [shuffelVR, setshuffelVR] = useState<vocab[] | null>(null);
     const fetchVocabs = async () => {
         const allVocabs = await getVocabsInSet(id as string);
         setVocabs(allVocabs);
+        
+    };
+    const createShuffelVocabs = async () => {
+        if (vocabs) {
+            setshuffelVL(shuffle(vocabs)); // Shuffle mảng vocabs khi nó được fetch từ server lần đầu
+            setshuffelVR(shuffle(vocabs));
+        }
+        else{
+            console.log("Not found vocab")
+        }
     };
 
     useEffect(() => {
         fetchVocabs();
+        
     }, []);
-
-    const handleNext = () => {
-        setCurrentVocabIndex((prevIndex) => (prevIndex + 1) % (vocabs ? vocabs.length : 0));
-        setShowDefinition(false); // Reset showDefinition khi chuyển sang từ tiếp theo
-    };
-
-    const handleToggleDefinition = () => {
-        setShowDefinition((prevState) => !prevState); // Thay đổi giá trị của showDefinition giữa true và false
-    };
-
-    const handleGoBack = () => {
-        if (currentVocabIndex > 0) {
-            setCurrentVocabIndex(currentVocabIndex - 1);
-            setShowDefinition(false); // Reset showDefinition khi quay lại từ trước đó
+    useEffect(() => {
+       
+        createShuffelVocabs();
+    }, [vocabs]);
+    
+    
+    const checkRightChoice = (left:string) => {
+        if (!vocabs || !cLeft || !cRight) {
+            // Nếu một trong các giá trị là null hoặc undefined, trả về false
+            return true;
         }
+        // Tìm vocab có vocab.word bằng cLeft
+        const selectedVocab = vocabs.find(vocab => vocab.word == left);
+        // Nếu không tìm thấy vocab có vocab.word bằng cLeft, trả về false
+        if (!selectedVocab) {
+            return false;
+        }
+        setCLeft("empty");
+                setCRight("empty");
+        // So sánh vocab.definition của vocab tìm được với cRight
+        return selectedVocab.definition == cRight;
     };
+    const checkLeftChoice = (right:string) => {
+        if (!vocabs || !cLeft || !cRight) {
+            // Nếu một trong các giá trị là null hoặc undefined, trả về false
+            return false;
+        }
+        // Tìm vocab có vocab.word bằng cLeft
+        const selectedVocab = vocabs.find(vocab => vocab.word == cLeft);
+        // Nếu không tìm thấy vocab có vocab.word bằng cLeft, trả về false
+        if (!selectedVocab) {
+            return false;
+        }
+        setCLeft("empty");
+                setCRight("empty");
+        // So sánh vocab.definition của vocab tìm được với cRight
+        return selectedVocab.definition == right;
+    };
+    const handlePressLeft=(word:string)=>{
+        if(cRight!="empty"){
+            if(checkRightChoice(word)){
+                setCLeft("empty");
+            setCRight("empty");
+                console.log("Correct match");
+            }
+            else{
+                console.log("Wrong match");
+            }
+            setCLeft("empty");
+            setCRight("empty");
+        }
+        else{
+            setCLeft(word);
+        }
+        
+        
+    }
+    const handlePressRight=(definition:string)=>{
+        
+        if(cLeft!="empty"){
+            if(checkLeftChoice(definition)){
+                setCLeft("empty");
+                setCRight("empty");
+                console.log("Correct match");
+            }
+            else{
+                console.log("Wrong match");
+            }
+            setCLeft("empty");
+            setCRight("empty");
+        }
+        else{
+            setCRight(definition);
+        }
+        
+    }
+    
+
+    
 
     return (
         <>
@@ -47,27 +124,27 @@ export default function Match() {
                         style={styles.progressBar}
                     />
                     </View>
-                    <View style={styles.container}>
-                    <View style={styles.containerButton}><Text>Word:</Text></View>
-                    <View style={styles.containerButton}><Text>Definition:</Text></View>
+                    <View style={styles.container2}>
+                    <View style={styles.containerButton}><Text>Word:{cLeft}</Text></View>
+                    <View style={styles.containerButton}><Text>Definition:{cRight}</Text></View>
                     </View>
                 <ScrollView horizontal={false} contentContainerStyle={styles.scrollViewContent}>
                     <View style={styles.container}>
                         <View style={styles.containerButton}>
                             
-                            {vocabs.map((vocab) => (
-                                <TouchableOpacity style={styles.buttonChoice}>
-                                    <Text style={styles.buttonText}>{vocab.word}</Text>
-                                </TouchableOpacity>
-                            ))}
+                        {shuffelVL?.map((vocab,index) => (
+                            <TouchableOpacity key={index} style={styles.buttonChoice} onPress={()=>handlePressLeft(vocab.word)}>
+                                <Text style={styles.buttonText}>{vocab.word}</Text>
+                            </TouchableOpacity>
+                        ))}
                         </View>
                         <View style={styles.containerButton}>
                         
-                            {vocabs.map((vocab) => (
-                                <TouchableOpacity style={styles.buttonChoice}>
-                                    <Text style={styles.buttonText}>{vocab.definition}</Text>
-                                </TouchableOpacity>
-                            ))}
+                        {shuffelVR?.map((vocab,index) => (
+                            <TouchableOpacity key={index} style={styles.buttonChoice} onPress={()=>handlePressRight(vocab.definition)}>
+                                <Text style={styles.buttonText}>{vocab.definition}</Text>
+                            </TouchableOpacity>
+                        ))}    
                         </View>
                     </View>
                 </ScrollView>
@@ -77,6 +154,18 @@ export default function Match() {
         </>
     );
 }
+
+const shuffle = (array:vocab[] | null) => {
+    if (!array) {
+        return []; // Trả về mảng trống nếu array là null
+    }
+    // Dùng phương pháp Fisher-Yates để shuffle mảng
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+};
 
 const styles = StyleSheet.create({
     progressContainer: {
@@ -97,12 +186,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding:20,
     },
+    container2: {
+       
+        flexDirection: 'row',
+        
+        alignItems: 'center',
+        padding:20,
+        borderBottomWidth:5,
+        borderBottomColor:"#410fa3"
+    },
     scrollViewContent: {
         flexGrow: 1,
     },
     containerButton: {
         flex: 1,
-        alignContent:"center"
+        
     },
     buttonChoice: {
         maxWidth:150,
