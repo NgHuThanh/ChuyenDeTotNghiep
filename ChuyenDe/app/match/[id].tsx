@@ -21,14 +21,24 @@ export default function Match() {
     };
     const createShuffelVocabs = async () => {
         if (vocabs) {
-            setshuffelVL(shuffle(vocabs)); // Shuffle mảng vocabs khi nó được fetch từ server lần đầu
-            setshuffelVR(shuffle(vocabs));
-        }
-        else{
-            console.log("Not found vocab")
+            const clonedVocabs = [...vocabs]; // Tạo bản sao của mảng vocabs
+            setshuffelVL(shuffle(clonedVocabs)); // Shuffle mảng clonedVocabs để set cho shuffelVL
+            setshuffelVR(shuffle([...clonedVocabs])); // Shuffle một bản sao khác của clonedVocabs để set cho shuffelVR
+        } else {
+            console.log("Not found vocab");
         }
     };
-
+    const deleteVocabByWord = (wordToDelete: string) => {
+        if (shuffelVL && shuffelVR) {
+            // Xóa vocab từ shuffelVL
+            const updatedShuffelVL = shuffelVL.filter(vocab => vocab.word != wordToDelete);
+            setshuffelVL(updatedShuffelVL);
+            
+            // Xóa vocab từ shuffelVR
+            const updatedShuffelVR = shuffelVR.filter(vocab => vocab.word != wordToDelete);
+            setshuffelVR(updatedShuffelVR);
+        }
+    };
     useEffect(() => {
         fetchVocabs();
         
@@ -46,6 +56,7 @@ export default function Match() {
         }
         // Tìm vocab có vocab.word bằng cLeft
         const selectedVocab = vocabs.find(vocab => vocab.word == left);
+        
         // Nếu không tìm thấy vocab có vocab.word bằng cLeft, trả về false
         if (!selectedVocab) {
             return false;
@@ -74,8 +85,7 @@ export default function Match() {
     const handlePressLeft=(word:string)=>{
         if(cRight!="empty"){
             if(checkRightChoice(word)){
-                setCLeft("empty");
-            setCRight("empty");
+                deleteVocabByWord(word);
                 console.log("Correct match");
             }
             else{
@@ -87,15 +97,12 @@ export default function Match() {
         else{
             setCLeft(word);
         }
-        
-        
     }
     const handlePressRight=(definition:string)=>{
         
         if(cLeft!="empty"){
             if(checkLeftChoice(definition)){
-                setCLeft("empty");
-                setCRight("empty");
+                deleteVocabByWord(cLeft);
                 console.log("Correct match");
             }
             else{
@@ -110,9 +117,6 @@ export default function Match() {
         
     }
     
-
-    
-
     return (
         <>
             {vocabs && (
