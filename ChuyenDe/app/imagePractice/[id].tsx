@@ -6,6 +6,8 @@ import { StyleSheet, Text, View, TouchableOpacity,Image } from 'react-native';
 import { ProgressBar } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useSWR from "swr";
+import { Feather } from '@expo/vector-icons';
+import { updatePracticeDays } from '@/model/practiceDay';
 const apiKey = 'NGvxJOgt1mEPidUdOGOh9lOTrmwoTizDjXo6dCU7jUtXYNpdWwjPuy3p';
 const fetcher = async (url:string) => {
     const response = await fetch(url, {
@@ -112,10 +114,14 @@ export default function ImagePractice() {
     if(!data){
         <Text>Loading...</Text>
     }
+    const handleFinish = () => {
+        updatePracticeDays({ times: vocabs?.length as number }); // Truyền số lần luyện tập cần cập nhật vào tham số `times`
+        router.push("/(tabs)/bookmark");
+    }
     if(finishedReview){
         return <View style={styles.finishedContainer}>
         <Text style={styles.finishedText}>You finished practice {vocabs?.length} word</Text>
-        <TouchableOpacity style={styles.finishedButton} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.finishedButton} onPress={handleFinish}>
             <Text style={styles.finishedButtonText}>Finished</Text>
         </TouchableOpacity>
     </View>
@@ -123,38 +129,58 @@ export default function ImagePractice() {
     return (
         <>
             {vocabs && (
-                <SafeAreaView>
-                    <View style={styles.progressContainer}>
-                        <ProgressBar progress={(currentIndex) /(vocabs.length+1)} color={'green'} style={{ height: 20, borderRadius: 20,width:280,borderWidth:1 }} />
+                <View style={{flex: 1}}>
+                <SafeAreaView style={{alignItems:"center",flex:1}}>
+                    <View style={[styles.progressContainer]}>
+                        <ProgressBar progress={(currentIndex) / (vocabs.length)} color={'green'} style={{ height: 20, borderRadius: 20, width: 280, borderWidth: 1 }} />
                     </View>
+                    <View style={{maxHeight:300,minHeight:300,marginBottom:10}}>
                     {data && data.photos && (
                         <View style={styles.imageContainer}>
-                            <Text>{data?.photos[currentImageIndex].src.medium}</Text>
-                            <Image
-                                source={{uri: data.photos[currentImageIndex].src.medium}}
-                                style={styles.image}
-                                resizeMode="cover"
-                            />
-                            <TouchableOpacity onPress={handleNextImage}>Other image</TouchableOpacity>
+                        <Image
+                            source={{uri: data.photos[currentImageIndex].src.medium}}
+                            style={styles.image}
+                            resizeMode="stretch"
+                        />
+                        <View style={styles.photographerContainer}>
+                            <Text style={styles.photographerText}>By: {data.photos[currentImageIndex].photographer}</Text>
+                        </View>
+                        <TouchableOpacity style={{backgroundColor:"#410fa3",padding:10,borderRadius:10,alignItems:"center"}} onPress={handleNextImage}>
+                            <Feather name="refresh-ccw" size={18} color="#FFF" />
+                        </TouchableOpacity>
+                        <Text style={{fontWeight:"bold",fontSize:20}}>What's it?</Text>
+                    </View>
+                    )}
+                    {data==null&& (
+                        <View style={styles.imageContainer}>
+                            <Text style={{minHeight:250}}>Loading</Text>
+                            <TouchableOpacity style={{backgroundColor:"green"}} onPress={handleNextImage}><Feather name="refresh-ccw" size={24} color="black" /></TouchableOpacity>
+                            <Text>What's it?</Text>
                         </View>
                     )}
-
-                    <View>
-                        {randomAnswers.map((answer, index) => (
-                            <TouchableOpacity
-                                key={index}
-                                onPress={() => handleAnswerSelection(answer)}
-                                style={[
-                                    styles.answer,
-                                    selectedAnswer === answer && isCorrect !== null && (isCorrect ? styles.correctAnswer : styles.wrongAnswer),
-                                ]}
-                            >
-                                <Text>{answer}</Text>
-                            </TouchableOpacity>
-                        ))}
                     </View>
                     
+                    
+                    <View style={styles.containerBottom}>
+                        <View style={[styles.answerContainer]}>
+                            {randomAnswers.map((answer, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    onPress={() => handleAnswerSelection(answer)}
+                                    style={[
+                                        styles.answer,
+                                        selectedAnswer === answer && isCorrect !== null && (isCorrect ? styles.correctAnswer : styles.wrongAnswer),
+                                    ]}
+                                >
+                                    <Text style={styles.text}>{answer}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    </View>
+                   
+                    
                 </SafeAreaView>
+                </View>
             )}
         </>
     );
@@ -164,10 +190,58 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    imageContainer: {
+    containerBottom: {
+        position: 'absolute',
+        bottom: 0,
+        marginBottom:20,
+        width: '100%',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)', // Điều này giúp tạo một lớp nền cho containerBottom, giúp nó nổi bật và dễ nhận biết
+        paddingHorizontal: 10, // Điều chỉnh khoảng cách giữa các phần tử bên trong containerBottom
+    },
+    answerContainer: {
+        flex:1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+    },
+    photographerContainer: {
+        position: 'absolute',
+        top:0, // Điều chỉnh vị trí bên dưới ảnh
+        left: 0,
+        right:0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Màu nền
+        paddingHorizontal: 10, // Khoảng cách lề ngang
+        paddingVertical: 5, // Khoảng cách lề dọc
+        alignItems: 'center', // Căn giữa theo chiều ngang
+    },
+    
+    photographerText: {
+        color: '#FFF', // Màu văn bản
+        fontWeight: 'bold',
+    },
+    text:{
+        color:"#FFF",
+        fontWeight:"bold",
+        fontSize:18,
+    },
+    answer: {
+        width: '48%', // 48% để cách nhau một ít, bạn có thể điều chỉnh tùy ý
+        padding: 10,
+        marginVertical: 5,
         
-        borderWidth: 3,
-        borderColor: 'white',
+        backgroundColor:"#410fa3",
+        color:"#FFF",
+        borderRadius:10,
+        textAlign:"center",
+        },
+    imageContainer: {
+        minWidth:250,
+        minHeight:300,
+        borderWidth: 2,
+        borderColor: '#888',
+        borderLeftWidth:5,
+        
+        
         alignItems:"center",
         
       },
@@ -175,19 +249,16 @@ const styles = StyleSheet.create({
         width: 250,
         height: 250,
       },
-    answer: {
-        padding: 10,
-        marginVertical: 5,
-        borderWidth: 1,
-        borderColor: 'black',
-    },
+    
     correctAnswer: {
         backgroundColor: 'lightgreen',
     },
-    progressContainer:{
-        flex:1,
-        marginTop:15,
+    progressContainer: {
+        alignItems: 'center', // căn giữa theo trục dọc
+        padding:10,
+        
     },
+    
     wrongAnswer: {
         backgroundColor: 'lightcoral',
     },
