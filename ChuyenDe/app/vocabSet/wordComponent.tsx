@@ -69,12 +69,13 @@ const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void
                 )}
             </TouchableOpacity>
             </View>
-            <Speak thingToSay={props.vocab.word}></Speak>
+            
             <View style={styles.infoContainer}>
                 <Text style={styles.boldText}>{props.vocab.word}</Text>
                 <Text style={styles.secondaryText}>{props.vocab.definition}</Text>
                 <Text style={[styles.secondaryText2, { color: difficultColor }]}>{props.vocab.difficult}</Text>
                 <Text style={{paddingRight:0}}>Practice at: {formattedDate}</Text>
+                <Speak thingToSay={props.vocab.word}></Speak>
             </View>
             <View style={styles.imageContainer}>
             <View style={styles.container2}>
