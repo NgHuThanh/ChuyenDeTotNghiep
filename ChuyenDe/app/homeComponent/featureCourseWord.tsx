@@ -1,10 +1,13 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
 import React from 'react'
-import { AntDesign } from '@expo/vector-icons';
+import { router } from 'expo-router';
 const FeatureCourseWord = () => {
     const localImageUrl = require('../../assets/images/vocab.png');
+    const handlePress=()=>{
+        router.push("/qaa/");
+    }
     return (
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity style={styles.container} onPress={handlePress}>
             <View style={styles.infoContainer}>
                 <Text style={styles.boldText}>Online</Text>
                 <Text style={styles.boldText}>Vocablary</Text>
