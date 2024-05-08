@@ -27,7 +27,7 @@ export default function ImagePractice() {
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
     const [selectedAnswer, setSelectedAnswer] = useState<string>('');
-    const [isCorrect, setIsCorrect] = useState<boolean | null>(null); // Biến để lưu trạng thái của việc chọn đúng hay sai
+    const [isCorrect, setIsCorrect] = useState<boolean | null>(null); // Biến sđể lưu trạng thái của việc chọn đúng hay sai
     const [randomAnswers, setRandomAnswers] = useState<string[]>([]); // Biến để lưu trữ các đáp án ngẫu nhiên
     const [finishedReview, setFinishedReview] = useState(false);
     

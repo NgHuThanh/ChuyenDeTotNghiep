@@ -2,7 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import { SetModel, deleteSet } from '@/model/word';
+import { SetModel, deleteSet, setAsyncData } from '@/model/word';
 import { router } from 'expo-router';
 const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
     const localImageUrl = require('../../assets/images/book.png');
@@ -33,6 +33,10 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
     }
     const goToDestination = () => {
         router.push(`/vocabSet/${props.setVocab.name}`);
+    };
+    const handleShare = () => {
+        setAsyncData(props.setVocab.name);
+        
     };
     
     return (
@@ -73,7 +77,7 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
             <TouchableOpacity  activeOpacity={0.7}>
             <MaterialIcons name="delete" size={24} color="#5b7bfe" onPress={handleDeleteSet} />
             </TouchableOpacity>
-            <TouchableOpacity  activeOpacity={0.7}>
+            <TouchableOpacity  activeOpacity={0.7} onPress={handleShare}>
             <Feather name="share" size={24} color="#5b7bfe" />
             </TouchableOpacity>
             

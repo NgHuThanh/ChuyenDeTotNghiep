@@ -7,6 +7,7 @@ import AddSetComponent from '../bookMarkComponent/addSet';
 import { SetModel, getAllSets } from '@/model/word';
 import { exportData } from '@/model/asyncStorage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ImportSet from '../bookMarkComponent/import';
 
 const BookMark = () => {
   const [text, setText] = useState('');
@@ -44,11 +45,19 @@ const BookMark = () => {
     setFilteredSets(filteredSets as SetModel[]);
   };
   const [visible, setVisible] = React.useState(false);
+  const [visibleImport, setvisibleImport] = React.useState(false);
+  const showSetvisibleImport = () => setvisibleImport(true);
   const showModal = () => setVisible(true);
   const hideModal = () => {
     fetchSets();
     setFilteredSets(sets as SetModel[]);
     setVisible(false)
+    
+  };
+  const hideModal2 = () => {
+    fetchSets();
+    setFilteredSets(sets as SetModel[]);
+    setvisibleImport(false)
     
   };
   const containerStyle: ViewStyle = {
@@ -66,11 +75,15 @@ const BookMark = () => {
         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
           <AddSetComponent fetchSets={fetchSets} />
         </Modal>
+        <Modal visible={visibleImport} onDismiss={hideModal2} contentContainerStyle={containerStyle}>
+          <ImportSet fetchSets={fetchSets} />
+        </Modal>
       </Portal>
       
       
       <View style={styles.headContainer}>
         <Text style={styles.text}>Your words {username}</Text>    
+        <TouchableOpacity onPress={showSetvisibleImport}style={styles.button2}><Text style={styles.text3}>Import by ID</Text>  </TouchableOpacity>
       </View>
       <TextInput
         label="Find your name set vocab"
@@ -112,11 +125,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  button2: {
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    height:40,
+    position: 'absolute',
+    
+    right: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding:5,
+  },
   text: {
     marginTop:20,
     color: '#faf9fd',
     fontWeight:"bold",
     fontSize: 18,
+  },
+  text3: {
+    
+    color: '#410fa3',
+    fontWeight:"bold",
+    fontSize: 14,
   },
   text2: {
     marginTop:5,

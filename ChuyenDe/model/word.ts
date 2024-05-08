@@ -1,3 +1,4 @@
+import { uploadSet } from '@/app/firebase/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export interface SetModel {
     vocabs?: vocab[];
@@ -209,3 +210,28 @@ export const findVocabsWithLastPracticeBeforeNow = async (): Promise<vocab[]> =>
         return [];
     }
 };
+export async function setAsyncData(name: string) {
+    try {
+        // Lấy dữ liệu từ AsyncStorage
+        const existingSets = await AsyncStorage.getItem('sets');
+        const sets: SetModel[] = existingSets ? JSON.parse(existingSets) : [];
+
+        // Tìm set có name tương ứng
+        const set: SetModel | undefined = sets.find(set => set.name === name);
+        if (!set) {
+            console.error(`Set with name ${name} not found in AsyncStorage`);
+            return;
+        }
+
+        // Chuyển đổi set thành chuỗi JSON
+        const setDataText = JSON.stringify(set);
+        uploadSet(setDataText);
+        // Trả về chuỗi JSON
+        // return setDataText;
+    } catch (error) {
+        console.error('Error writing data to Firestore:', error);
+        // return null;
+    }
+}
+
+  

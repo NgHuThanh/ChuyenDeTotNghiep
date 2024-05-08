@@ -1,4 +1,4 @@
-import { exportData, importData } from '@/model/asyncStorage';
+import { exportData, importData, importSetData } from '@/model/asyncStorage';
 import { content, contentAndQuestion, grammar, question } from '@/model/grammar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
@@ -195,3 +195,38 @@ export const updateUserSource = async () => {
       console.error('Error updating user source:', error);
   }
 }
+export const uploadSet = async (data: string) => {
+  try {
+      // Thực hiện truy vấn để thêm một tài liệu mới vào collection "onlineWord" với thuộc tính "source" là dữ liệu từ tham số đầu vào
+      await addDoc(collection(firestore, 'onlineWord'), {
+          source: data
+      });
+
+      console.log('Set online vocab source updated successfully!');
+  } catch (error) {
+      console.error('Error updating user source:', error);
+  }
+};
+export const importSet = async (id: string) => {
+  try {
+      // Tạo tham chiếu đến tài liệu trong collection "onlineWord" với ID được cung cấp
+      const userDocRef = doc(firestore, 'onlineWord', id);
+      
+      // Lấy dữ liệu của tài liệu
+      const userDocSnap = await getDoc(userDocRef);
+
+      // Kiểm tra xem tài liệu có tồn tại không
+      if (userDocSnap.exists()) {
+          // Trả về thuộc tính "source" của tài liệu
+          const source = userDocSnap.data()?.source;
+          console.log(source);
+          importSetData(source);
+      } else {
+          console.error('Document does not exist in Firestore.');
+          
+      }
+  } catch (error) {
+      console.error('Error importing set:', error);
+      return null;
+  }
+};

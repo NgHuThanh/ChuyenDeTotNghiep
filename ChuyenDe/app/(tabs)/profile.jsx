@@ -7,7 +7,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { StackedBarChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
 import { getPracticeDays } from "../../model/practiceDay";
-
+import {setAsyncData} from "../../model/word";
 const screenWidth = Dimensions.get("window").width;
 
 const Profile = () => {
@@ -20,6 +20,8 @@ const Profile = () => {
 
   useEffect(() => {
     const getUsername = async () => {
+      const test= await setAsyncData("New");
+      console.log(test);
       try {
         const storedUsername = await AsyncStorage.getItem('username');
         const storedEmail = await AsyncStorage.getItem('email');
