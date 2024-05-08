@@ -225,12 +225,14 @@ export async function setAsyncData(name: string) {
 
         // Chuyển đổi set thành chuỗi JSON
         const setDataText = JSON.stringify(set);
-        uploadSet(setDataText);
+        const id=uploadSet(setDataText);
+        return id;
         // Trả về chuỗi JSON
         // return setDataText;
     } catch (error) {
         console.error('Error writing data to Firestore:', error);
         // return null;
+        return null;
     }
 }
 

@@ -1,19 +1,35 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { SetModel, deleteSet, setAsyncData } from '@/model/word';
 import { router } from 'expo-router';
+import { Modal, Portal } from 'react-native-paper';
 const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
     const localImageUrl = require('../../assets/images/book.png');
     const [exist,setExist]=useState(true);
     const [practicePressed, setPracticePressed] = useState(false);
+    const [visible, setVisible] = React.useState(false);
+    const [id, setID] = useState<string | null | undefined>(undefined);
+    const showModal = () => setVisible(true);
     const handlePractice = () => {
         setPracticePressed(true);
     };
     if(exist==false){
         return <></>;
     }
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const id = await setAsyncData(props.setVocab.name);
+                setID(id);
+            } catch (error) {
+                console.error('Error setting async data:', error);
+            }
+        };
+
+        fetchData();
+    }, [props.setVocab.name]);
     const handleDeleteSet = () => {
         deleteSet(props.setVocab.name);
         props.fetchSets();
@@ -34,13 +50,29 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
     const goToDestination = () => {
         router.push(`/vocabSet/${props.setVocab.name}`);
     };
-    const handleShare = () => {
-        setAsyncData(props.setVocab.name);
-        
+    const handleShare = async () => {
+        setID(await setAsyncData(props.setVocab.name));
+        showModal();
     };
-    
+    const hideModal = () => {
+        
+        setVisible(false)
+        
+      };
+    const containerStyle: ViewStyle = {
+    backgroundColor: 'white',
+    padding: 0,
+    width: 300,
+    height: 200,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    };
     return (
         <TouchableOpacity style={styles.container} onPress={goToDestination}>
+            <Portal>
+                <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+                <Text>ID to share:{id}</Text>
+            </Modal></Portal>
             <View style={styles.infoContainer}>
                 <Text style={styles.boldText}>{props.setVocab.name}</Text>
                 <Text style={styles.secondaryText}>{props.setVocab.vocabs?.length} Cards</Text>

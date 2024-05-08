@@ -198,13 +198,18 @@ export const updateUserSource = async () => {
 export const uploadSet = async (data: string) => {
   try {
       // Thực hiện truy vấn để thêm một tài liệu mới vào collection "onlineWord" với thuộc tính "source" là dữ liệu từ tham số đầu vào
-      await addDoc(collection(firestore, 'onlineWord'), {
+      const docRef = await addDoc(collection(firestore, 'onlineWord'), {
           source: data
       });
 
       console.log('Set online vocab source updated successfully!');
+      
+      // Trả về ID của tài liệu đã được thêm vào Firestore
+      return docRef.id;
   } catch (error) {
       console.error('Error updating user source:', error);
+      // Trả về null nếu có lỗi xảy ra
+      return null;
   }
 };
 export const importSet = async (id: string) => {
