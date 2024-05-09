@@ -33,18 +33,20 @@ export default function GrammarHome() {
     }
     fetchData();
   }, []);
-  
+  const handlePressBack=()=>{
+    router.push("/(tabs)/home");
+  }
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <TouchableOpacity style={{alignSelf:"flex-start"}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
+
         <Text>Loading...</Text>
         <div id="root"></div>
       </View>
     );
   }
-  const handlePressBack=()=>{
-    router.push("/(tabs)/home");
-  }
+  
   return (
     <SafeAreaView style={{ backgroundColor: "#FFF", height: "100%", padding: 10 }}>
       <TouchableOpacity style={{alignSelf:"flex-start"}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
