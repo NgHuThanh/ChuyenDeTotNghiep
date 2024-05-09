@@ -1,10 +1,10 @@
-import { View } from "@/components/Themed";
+
 import { Stack } from "expo-router";
 import {Text} from "react-native";
 const AuthLayout =()=>{
     return(
         <>
-        <Stack>
+        <Stack >
             <Stack.Screen
                 name="sign-in"
                 options={{
@@ -21,3 +21,4 @@ const AuthLayout =()=>{
         </>
     );
 }
+export default AuthLayout;
