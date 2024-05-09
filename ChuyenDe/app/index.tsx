@@ -19,25 +19,26 @@ export default function App() {
     <SafeAreaView style={{backgroundColor:"#410fa3",height:"100%"}}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.imageContainer}>
-        <Image
+        {/* <Image
           source={localImageUrl} // source là một prop để truyền đường dẫn của hình ảnh
           style={styles.image} // style để tùy chỉnh kích thước, vị trí, và các thuộc tính khác của hình ảnh
           resizeMode="cover" // resizeMode để chỉ định cách ảnh sẽ được căn chỉnh khi hiển thị (cover, contain, stretch, ...)
-            />
+            /> */}
         <Text style={styles.text}>English App</Text>
         <CustomButton
-        title={"Let start"}
+        title={"Login now"}
         
         ></CustomButton>
-        <TouchableOpacity onPress={()=>router.push("/(tabs)/home")}>
-          Skip
+        <TouchableOpacity style={styles.button}onPress={()=>router.push("/(tabs)/home")}>
+          <Text style={styles.buttonText}>Skip</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleExport}>
+
+        {/* <TouchableOpacity onPress={handleExport}>
         updateUserSource
         </TouchableOpacity>
         <TouchableOpacity onPress={handleClear}>
         Clear
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         
         </View>
         {/* <StatusBar backgroundColor='' style='light'></StatusBar> */}
@@ -76,7 +77,24 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'white', // Màu trắng cho văn bản
-    fontSize: 24, // Kích thước văn bản
+    fontSize: 50, // Kích thước văn bản
     marginTop: 20, // Khoảng cách giữa hình ảnh và văn bản
+    fontWeight:"bold",
+  },
+  button: {
+    marginTop:40,
+    backgroundColor: 'white', // Màu nền của button
+    borderRadius: 8, // Bo góc của button
+    
+    justifyContent: 'center', // Căn chỉnh theo chiều dọc
+    alignItems: 'center', // Căn chỉnh theo chiều ngang
+    padding:20,
+    width:200,
+
+  },
+  buttonText: {
+    color: '#410fa3',
+    fontWeight:"bold", // Màu chữ của button
+    fontSize: 24, // Kích thước chữ của button
   },
 });

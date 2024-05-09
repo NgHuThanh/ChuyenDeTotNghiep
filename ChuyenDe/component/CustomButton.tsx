@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     marginTop:40,
     backgroundColor: 'white', // Màu nền của button
     borderRadius: 8, // Bo góc của button
-    height: 80, // Chiều cao của button
+    
     justifyContent: 'center', // Căn chỉnh theo chiều dọc
     alignItems: 'center', // Căn chỉnh theo chiều ngang
     padding:20,
@@ -30,6 +30,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#410fa3',
     fontWeight:"bold", // Màu chữ của button
-    fontSize: 18, // Kích thước chữ của button
+    fontSize: 24, // Kích thước chữ của button
   },
 })
