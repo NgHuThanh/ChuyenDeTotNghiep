@@ -72,3 +72,29 @@ export async function getPracticeDays(): Promise<PracticeDay[]> {
 // <View>
 //           {practiced.map((practice)=><Text>{practice.count}</Text>)}
 //           </View>
+export async function getTodayPracticeDay(): Promise<PracticeDay[]> {
+    const today = new Date();
+    const currentDay = today.getDate();
+    const currentMonth = today.getMonth() + 1; // Tháng bắt đầu từ 0 nên cần cộng thêm 1
+    const currentYear = today.getFullYear();
+
+    let practiceDays: PracticeDay[] = [];
+
+    try {
+        const storedPracticeDays = await AsyncStorage.getItem('practiceDays');
+        if (storedPracticeDays !== null) {
+            // Chuyển đổi dữ liệu từ chuỗi JSON thành mảng các đối tượng PracticeDay
+            const storedDays: any[] = JSON.parse(storedPracticeDays);
+
+            // Lọc ra các đối tượng PracticeDay có ngày, tháng, năm giống với ngày hiện tại
+            practiceDays = storedDays.filter((day: any) => day.day === currentDay && day.month === currentMonth && day.year === currentYear)
+                                       .map((day: any) => new PracticeDay(day.day, day.month, day.year, day.count));
+        
+        
+                                    }
+    } catch (error) {
+        console.error('Error retrieving practice days from AsyncStorage:', error);
+    }
+
+    return practiceDays;
+}

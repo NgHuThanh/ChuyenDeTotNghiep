@@ -17,18 +17,14 @@ const SignIn = () => {
     });
 
     const handleLogin = async () => {
-        if (form.password !== form.confirmPassword) {
-            setForm({ ...form, loading: false, error: 'Password does not match' });
-            return; // Kết thúc hàm handleLogin nếu mật khẩu không trùng khớp
-        }
-    
         setForm({ ...form, loading: true }); // Đặt trạng thái loading là true khi bắt đầu thực hiện đăng nhập
-    
+
         // Gọi hàm login
         const result = await login(form.email, form.password);
-    
+
         if (result) {
             // Nếu đăng nhập thành công, chuyển hướng đến trang home
+            
             router.push("/home");
         } else {
             // Nếu đăng nhập không thành công, hiển thị thông báo lỗi

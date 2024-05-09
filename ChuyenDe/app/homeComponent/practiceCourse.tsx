@@ -7,16 +7,27 @@ import { ProgressBar } from 'react-native-paper';
 import { addDocument } from '../firebase/config';
 import { findVocabsWithLastPracticeBeforeNow } from '@/model/word';
 import { router } from 'expo-router';
+import PracticeDay, { getTodayPracticeDay } from '@/model/practiceDay';
 
 const PracticeCourse = () => {
     const [vocabCount, setVocabCount] = useState(0); 
-       
+       const [practiced,setPracticed]=useState<PracticeDay[]>([]); 
+        async function example() {
+            try {
+                const practiceDays = await getTodayPracticeDay();
+                setPracticed(practiceDays);
+                console.log(practiceDays);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
     useEffect(() => {
         const fetchVocabCount = async () => {
             try {
                 const existingSets = findVocabsWithLastPracticeBeforeNow();
                 if((await existingSets).length!=null)
                 setVocabCount((await existingSets).length);
+                example();
             } catch (error) {
                 console.error('Error fetching vocab count:', error);
             }
@@ -24,7 +35,7 @@ const PracticeCourse = () => {
 
         fetchVocabCount();
     }, []);
-
+    
     const localImageUrl = require('../../assets/images/book.png');
 
     const handleReview=()=>{
@@ -34,10 +45,10 @@ const PracticeCourse = () => {
     return (
         <TouchableOpacity style={styles.container} onPress={handleReview}>
             <View style={styles.infoContainer}>
-                <Text style={styles.boldText}>Practice</Text>
-                <Text style={styles.boldText}>Your Word</Text>
-                <Text style={styles.secondaryText}>Do not forget</Text>
-                <ProgressBar progress={0.8}/>
+                <Text style={styles.boldText}>Practice Your Word</Text>
+                <Text style={styles.boldText}></Text>
+                <Text style={styles.secondaryText}>Keep it going!</Text>
+                <Text style={styles.secondaryText}>Today you practice: {practiced[0].count} words</Text>
                 {/* <Text style={styles.percentText}><AntDesign name="rocket1" size={24} color="green" /></Text> */}
             </View>
 
@@ -45,10 +56,13 @@ const PracticeCourse = () => {
                 {vocabCount ? (
                     <>
                         <Text style={styles.boldText2}>{vocabCount}</Text>
-                        <Text>Words need to practice</Text>
+                        <Text>Need to practice</Text>
                     </>
                 ) : (
-                    <Text>No Words to practice now</Text>
+                    <>
+                    <Text style={styles.boldText3}>0</Text>
+                        <Text style={{color:"#cedf74"}}>Need to practice</Text>
+                    </>
                 )}
             </View>
         </TouchableOpacity>
@@ -62,9 +76,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: '#5b7bfe', // Màu nền xanh
         borderRadius: 20, // Bo tròn góc
-        overflow: 'hidden', // Ẩn bất kỳ phần nào vượt ra ngoài giới hạn của container
+         // Ẩn bất kỳ phần nào vượt ra ngoài giới hạn của container
         marginBottom: 10, // Khoảng cách dưới cùng
-        height:130,
+        
     },
     imageContainer: {
         flex: 3, // Chiếm 60% chiều rộng
@@ -73,7 +87,7 @@ const styles = StyleSheet.create({
         padding: 5, // Khoảng cách padding
     },
     infoContainer: {
-        flex: 2, // Chiếm 40% chiều rộng
+        flex: 4, // Chiếm 40% chiều rộng
         padding: 10, // Khoảng cách padding
     },
     boldText: {
@@ -85,6 +99,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold', // In đậm
         fontSize: 38, // Kích thước phông chữ
         color: '#FFF', // Màu chữ trắng
+    },
+    boldText3: {
+        fontWeight: 'bold', // In đậm
+        fontSize: 38, // Kích thước phông chữ
+        color: '#cedf74', // Màu chữ trắng
     },
     secondaryText: {
         marginBottom:20,
