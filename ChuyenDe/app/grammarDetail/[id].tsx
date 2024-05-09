@@ -6,6 +6,7 @@ import { contentAndQuestion, grammar } from "@/model/grammar";
 import { getContentAndQuestionList, getGrammarById } from "../firebase/config";
 import { Text } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AntDesign } from "@expo/vector-icons";
 export default function SetDetail() {
     const { id } = useLocalSearchParams();
     const [grammar, setGrammars] = useState<grammar>();
@@ -59,9 +60,14 @@ export default function SetDetail() {
           </View>
         );
       }
+      const handlePressBack=()=>{
+        router.push("/grammar/");
+    }
     return (
         <>
             <SafeAreaView style={{ backgroundColor: "#FFF", height: "100%", padding: 10 }}>
+            <TouchableOpacity style={{alignSelf:"flex-start"}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
+
                 <Text style={{ textAlign: "center", fontSize: 28, fontWeight: "bold", marginBottom: 10, color: "black" }}>{grammar?.title}</Text>
                 <ScrollView>
                     {contentAndQuestions.map((caq, index, key) => (

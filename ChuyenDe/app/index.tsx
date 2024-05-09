@@ -5,7 +5,7 @@ import { ScrollView, StyleSheet, Text, View,Image, Button, Touchable, TouchableO
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { updateUserSource } from './firebase/config';
 import { clearAll } from '@/model/asyncStorage';
-
+import { AntDesign } from '@expo/vector-icons';
 export default function App() {
   const localImageUrl = require('../assets/images/illustrations.png');
   const handleExport=()=>{
@@ -17,6 +17,7 @@ export default function App() {
   
   return (
     <SafeAreaView style={{backgroundColor:"#410fa3",height:"100%"}}>
+      <TouchableOpacity><AntDesign name="arrowleft" size={24} color="black" /></TouchableOpacity>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.imageContainer}>
         {/* <Image

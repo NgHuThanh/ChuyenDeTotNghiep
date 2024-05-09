@@ -1,10 +1,12 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import GrammarComponent from './grammarComponent';
 import { grammar } from '@/model/grammar';
 import { getGrammarList } from '../firebase/config';
+import { AntDesign } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 const url = "https://api.mymemory.translated.net/get?q=Hello World!&langpair=en|it";
 const fetcher = async (url: string) => {
@@ -40,9 +42,12 @@ export default function GrammarHome() {
       </View>
     );
   }
-
+  const handlePressBack=()=>{
+    router.push("/(tabs)/home");
+  }
   return (
     <SafeAreaView style={{ backgroundColor: "#FFF", height: "100%", padding: 10 }}>
+      <TouchableOpacity style={{alignSelf:"flex-start"}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
       <ScrollView>
         {grammars.map((grammar) => (
           <GrammarComponent key={grammar.id} grammar={grammar} />

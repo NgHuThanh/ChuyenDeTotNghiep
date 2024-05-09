@@ -1,4 +1,5 @@
 import { getVocabsInSet, vocab } from '@/model/word';
+import { AntDesign } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
@@ -16,7 +17,7 @@ export default function MultipleChoice() {
         const allVocabs = await getVocabsInSet(id as string);
         setVocabs(allVocabs);
     };
-
+    
     useEffect(() => {
         fetchVocabs();
     }, []);
@@ -77,10 +78,15 @@ export default function MultipleChoice() {
         </TouchableOpacity>
     </View>
     }
+    const handlePressBack=()=>{
+        router.push("/(tabs)/bookmark");
+    }
     return (
         <>
             {vocabs && (
                 <SafeAreaView>
+                    <TouchableOpacity style={{alignSelf:"flex-start"}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
+
                     <View style={styles.progressContainer}>
                         <ProgressBar progress={(currentIndex) /(vocabs.length+1)} color={'green'} style={{ height: 20, borderRadius: 20,width:280,borderWidth:1 }} />
                     </View>

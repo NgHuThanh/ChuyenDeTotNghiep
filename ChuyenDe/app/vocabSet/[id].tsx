@@ -9,6 +9,7 @@ import React from 'react';
 import AddVocabComponent from './addVocab';
 import { getVocabsInSet, vocab } from '@/model/word';
 import { useLocalSearchParams } from 'expo-router';
+import { AntDesign } from '@expo/vector-icons';
 
 const url="https://api.mymemory.translated.net/get?q=Hello World!&langpair=en|it";
 const fetcher = async (url:string) => {
@@ -52,10 +53,14 @@ export default function SetDetail() {
         alignSelf: 'center',
         justifyContent: 'center',
       };
+      const handlePressBack=()=>{
+        router.push("/(tabs)/bookmark")
+      }
   return (
     <>
         <SafeAreaView style={styles.container}>
         <PaperProvider >
+        
             <Portal>
                 <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
                 <AddVocabComponent nameSet={id as string}/>
@@ -63,6 +68,7 @@ export default function SetDetail() {
             </Portal>
         
             <View style={styles.headContainer}>
+            <TouchableOpacity onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="#FFF" /></TouchableOpacity>
                 <Text style={styles.text}>{id}</Text>    
             </View>
             <TextInput
@@ -98,7 +104,8 @@ const styles = StyleSheet.create({
     marginTop:20,
     color: '#faf9fd',
     fontWeight:"bold",
-    fontSize: 18,
+    fontSize: 28,
+    textAlign:"center",
     },
     button: {
         backgroundColor: '#5b7bfe',

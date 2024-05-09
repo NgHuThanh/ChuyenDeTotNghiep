@@ -1,12 +1,9 @@
-import CustomButton from '@/component/CustomButton';
-import { Feather } from '@expo/vector-icons';
-import { Link, router } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+import { AntDesign, Feather } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View,Image, Button, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View,TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import useSWR from 'swr';
 
 const url="https://api.mymemory.translated.net/get?q=Hello World!&langpair=en|it";
 const fetcher = async (url:string) => {
@@ -54,9 +51,13 @@ export default function LongApp() {
       console.error('Error fetching translation:', error);
     }
   };
-
+  const handlePressBack=()=>{
+    router.push("/(tabs)/translate");
+  }
   return (
     <SafeAreaView style={{backgroundColor:"#FFF",height:"100%",padding:10}}>
+      <TouchableOpacity style={{alignSelf:"flex-start"}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
+
       <View>
         <TextInput
           label="Input text to translate"

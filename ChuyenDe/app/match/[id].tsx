@@ -1,5 +1,6 @@
 import { updatePracticeDays } from "@/model/practiceDay";
 import { getVocabsInSet, vocab } from "@/model/word";
+import { AntDesign } from "@expo/vector-icons";
 import { useLocalSearchParams, router } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View, Image, Button, TouchableOpacity, ViewStyle } from 'react-native';
@@ -148,10 +149,15 @@ export default function Match() {
         </TouchableOpacity>
     </View>
     }
+    const handlePressBack=()=>{
+        router.push("/(tabs)/bookmark");
+    }
     return (
         <>
             {vocabs && (
                 <SafeAreaView style={{ flex: 1 }}>
+                    <TouchableOpacity style={{alignSelf:"flex-start"}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
+
                     <View style={styles.progressContainer}>
                     <ProgressBar
                         progress={currentVocabIndex / (vocabs ? vocabs.length : 1)}

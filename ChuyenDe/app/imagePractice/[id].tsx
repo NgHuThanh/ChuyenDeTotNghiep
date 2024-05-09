@@ -6,7 +6,7 @@ import { StyleSheet, Text, View, TouchableOpacity,Image } from 'react-native';
 import { ProgressBar } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useSWR from "swr";
-import { Feather } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import { updatePracticeDays } from '@/model/practiceDay';
 const apiKey = 'NGvxJOgt1mEPidUdOGOh9lOTrmwoTizDjXo6dCU7jUtXYNpdWwjPuy3p';
 const fetcher = async (url:string) => {
@@ -126,11 +126,16 @@ export default function ImagePractice() {
         </TouchableOpacity>
     </View>
     }
+    const handlePressBack=()=>{
+        router.push("/(tabs)/bookmark");
+    }
     return (
         <>
             {vocabs && (
                 <View style={{flex: 1}}>
                 <SafeAreaView style={{alignItems:"center",flex:1}}>
+                <TouchableOpacity style={{alignSelf:"flex-start"}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
+
                     <View style={[styles.progressContainer]}>
                         <ProgressBar progress={(currentIndex) / (vocabs.length)} color={'green'} style={{ height: 20, borderRadius: 20, width: 280, borderWidth: 1 }} />
                     </View>

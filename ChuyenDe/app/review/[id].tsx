@@ -123,10 +123,14 @@ export default function Review() {
         </TouchableOpacity>
     </View>
     }
+    const handlePressBack=()=>{
+        router.push("/(tabs)/bookmark");
+    }
     return (
         <>
             {vocabs && (
                 <SafeAreaView style={styles.container}>
+                    <TouchableOpacity style={{alignSelf:"flex-start"}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
                     <View style={styles.progressContainer}>
                         <ProgressBar progress={currentVocabIndex / (vocabs ? vocabs.length : 1)} color={'green'} style={{ height: 20, borderRadius: 20,width:280,borderWidth:1 }} />
                     </View>

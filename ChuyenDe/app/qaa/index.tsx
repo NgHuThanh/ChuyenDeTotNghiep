@@ -1,9 +1,10 @@
-import { Feather } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import { useState } from 'react';
 import { StyleSheet, Text, View,TouchableOpacity, ScrollView } from 'react-native';
 import { PaperProvider, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import QaaComponent from './qaaComponent';
+import { router } from 'expo-router';
 
 const url="https://api.mymemory.translated.net/get?q=Hello World!&langpair=en|it";
 const fetcher = async (url:string) => {
@@ -15,10 +16,14 @@ const fetcher = async (url:string) => {
 };
 
 export default function qaa() {
-  
+  const handlePressBack=()=>{
+    router.push("/(tabs)/home");
+  }
   return (
     <PaperProvider>
     <SafeAreaView style={styles.container}>
+    <TouchableOpacity style={{alignSelf:"flex-start"}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
+
         <View style={styles.boxQaa}><TouchableOpacity><Text style={styles.text}>What are you thinking now?</Text></TouchableOpacity></View>
         <ScrollView style={{padding:10}}>
             <QaaComponent/>

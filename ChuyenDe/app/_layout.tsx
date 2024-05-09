@@ -16,6 +16,7 @@ const Rootlayout = () => {
         <Stack.Screen name="muitiplechoice" options={{headerShown:false}}></Stack.Screen>
         <Stack.Screen name="qaa" options={{headerShown:false}}></Stack.Screen>
         <Stack.Screen name="review" options={{headerShown:false}}></Stack.Screen>
+        <Stack.Screen name="vocabSet" options={{headerShown:false}}></Stack.Screen>
 
     </Stack>
   )
