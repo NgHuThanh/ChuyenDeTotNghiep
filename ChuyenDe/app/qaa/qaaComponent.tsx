@@ -1,21 +1,31 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image, SafeAreaView, ViewStyle, Dimensions, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 import { Modal, PaperProvider, Portal, TextInput } from 'react-native-paper';
 import AvatarDetault from './avatarComponent';
+import { qaa, rep } from '../../model/qaa';
+import { getAllRepDocuments, writeRepToFirestore } from '../firebase/config';
 
-const QaaComponent = () => {
+const QaaComponent = (props:{qaa:qaa}) => {
     const [visible, setVisible] = React.useState(false);
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
+    const [reps,setReps]=useState<rep[]>([]);
     const [form, setForm] = useState({
         
         content: "",
         error: '', // Thêm trạng thái lỗi
         
       });
+      const fetchReps = async () => {
+        const allReps = await getAllRepDocuments(props.qaa.id);
+        setReps(allReps);
+      };
+      useEffect(() => {
+        fetchReps();
+      }, []);
     const containerStyle: ViewStyle = {
         position: 'absolute',
         top: 30,
@@ -28,38 +38,40 @@ const QaaComponent = () => {
         justifyContent: 'center',
         marginHorizontal:10,
     };
-    
+    const handlePressRep=()=>{
+        writeRepToFirestore(props.qaa.id,form.content);
+        
+    }
     return (
         <>
             <SafeAreaView >
-
                     <View style={styles.container}>
-                        <Text style={styles.title}>Title</Text>
-                    <View style={styles.userInfo}>
-                        <AvatarDetault/>
-                        <Text style={styles.userName}>Name user</Text>
-                    </View>
-                    <Text style={styles.content}>Hey guy, I just wonder how can I learn verbHey guy, I just wonder how can I learn verbHey guy, I just wonder how can I learn verbHey guy, I just wonder how can I learn verb</Text>
-                    <View style={styles.commentContainer}>
-                        <TouchableOpacity style={styles.commentButton} onPress={showModal}>
-                            <Feather name="message-circle" size={24} color="black" />
-                            <Text style={styles.commentText}>Comments </Text>
-                            <Text style={styles.timeAgo}>25 minutes ago</Text>
-                        </TouchableOpacity>
-                    </View>
+                        <Text style={styles.title}>{props.qaa.title}</Text>
+                        <View style={styles.userInfo}>
+                            <AvatarDetault/>
+                            <Text style={styles.userName}>{props.qaa.user}</Text>
+                        </View>
+                        <Text style={styles.content}>{props.qaa.content}</Text>
+                        <View style={styles.commentContainer}>
+                            <TouchableOpacity style={styles.commentButton} onPress={showModal}>
+                                <Feather name="message-circle" size={24} color="black" />
+                                <Text style={styles.commentText}>Comments </Text>
+                                <Text style={styles.timeAgo}>25 minutes ago</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                     
 
                     <Portal>
                         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
-                        <View style={{ flex: 1, alignItems: 'center',padding:10,minHeight:500 }}>
+                        <View style={{ flex: 1, alignItems: 'center',padding:10,minHeight:500,maxHeight:600 }}>
                             <View>
                                 <Text style={styles.title}>Title</Text>
                                 <View style={styles.userInfo}>
                                 <AvatarDetault/>
-                                    <Text style={styles.userName}>Name user</Text>
+                                    <Text style={styles.userName}>{props.qaa.user}</Text>
                                 </View>
-                                <Text style={styles.content}>Hey guy, I just wonder how can I learn verbHey guy, I just wonder how can I learn verbHey guy, I just wonder how can I learn verbHey guy, I just wonder how can I learn verb</Text>
+                                <Text style={styles.content}>{props.qaa.content}</Text>
                                 <View style={styles.commentContainer}>
                                     <TouchableOpacity style={styles.commentButton}>
                                         <Feather name="message-circle" size={24} color="black" />
@@ -69,17 +81,21 @@ const QaaComponent = () => {
                                 </View>
                             </View>
                             <ScrollView>
-                                <View>
+                                {reps.map((rep)=>(
+                                    <View>
                                     <View style={styles.container2}>
                                     <View style={styles.userInfo}>
                                         <AvatarDetault/>
-                                        <Text style={styles.userName}>User</Text>
+                                        <Text style={styles.userName}>{rep.user}</Text>
                                         </View>
                                         
                                         <Text style={styles.timeAgo}>6 h ago</Text>
-                                        <Text>Just like normal, do what you learn in school will be okay</Text>
+                                        <Text>{rep.content}</Text>
                                     </View>
                                 </View>
+                                ))}
+                                
+                                
                             </ScrollView>
                            
                         </View>
@@ -96,7 +112,7 @@ const QaaComponent = () => {
                                     onChangeText={(text) => setForm({ ...form, content: text })}
                                     style={styles.input}
                                 />
-                                <TouchableOpacity>
+                                <TouchableOpacity onPress={handlePressRep}>
                                     <Feather name="send" size={24} color="blue" />
                                 </TouchableOpacity>
                             </View>
@@ -118,6 +134,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         padding:10,
         // Các kiểu khác...
+        alignItems:"flex-start",
     },
     absoluteContainer: {
         
@@ -132,6 +149,7 @@ const styles = StyleSheet.create({
         padding: 10,
         flexDirection: 'row',
         alignItems: 'center',
+        width:"95%",
     },
     input: {
         width: "90%",

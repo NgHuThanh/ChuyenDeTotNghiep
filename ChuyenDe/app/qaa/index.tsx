@@ -1,5 +1,5 @@
 import { AntDesign, Feather } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View,TouchableOpacity, ScrollView, ViewStyle } from 'react-native';
 import { Modal, PaperProvider, Portal, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,6 +7,9 @@ import QaaComponent from './qaaComponent';
 import { router } from 'expo-router';
 import React from 'react';
 import AvatarDetault from './avatarComponent';
+import { getAllQaaDocuments, writeToFirestore } from '../firebase/config';
+import { qaa } from '../../model/qaa'; // Đường dẫn này có thể đã trùng với đường dẫn của một tên khác trong index.tsx
+
 
 const url="https://api.mymemory.translated.net/get?q=Hello World!&langpair=en|it";
 const fetcher = async (url:string) => {
@@ -17,13 +20,24 @@ const fetcher = async (url:string) => {
   return response.json();
 };
 
-export default function qaa() {
+export default function qaaa() {
+    const [questionandanswer,setquestionandanswer]=useState<qaa[]>([])
     const [form, setForm] = useState({
         title: "",
         content: "",
         error: '', // Thêm trạng thái lỗi
         
       });
+    
+      const fetchQaas = async () => {
+        const allQaas = await getAllQaaDocuments();
+        setquestionandanswer(allQaas);
+      };
+      
+
+      useEffect(() => {
+        fetchQaas();
+      }, []);
   const handlePressBack=()=>{
     router.push("/(tabs)/home");
   }
@@ -42,6 +56,20 @@ const containerStyle: ViewStyle = {
         justifyContent: 'center',
         marginHorizontal:10,
     };
+    const handlePost = () => {
+        // Ghi dữ liệu lên Firestore
+        writeToFirestore(form.title, form.content);
+    
+        // Reset lại giá trị của form
+        setForm({
+            title: "",
+            content: "",
+            error: '', // Thêm trạng thái lỗi
+        });
+    
+        // Ẩn modal
+        hideModal();
+    };
   return (
     <PaperProvider>
     <SafeAreaView style={styles.container}>
@@ -54,10 +82,14 @@ const containerStyle: ViewStyle = {
     </View>
 
         <ScrollView style={{padding:10}}>
-            <QaaComponent/>
-            <QaaComponent/>
-            <QaaComponent/>
-            <QaaComponent/>
+            {questionandanswer.map((qa)=>(
+                <>
+                <QaaComponent qaa={qa}/>
+                </>
+            
+            ))}
+
+            
         </ScrollView>
         <Portal>
             <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
@@ -74,11 +106,11 @@ const containerStyle: ViewStyle = {
                             mode="outlined"
                             label="Content"
                             placeholder="Enter what are you thinking?"
-                            value={form.title}
+                            value={form.content}
                             onChangeText={(text) => setForm({ ...form, content: text })}
                             style={styles.input2}
                         />         
-                    <TouchableOpacity style={styles.commentButton}>Post now</TouchableOpacity>
+                    <TouchableOpacity onPress={handlePost} style={styles.commentButton}>Post now</TouchableOpacity>
                 </View>
             </Modal>
         </Portal>

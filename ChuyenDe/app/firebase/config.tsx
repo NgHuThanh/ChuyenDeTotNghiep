@@ -1,5 +1,6 @@
 import { exportData, importData, importSetData } from '@/model/asyncStorage';
 import { content, contentAndQuestion, grammar, question } from '@/model/grammar';
+import { qaa, rep } from '@/model/qaa';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
 import {addDoc, collection, doc, getDoc, getDocs, getFirestore, query, updateDoc, where } from 'firebase/firestore';
@@ -233,5 +234,83 @@ export const importSet = async (id: string) => {
   } catch (error) {
       console.error('Error importing set:', error);
       return null;
+  }
+};
+export const writeToFirestore = async (title: string, content: string): Promise<string> => {
+  const userName=await AsyncStorage.getItem("username");
+  try {
+      const docRef = await addDoc(collection(firestore, 'qaa'), {
+          title: title,
+          content: content,
+          timecreate: new Date(), // Thêm thông tin thời gian tạo
+          user: userName // Thêm thông tin người dùng
+      });
+      console.log('Document written with ID: ', docRef.id);
+      // Return the document ID if needed
+      return docRef.id;
+  } catch (e) {
+      console.error('Error adding document: ', e);
+      throw new Error('Failed to write document to Firestore');
+  }
+};
+export const writeRepToFirestore = async (id: string, content: string): Promise<string> => {
+  const userName=await AsyncStorage.getItem("username");
+  try {
+      const docRef = await addDoc(collection(firestore, 'qaa/'+id+'/replied'), {
+          content: content,
+          timecreate: new Date(), // Thêm thông tin thời gian tạo
+          user: userName // Thêm thông tin người dùng
+      });
+      console.log('Document written with ID: ', docRef.id);
+      // Return the document ID if needed
+      return docRef.id;
+  } catch (e) {
+      console.error('Error adding document: ', e);
+      throw new Error('Failed to write document to Firestore');
+  }
+};
+export const getAllQaaDocuments = async (): Promise<qaa[]> => {
+  try {
+      const querySnapshot = await getDocs(collection(firestore, 'qaa'));
+      const qaaList: qaa[] = [];
+
+      querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const qaaData: qaa = {
+              id: doc.id,
+              title: data.title || '',
+              content: data.content || '',
+              timecreate: data.timecreate.toDate(), // Chuyển đổi thời gian từ Firestore Timestamp sang JavaScript Date
+              user: data.user || ''
+          };
+          qaaList.push(qaaData);
+      });
+
+      return qaaList;
+  } catch (error) {
+      console.error('Error getting documents:', error);
+      return [];
+  }
+};
+export const getAllRepDocuments = async (id:string): Promise<rep[]> => {
+  try {
+      const querySnapshot = await getDocs(collection(firestore, 'qaa/'+id+'/replied'));
+      const qaaList: rep[] = [];
+
+      querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const qaaData: rep = {
+              id: doc.id,
+              content: data.content || '',
+              timecreate: data.timecreate.toDate(), // Chuyển đổi thời gian từ Firestore Timestamp sang JavaScript Date
+              user: data.user || ''
+          };
+          qaaList.push(qaaData);
+      });
+
+      return qaaList;
+  } catch (error) {
+      console.error('Error getting documents:', error);
+      return [];
   }
 };
