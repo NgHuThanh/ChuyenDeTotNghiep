@@ -48,7 +48,7 @@ const PracticeCourse = () => {
                 <Text style={styles.boldText}>Practice Your Word</Text>
                 <Text style={styles.boldText}></Text>
                 <Text style={styles.secondaryText}>Keep it going!</Text>
-                <Text style={styles.secondaryText}>Today you practice: {practiced[0].count} words</Text>
+                <Text style={styles.secondaryText}>Today you practice: {practiced.length > 0 ? practiced[0].count : 0} words</Text>
                 {/* <Text style={styles.percentText}><AntDesign name="rocket1" size={24} color="green" /></Text> */}
             </View>
 
