@@ -9,6 +9,7 @@ import React from 'react';
 import AvatarDetault from './avatarComponent';
 import { getAllQaaDocuments, writeToFirestore } from '../firebase/config';
 import { qaa } from '../../model/qaa'; // Đường dẫn này có thể đã trùng với đường dẫn của một tên khác trong index.tsx
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const url="https://api.mymemory.translated.net/get?q=Hello World!&langpair=en|it";
@@ -21,6 +22,7 @@ const fetcher = async (url:string) => {
 };
 
 export default function qaaa() {
+    
     const [questionandanswer,setquestionandanswer]=useState<qaa[]>([])
     const [form, setForm] = useState({
         title: "",
@@ -38,6 +40,18 @@ export default function qaaa() {
       useEffect(() => {
         fetchQaas();
       }, []);
+
+      useEffect(() => {
+        checkUsername();
+      }, []);
+
+      const checkUsername = async () => {
+        const username = await AsyncStorage.getItem('username');
+        if (!username) {
+          router.push("/(auth)/sign-in");
+        }
+      };
+
   const handlePressBack=()=>{
     router.push("/(tabs)/home");
   }
@@ -70,6 +84,7 @@ const containerStyle: ViewStyle = {
         // Ẩn modal
         hideModal();
     };
+    
   return (
     <PaperProvider>
     <SafeAreaView style={styles.container}>

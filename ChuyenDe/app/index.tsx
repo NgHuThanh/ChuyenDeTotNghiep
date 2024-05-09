@@ -5,19 +5,35 @@ import { ScrollView, StyleSheet, Text, View,Image, Button, Touchable, TouchableO
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { updateUserSource } from './firebase/config';
 import { clearAll } from '@/model/asyncStorage';
-import { AntDesign } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from 'react';
 export default function App() {
   const localImageUrl = require('../assets/images/illustrations.png');
+  const [ex,setEx]=useState(false);
   const handleExport=()=>{
     updateUserSource()
   }
-  const handleClear=()=>{
-    clearAll()
-  }
   
+  const check=async ()=>{
+    const userId=await AsyncStorage.getItem("username");
+    if(userId!=null){
+      router.push("/(tabs)/home");
+    }
+    else{
+      setEx(true);
+        }
+  }
+  useEffect(() => {
+    check();
+  }, []);
+  if(ex==false){
+    return (<SafeAreaView style={{backgroundColor:"#410fa3",height:"100%",alignItems:"center",justifyContent:"center"}}>
+       <Text style={styles.text}>Loading...</Text>
+    </SafeAreaView>);
+  }
   return (
     <SafeAreaView style={{backgroundColor:"#410fa3",height:"100%"}}>
-      <TouchableOpacity><AntDesign name="arrowleft" size={24} color="black" /></TouchableOpacity>
+      
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.imageContainer}>
         {/* <Image
