@@ -10,10 +10,15 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
     const [exist,setExist]=useState(true);
     const [practicePressed, setPracticePressed] = useState(false);
     const [visible, setVisible] = React.useState(false);
+    const [visible2, setVisible2] = React.useState(false);
+    const [visible3, setVisible3] = React.useState(false);
     const [id, setID] = useState<string | null | undefined>(undefined);
     const showModal = () => setVisible(true);
     const handlePractice = () => {
-        setPracticePressed(true);
+        setVisible2(true);
+    };
+    const DeleteConfirm = () => {
+        setVisible3(true);
     };
     if(exist==false){
         return <></>;
@@ -30,11 +35,14 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
 
         fetchData();
     }, [props.setVocab.name]);
-    const handleDeleteSet = () => {
-        deleteSet(props.setVocab.name);
-        props.fetchSets();
-        setExist(false);
-    }
+    const handleDeleteSet = async () => {
+        try {
+            await deleteSet(props.setVocab.name); // Xóa dữ liệu từ async storage
+            await props.fetchSets(); // Cập nhật lại trang kia bằng cách gọi hàm fetchSets từ props
+        } catch (error) {
+            console.error('Error deleting set:', error);
+        }
+    };
     const handleReview=()=>{
         router.push(`/review/${props.setVocab.name}`)
     }
@@ -59,20 +67,67 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
         setVisible(false)
         
       };
+      const hideModal2 = () => {
+        
+        setVisible2(false)
+        
+      };
+      const hideModal3 = () => {
+        
+        setVisible3(false)
+        
+      };
     const containerStyle: ViewStyle = {
     backgroundColor: 'white',
-    padding: 0,
-    width: 300,
-    height: 200,
+    padding: 10,
+    
     alignSelf: 'center',
     justifyContent: 'center',
+    borderRadius:20,
+    alignItems:"center",
+    
     };
     return (
         <TouchableOpacity style={styles.container} onPress={goToDestination}>
             <Portal>
                 <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
-                <Text>ID to share:{id}</Text>
+                <Text style={styles.boldText}>ID to share:</Text>
+                <Text style={styles.percentText}>{id}</Text>
             </Modal></Portal>
+            <Portal>
+                <Modal visible={visible3} onDismiss={hideModal3} contentContainerStyle={containerStyle}>
+                    <View style={styles.infoContainer}>
+                        <Text style={styles.boldText}>Are you sure want to delete?</Text>
+                        
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity style={styles.button} activeOpacity={0.7}>
+                            <Text style={styles.buttonText} onPress={handleDeleteSet}>Delete</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.button}>
+                                <Text style={styles.buttonText} onPress={hideModal3}>Cancle</Text>
+                            </TouchableOpacity>
+                        </View>
+                    
+                    
+                    </View>
+            </Modal></Portal>
+            <Portal>
+                <Modal visible={visible2} onDismiss={hideModal2} contentContainerStyle={containerStyle}>
+                
+                    <View style={styles.buttonContainer2}>
+                    <TouchableOpacity style={styles.button2} activeOpacity={0.2}>
+                    <Text style={styles.buttonText} onPress={handleMultipleChoice}>Multiples choice</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button2} activeOpacity={0.7}>
+                    <Text style={styles.buttonText} onPress={handleMatchChoice}>Match game</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button2} activeOpacity={0.7}>
+                    <Text style={styles.buttonText} onPress={handleImagePractice}>Image game</Text>
+                    </TouchableOpacity>
+                </View>
+                
+            </Modal>
+            </Portal>
             <View style={styles.infoContainer}>
                 <Text style={styles.boldText}>{props.setVocab.name}</Text>
                 <Text style={styles.secondaryText}>{props.setVocab.vocabs?.length} Cards</Text>
@@ -81,33 +136,19 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
                     <Text style={styles.buttonText} onPress={handleReview}>Review</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={[styles.button, { opacity: practicePressed ? 0.5 : 1 }]}
-                        activeOpacity={practicePressed ? 1 : 0.7}
-                        disabled={practicePressed}
+                        style={styles.button}
                         onPress={handlePractice}
                     >
                         <Text style={styles.buttonText}>Practice</Text>
                     </TouchableOpacity>
                 </View>
                 
-                {practicePressed && (
-                    <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button2} activeOpacity={0.2}>
-                    <Text style={styles.buttonText} onPress={handleMultipleChoice}>Multiples</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button2} activeOpacity={0.7}>
-                    <Text style={styles.buttonText} onPress={handleMatchChoice}>Match</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button2} activeOpacity={0.7}>
-                    <Text style={styles.buttonText} onPress={handleImagePractice}>Image</Text>
-                    </TouchableOpacity>
-                </View>
-                )}
+                
             </View>
             <View style={styles.imageContainer}>
             
             <TouchableOpacity  activeOpacity={0.7}>
-            <MaterialIcons name="delete" size={24} color="#5b7bfe" onPress={handleDeleteSet} />
+            <MaterialIcons name="delete" size={24} color="#5b7bfe" onPress={DeleteConfirm} />
             </TouchableOpacity>
             <TouchableOpacity  activeOpacity={0.7} onPress={handleShare}>
             <Feather name="share" size={24} color="#5b7bfe" />
@@ -164,6 +205,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between', // Căn đều các button trong hàng ngang
         marginVertical: 10, // Khoảng cách dọc giữa text input và button container
       },
+      buttonContainer2: {
+         // Sắp xếp các button theo hàng ngang
+        justifyContent: 'space-between', // Căn đều các button trong hàng ngang
+        marginVertical: 10, // Khoảng cách dọc giữa text input và button container
+        padding:10,
+        borderRadius:20,
+      },
     boldText: {
         fontWeight: 'bold', // In đậm
         fontSize: 18, // Kích thước phông chữ
@@ -176,6 +224,7 @@ const styles = StyleSheet.create({
     percentText: {
         marginBottom:20,
         color: 'green', // Màu #888
+        fontSize:20,
     },
     button: {
         backgroundColor: '#5b7bfe',
@@ -188,8 +237,8 @@ const styles = StyleSheet.create({
       button2: {
         backgroundColor: '#5b7bfe',
         borderRadius: 8,
-        height:'200%',
-        width: '30%', // Chiếm 48% chiều rộng của parent (SafeAreaView)
+        margin:10,
+        padding:10,
         justifyContent: 'center',
         alignItems: 'center',
       },

@@ -69,8 +69,9 @@ const BookMark = () => {
     justifyContent: 'center',
   };
   return (
+    <PaperProvider >
     <SafeAreaView style={styles.container}>
-      <PaperProvider >
+      
       <Portal>
         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
           <AddSetComponent fetchSets={fetchSets} />
@@ -98,8 +99,9 @@ const BookMark = () => {
       <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={showModal}>
         <AntDesign name="addfolder" size={24} color="#FFF" />
       </TouchableOpacity>
-      </PaperProvider>
+      
     </SafeAreaView>
+    </PaperProvider>
   )
 }
 
