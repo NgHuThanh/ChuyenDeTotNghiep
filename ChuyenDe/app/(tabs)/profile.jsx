@@ -5,9 +5,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
 import { StackedBarChart } from "react-native-chart-kit";
-import { Dimensions } from "react-native";
+import { Dimensions,ViewStyle } from "react-native";
 import { getPracticeDays } from "../../model/practiceDay";
 import {setAsyncData} from "../../model/word";
+import { Modal, Portal,PaperProvider } from 'react-native-paper';
+import { router, useLocalSearchParams } from "expo-router";
+import {logout} from "../firebase/config"
 const screenWidth = Dimensions.get("window").width;
 
 const Profile = () => {
@@ -17,7 +20,19 @@ const Profile = () => {
   const [dateLabels, setDateLabels] = useState([]);
   const [selectedDate, setSelectedDate] = useState('');
   const [practiceCounts, setPracticeCounts] = useState([]);
-
+  const [visible, setVisible] = React.useState(false);
+  const showModal = () => setVisible(true);
+  const logoutConfirmed = () => {
+    
+    setVisible(false);
+    logout();
+    router.push("/");
+  };
+  const hideModal = () => {
+    
+    setVisible(false);
+    
+  };
   useEffect(() => {
     const getUsername = async () => {
       
@@ -76,7 +91,7 @@ const Profile = () => {
       setCurrentDate(nextDate);
     }
   };
-
+  
   const updatePracticeCounts = async (labels) => {
     const practiceDays = await getPracticeDays();
     const counts = labels.map(({ day, month }) => { // Sử dụng destructuring để lấy ngày và tháng từ mảng nhãn
@@ -115,16 +130,23 @@ const Profile = () => {
     useShadowColorFromDataset: false,
      
   };
+ 
+  
 
   return (
-    <SafeAreaView style={{ backgroundColor: '#FFF' }}>
+    <PaperProvider>
+      <SafeAreaView style={{ backgroundColor: '#FFF' }}>
       <ScrollView>
         <View style={styles.headContainer}>
           <Text style={styles.text}>PROFILE</Text> {/* Hiển thị username */}
           <Text style={styles.textt}>Username: {username}</Text>
           <Text style={styles.textt}>Email: {email}</Text>
-          <Text style={styles.textSmall}>Let see your progress</Text>
-        </View>
+          <View style={{flexDirection:"row"}}>
+            <Text style={styles.textSmall}>Let see your progress</Text>
+            <TouchableOpacity style={{borderRadius:"50%",padding:5,backgroundColor:"#FFF",margin:10}}onPress={showModal}><AntDesign name="logout" size={24} color="#410fa3" /></TouchableOpacity>
+          
+          </View>
+          </View>
         <View>
           <View style={styles.dateContainer}>
             <TouchableOpacity onPress={handlePreviousDate}><AntDesign name="caretleft" size={24} color="black" /></TouchableOpacity>
@@ -140,7 +162,20 @@ const Profile = () => {
           />
         </View>
       </ScrollView>
+      <Portal>
+        <Modal visible={visible} onDismiss={hideModal}>
+          <View style={{backgroundColor:"#FFF",alignItems:"center",padding:20}}>
+            <Text style={{fontSize:20,fontWeight:"bold"}}>Are you sure want to log out?</Text>
+            <View style={{flexDirection:"row"}}>
+              <TouchableOpacity style={{margin:10,width:100,padding:10,borderRadius:10, backgroundColor:"blue",color:"#FFF"}} onPress={logoutConfirmed}>Yes</TouchableOpacity>
+              <TouchableOpacity style={{margin:10,width:100,padding:10,borderRadius:10, backgroundColor:"blue",color:"#FFF"}} onPress={hideModal}>No</TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      </Portal>
     </SafeAreaView>
+    </PaperProvider>
+    
   );
 };
 

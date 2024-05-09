@@ -168,6 +168,20 @@ export const login = async (email:string, password:string) => {
     return false;
   }
 };
+export const logout = async () => {
+  try {
+    // Xóa các AsyncStorage chứa thông tin đăng nhập
+    await AsyncStorage.removeItem('email');
+    await AsyncStorage.removeItem('userId');
+    await AsyncStorage.removeItem('username');
+    // Trả về true để chỉ ra rằng đăng xuất thành công
+    return true;
+  } catch (error) {
+    console.error("Error logging out:", error);
+    // Nếu xảy ra lỗi, trả về false
+    return false;
+  }
+};
 export const updateUserSource = async () => {
   try {
       // Lấy userId từ AsyncStorage
