@@ -56,12 +56,12 @@ const PracticeCourse = () => {
                 {vocabCount ? (
                     <>
                         <Text style={styles.boldText2}>{vocabCount}</Text>
-                        <Text>Need to practice</Text>
+                        <Text style={{color:"pink",fontSize:16,fontWeight:"bold"}}>Need to practice</Text>
                     </>
                 ) : (
                     <>
                     <Text style={styles.boldText3}>0</Text>
-                        <Text style={{color:"#cedf74"}}>Need to practice</Text>
+                        <Text style={{color:"#cedf74",fontSize:20,fontWeight:"bold"}}>Need to practice</Text>
                     </>
                 )}
             </View>
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     boldText2: {
         fontWeight: 'bold', // In đậm
         fontSize: 38, // Kích thước phông chữ
-        color: '#FFF', // Màu chữ trắng
+        color: 'pink', // Màu chữ trắng
     },
     boldText3: {
         fontWeight: 'bold', // In đậm

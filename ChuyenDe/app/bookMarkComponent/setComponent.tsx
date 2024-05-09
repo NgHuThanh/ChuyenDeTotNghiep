@@ -97,7 +97,7 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
             <Portal>
                 <Modal visible={visible3} onDismiss={hideModal3} contentContainerStyle={containerStyle}>
                     <View style={styles.infoContainer}>
-                        <Text style={styles.boldText}>Are you sure want to delete?</Text>
+                        <Text style={styles.boldText}>Are you sure want to delete set {props.setVocab.name}?</Text>
                         
                         <View style={styles.buttonContainer}>
                             <TouchableOpacity style={styles.button} activeOpacity={0.7}>

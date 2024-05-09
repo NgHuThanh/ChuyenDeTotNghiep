@@ -20,8 +20,7 @@ const Profile = () => {
 
   useEffect(() => {
     const getUsername = async () => {
-      const test= await setAsyncData("New");
-      console.log(test);
+      
       try {
         const storedUsername = await AsyncStorage.getItem('username');
         const storedEmail = await AsyncStorage.getItem('email');

@@ -14,7 +14,7 @@ const BookMark = () => {
   const [sets, setSets] = useState<SetModel[] | null>(null);
   const [filteredSets, setFilteredSets] = useState<SetModel[] | null>(null);
   const [username, setUsername] = useState('');
-  exportData();
+  
   useEffect(() => {
     // Lấy giá trị của 'username' từ AsyncStorage khi component được render
     const getUsername = async () => {
