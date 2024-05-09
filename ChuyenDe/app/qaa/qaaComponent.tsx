@@ -7,7 +7,25 @@ import { Modal, PaperProvider, Portal, TextInput } from 'react-native-paper';
 import AvatarDetault from './avatarComponent';
 import { qaa, rep } from '../../model/qaa';
 import { getAllRepDocuments, writeRepToFirestore } from '../firebase/config';
-
+export const calculateTimeAgo = (time: Date) => {
+    const now = new Date();
+    const diff = now.getTime() - time.getTime(); // Sử dụng getTime để lấy giá trị thời gian ở đơn vị milliseconds
+    
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    
+    if (days > 0) {
+        return `${days} day${days > 1 ? 's' : ''} ago`;
+    } else if (hours > 0) {
+        return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    } else if (minutes > 0) {
+        return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    } else {
+        return 'just now';
+    }
+};
 const QaaComponent = (props:{qaa:qaa}) => {
     const [visible, setVisible] = React.useState(false);
     const showModal = () => setVisible(true);
@@ -42,6 +60,7 @@ const QaaComponent = (props:{qaa:qaa}) => {
         writeRepToFirestore(props.qaa.id,form.content);
         
     }
+    
     return (
         <>
             <SafeAreaView >
@@ -56,7 +75,7 @@ const QaaComponent = (props:{qaa:qaa}) => {
                             <TouchableOpacity style={styles.commentButton} onPress={showModal}>
                                 <Feather name="message-circle" size={24} color="black" />
                                 <Text style={styles.commentText}>Comments </Text>
-                                <Text style={styles.timeAgo}>25 minutes ago</Text>
+                                <Text style={styles.timeAgo}>{calculateTimeAgo(props.qaa.timecreate)}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -76,7 +95,7 @@ const QaaComponent = (props:{qaa:qaa}) => {
                                     <TouchableOpacity style={styles.commentButton}>
                                         <Feather name="message-circle" size={24} color="black" />
                                         <Text style={styles.commentText}>Comments </Text>
-                                        <Text style={styles.timeAgo}>25 minutes ago</Text>
+                                        <Text style={styles.timeAgo}>{calculateTimeAgo(props.qaa.timecreate)}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -89,7 +108,7 @@ const QaaComponent = (props:{qaa:qaa}) => {
                                         <Text style={styles.userName}>{rep.user}</Text>
                                         </View>
                                         
-                                        <Text style={styles.timeAgo}>6 h ago</Text>
+                                        <Text style={styles.timeAgo}>{calculateTimeAgo(rep.timecreate)}</Text>
                                         <Text>{rep.content}</Text>
                                     </View>
                                 </View>

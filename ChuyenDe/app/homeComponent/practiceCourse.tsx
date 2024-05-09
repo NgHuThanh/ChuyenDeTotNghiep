@@ -61,7 +61,7 @@ const PracticeCourse = () => {
                 ) : (
                     <>
                     <Text style={styles.boldText3}>0</Text>
-                        <Text style={{color:"#cedf74",fontSize:20,fontWeight:"bold"}}>Need to practice</Text>
+                        <Text style={{color:"#cedf74",fontSize:16,fontWeight:"bold"}}>Need to practice</Text>
                     </>
                 )}
             </View>
