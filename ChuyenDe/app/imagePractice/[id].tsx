@@ -142,18 +142,22 @@ export default function ImagePractice() {
                     <View style={{maxHeight:300,minHeight:300,marginBottom:10}}>
                     {data && data.photos && (
                         <View style={styles.imageContainer}>
-                        <Image
-                            source={{uri: data.photos[currentImageIndex].src.medium}}
-                            style={styles.image}
-                            resizeMode="stretch"
-                        />
-                        <View style={styles.photographerContainer}>
-                            <Text style={styles.photographerText}>By: {data.photos[currentImageIndex].photographer}</Text>
-                        </View>
-                        <TouchableOpacity style={{backgroundColor:"#410fa3",padding:10,borderRadius:10,alignItems:"center"}} onPress={handleNextImage}>
-                            <Feather name="refresh-ccw" size={18} color="#FFF" />
-                        </TouchableOpacity>
-                        <Text style={{fontWeight:"bold",fontSize:20}}>What's it?</Text>
+                         {data && data.photos && data.photos[currentImageIndex] && data.photos[currentImageIndex].src ? (
+        <Image
+            source={{ uri: data.photos[currentImageIndex].src.medium }}
+            style={styles.image}
+            resizeMode="stretch"
+        />
+    ) : (
+        <Text style={{minHeight:200}}>Image not found</Text>
+    )}
+    <View style={styles.photographerContainer}>
+        <Text style={styles.photographerText}>By: {data.photos[currentImageIndex]?.photographer}</Text>
+    </View>
+    <TouchableOpacity style={{ backgroundColor: "#410fa3", padding: 10, borderRadius: 10, alignItems: "center" }} onPress={handleNextImage}>
+        <Feather name="refresh-ccw" size={18} color="#FFF" />
+    </TouchableOpacity>
+    <Text style={{ fontWeight: "bold", fontSize: 20 }}>What's it?</Text>
                     </View>
                     )}
                     {data==null&& (

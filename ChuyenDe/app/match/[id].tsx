@@ -165,10 +165,7 @@ export default function Match() {
                         style={styles.progressBar}
                     />
                     </View>
-                    <View style={styles.container2}>
-                    <View style={styles.containerButton}><Text>Word:{cLeft}</Text></View>
-                    <View style={styles.containerButton}><Text>Definition:{cRight}</Text></View>
-                    </View>
+                   
                 <ScrollView horizontal={false} contentContainerStyle={styles.scrollViewContent}>
                     <View style={styles.container}>
                         <View style={styles.containerButton}>
