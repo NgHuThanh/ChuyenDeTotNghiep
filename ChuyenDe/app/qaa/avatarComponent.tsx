@@ -21,8 +21,8 @@ export default AvatarDetault
 
 const styles = StyleSheet.create({
     imageContainer: {
-        width: 50,
-        height: 50,
+        width: 40,
+        height: 40,
         borderWidth: 3,
         borderColor: 'white',
         borderRadius: 100,

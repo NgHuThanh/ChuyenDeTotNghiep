@@ -251,7 +251,7 @@ export const importSet = async (id: string) => {
   }
 };
 export const writeToFirestore = async (title: string, content: string): Promise<string> => {
-  const userName=await AsyncStorage.getItem("username");
+  const userName=await AsyncStorage.getItem("userId");
   try {
       const docRef = await addDoc(collection(firestore, 'qaa'), {
           title: title,
@@ -268,7 +268,7 @@ export const writeToFirestore = async (title: string, content: string): Promise<
   }
 };
 export const writeRepToFirestore = async (id: string, content: string): Promise<string> => {
-  const userName=await AsyncStorage.getItem("username");
+  const userName=await AsyncStorage.getItem("userId");
   try {
       const docRef = await addDoc(collection(firestore, 'qaa/'+id+'/replied'), {
           content: content,
@@ -326,5 +326,28 @@ export const getAllRepDocuments = async (id:string): Promise<rep[]> => {
   } catch (error) {
       console.error('Error getting documents:', error);
       return [];
+  }
+};
+export const getUserInfo = async (id: string) => {
+  try {
+      // Tạo tham chiếu đến tài liệu trong collection "onlineWord" với ID được cung cấp
+      const userDocRef = doc(firestore, 'users', id);
+      
+      // Lấy dữ liệu của tài liệu
+      const userDocSnap = await getDoc(userDocRef);
+
+      // Kiểm tra xem tài liệu có tồn tại không
+      if (userDocSnap.exists()) {
+          // Trả về thuộc tính "source" của tài liệu
+          const source = userDocSnap.data()?.username;
+          console.log(source);
+          return source;
+      } else {
+          console.error('Document does not exist in Firestore.');
+          
+      }
+  } catch (error) {
+      console.error('Error importing set:', error);
+      return null;
   }
 };

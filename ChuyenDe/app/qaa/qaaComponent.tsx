@@ -6,7 +6,9 @@ import { Feather } from '@expo/vector-icons';
 import { Modal, PaperProvider, Portal, TextInput } from 'react-native-paper';
 import AvatarDetault from './avatarComponent';
 import { qaa, rep } from '../../model/qaa';
-import { getAllRepDocuments, writeRepToFirestore } from '../firebase/config';
+import { getAllRepDocuments, getUserInfo, writeRepToFirestore } from '../firebase/config';
+import RepComponent from './repComponent';
+import { Entypo } from '@expo/vector-icons';
 export const calculateTimeAgo = (time: Date) => {
     const now = new Date();
     const diff = now.getTime() - time.getTime(); // Sử dụng getTime để lấy giá trị thời gian ở đơn vị milliseconds
@@ -31,6 +33,7 @@ const QaaComponent = (props:{qaa:qaa}) => {
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
     const [reps,setReps]=useState<rep[]>([]);
+    const [userName,setUserName]=useState();
     const [form, setForm] = useState({
         
         content: "",
@@ -39,6 +42,8 @@ const QaaComponent = (props:{qaa:qaa}) => {
       });
       const fetchReps = async () => {
         const allReps = await getAllRepDocuments(props.qaa.id);
+        const name=await getUserInfo(props.qaa.user);
+        setUserName(name);
         setReps(allReps);
       };
       useEffect(() => {
@@ -47,17 +52,17 @@ const QaaComponent = (props:{qaa:qaa}) => {
     const containerStyle: ViewStyle = {
         position: 'absolute',
         top: 30,
-        left: 0,
-        right: 0,
-        
+        width:"95%",
+        borderRadius:10,
         backgroundColor: 'white',
         padding: 0,
-        alignSelf: 'center',
-        justifyContent: 'center',
+        
+        
         marginHorizontal:10,
     };
     const handlePressRep=()=>{
         writeRepToFirestore(props.qaa.id,form.content);
+        fetchReps();
         
     }
     
@@ -68,14 +73,16 @@ const QaaComponent = (props:{qaa:qaa}) => {
                         <Text style={styles.title}>{props.qaa.title}</Text>
                         <View style={styles.userInfo}>
                             <AvatarDetault/>
-                            <Text style={styles.userName}>{props.qaa.user}</Text>
+                            <View>
+                                <Text style={styles.userName}>{userName}</Text>
+                                <Text style={styles.timeAgo}>{calculateTimeAgo(props.qaa.timecreate)}</Text>
+                            </View>
                         </View>
                         <Text style={styles.content}>{props.qaa.content}</Text>
                         <View style={styles.commentContainer}>
                             <TouchableOpacity style={styles.commentButton} onPress={showModal}>
                                 <Feather name="message-circle" size={24} color="black" />
-                                <Text style={styles.commentText}>Comments </Text>
-                                <Text style={styles.timeAgo}>{calculateTimeAgo(props.qaa.timecreate)}</Text>
+                                <Text style={styles.commentText}>{reps.length} Comments </Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -83,41 +90,36 @@ const QaaComponent = (props:{qaa:qaa}) => {
 
                     <Portal>
                         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
-                        <View style={{ flex: 1, alignItems: 'center',padding:10,minHeight:500,maxHeight:600 }}>
+                        <View style={{ flex: 1,padding:10,minHeight:500,maxHeight:550 }}>
                             <View>
                                 <Text style={styles.title}>Title</Text>
                                 <View style={styles.userInfo}>
                                 <AvatarDetault/>
-                                    <Text style={styles.userName}>{props.qaa.user}</Text>
+                                <View>
+                                <Text style={styles.userName}>{userName}</Text>
+                                <Text style={styles.timeAgo}>{calculateTimeAgo(props.qaa.timecreate)}</Text>
+                                </View>
+                                    
                                 </View>
                                 <Text style={styles.content}>{props.qaa.content}</Text>
                                 <View style={styles.commentContainer}>
                                     <TouchableOpacity style={styles.commentButton}>
                                         <Feather name="message-circle" size={24} color="black" />
                                         <Text style={styles.commentText}>Comments </Text>
-                                        <Text style={styles.timeAgo}>{calculateTimeAgo(props.qaa.timecreate)}</Text>
+                                        
                                     </TouchableOpacity>
                                 </View>
                             </View>
                             <ScrollView>
                                 {reps.map((rep)=>(
-                                    <View>
-                                    <View style={styles.container2}>
-                                    <View style={styles.userInfo}>
-                                        <AvatarDetault/>
-                                        <Text style={styles.userName}>{rep.user}</Text>
-                                        </View>
-                                        
-                                        <Text style={styles.timeAgo}>{calculateTimeAgo(rep.timecreate)}</Text>
-                                        <Text>{rep.content}</Text>
-                                    </View>
-                                </View>
+                                   <RepComponent id={rep.id} content={rep.content} timecreate={rep.timecreate} user={rep.user} ></RepComponent>
                                 ))}
                                 
                                 
                             </ScrollView>
                            
                         </View>
+        
                         <View style={styles.absoluteContainer}>
                             <View style={styles.container}>
                                 {/* Các phần tử gốc */}
@@ -127,12 +129,13 @@ const QaaComponent = (props:{qaa:qaa}) => {
                                     mode="outlined"
                                     label="Add you comment"
                                     placeholder="Enter your comment"
+                                    textColor='black'
                                     value={form.content}
                                     onChangeText={(text) => setForm({ ...form, content: text })}
                                     style={styles.input}
                                 />
                                 <TouchableOpacity onPress={handlePressRep}>
-                                    <Feather name="send" size={24} color="blue" />
+                                <Entypo name="paper-plane" size={24} color="black" />
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -153,7 +156,8 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         padding:10,
         // Các kiểu khác...
-        alignItems:"flex-start",
+        
+        width:"100%",
     },
     absoluteContainer: {
         
