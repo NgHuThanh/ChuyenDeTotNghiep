@@ -74,64 +74,66 @@ const Translate = () => {
             </View>;
         }
     return (
-        // <View style={{ padding: 10 }}>
-        //     <Searchbar
-        //         placeholder="Search"
-        //         onChangeText={setSearchQuery}
-        //         value={searchQuery}
-        //     />
-        //     <TouchableOpacity style={styles.button} onPress={handlePress} activeOpacity={0.7}>
-        //         <Text style={styles.buttonText}>Search</Text>
-        //     </TouchableOpacity>
-        //     <TouchableOpacity style={styles.button} onPress={handlePress2} activeOpacity={0.7}>
-        //     <Text style={styles.buttonText}>Search long text</Text>
-        // </TouchableOpacity>
-        //     <ScrollView>
-        //     {data.map((word, index,key) => (
-        //         <View style={styles.container}>
-        //         <View style={styles.row}>
-        //             <Text style={styles.boldText}>{word.word}</Text>
-        //             <TouchableOpacity style={styles.iconContainer} onPress={()=>playSound(word.phonetics[0].audio)}>
-        //                 <Feather name="volume-2" size={24} color="#888" />
-        //             </TouchableOpacity>
-        //         </View>
-        //         <Text style={styles.lightText}>{word.phonetics[0].text}</Text>
-        //         {word.meanings.map((meaning,key)=>(
-        //             <>
-        //             <View style={styles.row}>
-        //                 <View style={styles.textContainer}>
-        //                     <Text style={styles.lightText}>{meaning.partOfSpeech}</Text>
-        //                 </View>
-        //             </View>
-        //             {meaning.definitions.map((definition, index,key) => (
-        //                 <View key={index}>
-        //                     <Text style={styles.description}>
-        //                         -{definition.definition}
-        //                     </Text>
-        //                     {definition.example && (
-        //                         <View style={styles.infoBox}>
-        //                             <Text style={styles.italicText}>
-        //                                 {definition.example}
-        //                             </Text>
-        //                         </View>
-        //                     )}
-        //                 </View>
-        //             ))}
+        <View style={{ padding: 10 }}>
+            <Searchbar
+                placeholder="Search"
+                onChangeText={setSearchQuery}
+                value={searchQuery}
+            />
+            <TouchableOpacity style={styles.button} onPress={handlePress} activeOpacity={0.7}>
+                <Text style={styles.buttonText}>Search</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handlePress2} activeOpacity={0.7}>
+            <Text style={styles.buttonText}>Search long text</Text>
+        </TouchableOpacity>
+            <ScrollView>
+            {data.map((word, index,key) => (
+                <View style={styles.container}>
+                <View style={styles.row}>
+                    <Text style={styles.boldText}>{word.word}</Text>
+                    <TouchableOpacity style={styles.iconContainer} onPress={()=>playSound(word.phonetics[0].audio)}>
+                        <Feather name="volume-2" size={24} color="#888" />
+                    </TouchableOpacity>
+                </View>
+                <Text style={styles.lightText}>{word.phonetics[0].text}</Text>
+                <ScrollView>
+                {word.meanings.map((meaning,key)=>(
+                    <>
+                    <View style={styles.row}>
+                        <View style={styles.textContainer}>
+                            <Text style={styles.lightText}>{meaning.partOfSpeech}</Text>
+                        </View>
+                    </View>
+                    {meaning.definitions.map((definition, index,key) => (
+                        <View key={index}>
+                            <Text style={styles.description}>
+                                -{definition.definition}
+                            </Text>
+                            {definition.example && (
+                                <View style={styles.infoBox}>
+                                    <Text style={styles.italicText}>
+                                        {definition.example}
+                                    </Text>
+                                </View>
+                            )}
+                        </View>
+                    ))}
 
                     
-        //             </>
+                    </>
                 
-        //         ))}
+                ))}
+                </ScrollView>
                 
                 
                 
-        //     </View>
-        //     ))}
-        //     </ScrollView>
+                
+            </View>
+            ))}
+            </ScrollView>
             
-        // </View>
-        <>
-        </>
+        </View>
+       
     )
 }
 
@@ -178,7 +180,7 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
     },
     button: {
-        
+        marginBottom:5,
         backgroundColor: '#410fa3', // Màu nền của button
         borderRadius: 8, // Bo góc của button
         height: 50, // Chiều cao của button
