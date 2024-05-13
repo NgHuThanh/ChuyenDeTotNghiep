@@ -27,7 +27,7 @@ export default function SetDetail() {
             await AsyncStorage.setItem('idGrammars', JSON.stringify(idGrammars));
     
             // Chuyển hướng đến đường dẫn mới
-            router.back();
+            router.push("/grammar/")
         } catch (error) {
             console.error("Error saving idGrammar to AsyncStorage: ", error);
         }
@@ -62,13 +62,14 @@ export default function SetDetail() {
       }
       const handlePressBack=()=>{
         router.push("/grammar/");
+        
     }
     return (
         <>
             <SafeAreaView style={{ backgroundColor: "#FFF", height: "100%", padding: 10 }}>
             <TouchableOpacity style={{alignSelf:"flex-start"}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
 
-                <Text style={{ textAlign: "center", fontSize: 28, fontWeight: "bold", marginBottom: 10, color: "black" }}>{grammar?.title}</Text>
+                <Text style={{textAlign: "center", fontSize: 28, fontWeight: "bold", marginBottom: 10, color: "#410fa3" }}>{grammar?.title}</Text>
                 <ScrollView>
                     {contentAndQuestions.map((caq, index, key) => (
                         <UiComponent key={index} id={id as string} caq={caq}></UiComponent>

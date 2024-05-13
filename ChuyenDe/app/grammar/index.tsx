@@ -41,16 +41,22 @@ export default function GrammarHome() {
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               <TouchableOpacity style={{alignSelf:"flex-start"}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
 
-        <Text>Loading...</Text>
+        <Text style={styles.text}>Loading...</Text>
         <div id="root"></div>
       </View>
     );
   }
   
   return (
-    <SafeAreaView style={{ backgroundColor: "#FFF", height: "100%", padding: 10 }}>
-      <TouchableOpacity style={{alignSelf:"flex-start"}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
-      <ScrollView>
+    <SafeAreaView style={{ backgroundColor: "#FFF", height: "100%" }}>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={handlePressBack}>
+          <AntDesign name="arrowleft" size={30} color="#FFF" />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>GRAMMAR & QUIZ</Text>
+      </View>
+
+      <ScrollView style={{padding:10}}>
         {grammars.map((grammar) => (
           <GrammarComponent key={grammar.id} grammar={grammar} />
         ))}
@@ -60,5 +66,27 @@ export default function GrammarHome() {
 }
 
 const styles = StyleSheet.create({
-  
+  text: {
+    color: '#410fa3', // Màu trắng cho văn bản
+    fontSize: 20, // Kích thước văn bản
+    marginTop: 20, // Khoảng cách giữa hình ảnh và văn bản
+    fontWeight:"bold",
+    marginBottom:20,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding:10,
+    backgroundColor:"#410fa3",
+
+  },
+  backButton: {
+    alignSelf: 'flex-start',
+  },
+  headerText: {
+    color: '#FFF',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
 });

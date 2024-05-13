@@ -36,7 +36,7 @@ const ContentComponent = (props:{id:string,caq:string}) => {
                 
                 <View style={styles.item}>
                 <View style={styles.subItem}>
-                    <Text style={styles.text}><Octicons name="light-bulb" size={20} color="#703445" style={{marginRight:5}} />{content.content}</Text>
+                    <Text style={styles.text}><Octicons name="light-bulb" size={20} color="yellow" style={{marginRight:5}} />{content.content}</Text>
                 </View>
                 <View style={[styles.example]}>
                     <Text style={[styles.text, styles.exampleText]}>{content.example}</Text>
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
         padding:10,
     },
     text: {
-        fontSize: 16,
+        fontSize: 18,
         color:"#febaff"
     },
     example: {
@@ -80,6 +80,6 @@ const styles = StyleSheet.create({
     
     
     exampleText: {
-        color:"#9469d7"
+        color:"#410fa3"
     },
 });
