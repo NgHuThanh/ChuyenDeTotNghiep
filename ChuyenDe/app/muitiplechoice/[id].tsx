@@ -73,7 +73,7 @@ export default function MultipleChoice() {
     if(finishedReview){
         return <View style={styles.finishedContainer}>
         <Text style={styles.finishedText}>You finished practice {vocabs?.length} word</Text>
-        <TouchableOpacity style={styles.finishedButton} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.finishedButton} onPress={() => router.push("/bookmark")}>
             <Text style={styles.finishedButtonText}>Finished</Text>
         </TouchableOpacity>
     </View>
@@ -84,16 +84,16 @@ export default function MultipleChoice() {
     return (
         <>
             {vocabs && (
-                <SafeAreaView>
+                <SafeAreaView style={styles.container}>
                     <TouchableOpacity style={{alignSelf:"flex-start"}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
 
                     <View style={styles.progressContainer}>
                         <ProgressBar progress={(currentIndex) /(vocabs.length+1)} color={'green'} style={{ height: 20, borderRadius: 20,width:280,borderWidth:1 }} />
                     </View>
-                    <View>
-                        <Text>{vocabs[currentIndex].word} lv:{currentIndex}</Text>
+                    <View style={styles.question}>
+                        <Text style={styles.questionText}>{vocabs[currentIndex].word}</Text>
                     </View>
-                    <View>
+                    <View style={{width:"100%",alignItems:"center"}}>
                         {randomAnswers.map((answer, index) => (
                             <TouchableOpacity
                                 key={index}
@@ -103,7 +103,7 @@ export default function MultipleChoice() {
                                     selectedAnswer === answer && isCorrect !== null && (isCorrect ? styles.correctAnswer : styles.wrongAnswer),
                                 ]}
                             >
-                                <Text>{answer}</Text>
+                                <Text style={{color:"#FFF",fontWeight:"bold"}}>{answer}</Text>
                             </TouchableOpacity>
                         ))}
                     </View>
@@ -115,18 +115,39 @@ export default function MultipleChoice() {
 }
 
 const styles = StyleSheet.create({
+    container:{
+        alignItems:"center",
+        padding:10,
+    },
+    question: {
+        minHeight: 300,
+        padding: 10,
+        marginVertical: 10,
+        borderColor: 'black',
+        justifyContent:"center",
+    },
+    questionText: {
+        fontWeight: 'bold',
+        fontSize: 30,
+        color:"#410fa3",
+    },
     answer: {
         padding: 10,
         marginVertical: 5,
         borderWidth: 1,
         borderColor: 'black',
+        width:"100%",
+        alignItems:"center",
+        backgroundColor:"#410fa3",
+        borderRadius:10,
+
     },
     correctAnswer: {
         backgroundColor: 'lightgreen',
     },
-    progressContainer:{
-        flex:1,
-        marginTop:15,
+    progressContainer: {
+        alignItems: 'center', // căn giữa theo trục dọc
+        padding:10,
     },
     wrongAnswer: {
         backgroundColor: 'lightcoral',
