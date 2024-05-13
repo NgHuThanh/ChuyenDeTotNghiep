@@ -5,6 +5,10 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { SetModel, deleteSet, setAsyncData } from '@/model/word';
 import { router } from 'expo-router';
 import { Modal, Portal } from 'react-native-paper';
+import { Foundation } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
     const localImageUrl = require('../../assets/images/book.png');
     const [exist,setExist]=useState(true);
@@ -116,13 +120,23 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
                 
                     <View style={styles.buttonContainer2}>
                     <TouchableOpacity style={styles.button2} activeOpacity={0.2}>
+                    <View style={{flexDirection:"row"}}>
+                    <MaterialCommunityIcons name="checkbox-marked-circle-plus-outline" size={24} color="#FFF" />
                     <Text style={styles.buttonText} onPress={handleMultipleChoice}>Multiples choice</Text>
+                    </View>
+                    
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button2} activeOpacity={0.7}>
+                    <View style={{flexDirection:"row"}}>
+                    <MaterialCommunityIcons name="format-columns" size={24} color="#FFF" />
                     <Text style={styles.buttonText} onPress={handleMatchChoice}>Match game</Text>
+                    </View>
+                    
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button2} activeOpacity={0.7}>
-                    <Text style={styles.buttonText} onPress={handleImagePractice}>Image game</Text>
+                    <View style={{flexDirection:"row"}}><MaterialCommunityIcons name="image-search" size={24} color="#FFF" />
+                    <Text style={styles.buttonText} onPress={handleImagePractice}>Image game</Text></View>
+                    
                     </TouchableOpacity>
                 </View>
                 
@@ -133,13 +147,21 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
                 <Text style={styles.secondaryText}>{props.setVocab.vocabs?.length} Cards</Text>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.button} activeOpacity={0.7}>
-                    <Text style={styles.buttonText} onPress={handleReview}>Review</Text>
+                        <View style={{flexDirection:"row"}}>
+                        <Foundation name="page-multiple" size={24} color="#FFF" style={{marginRight:5}} />
+                        <Text style={styles.buttonText} onPress={handleReview}>Review</Text>
+                        </View>
+                    
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.button}
                         onPress={handlePractice}
                     >
+                        <View style={{flexDirection:"row"}}>
+                        <Entypo name="rocket" size={24} color="#FFF" style={{marginRight:5}} />
                         <Text style={styles.buttonText}>Practice</Text>
+                        </View>
+                        
                     </TouchableOpacity>
                 </View>
                 
@@ -165,36 +187,34 @@ export default SetComponent
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        backgroundColor: '#FFF', // Màu nền xanh
-        borderRadius: 10, // Bo tròn góc
-         // Ẩn bất kỳ phần nào vượt ra ngoài giới hạn của container
-        marginBottom: 10, // Khoảng cách dưới cùng
-        
-        paddingLeft:20,
-        paddingTop:10,
-        shadowColor: '#000', // Màu của shadow
+        backgroundColor: '#FFF',
+        borderRadius: 10,
+        marginBottom: 10,
+        padding: 5,
+        paddingLeft: 20,
+        paddingTop: 10,
+        shadowColor: '#000',
         shadowOffset: {
             width: 0,
             height: 3,
         },
-        shadowOpacity: 0.27, // Độ mờ của shadow
-        shadowRadius: 4.65, // Độ đục của shadow
-        elevation: 6, // Thêm elevation để hiển thị shadow trên Android
-        borderLeftWidth: 5, // Độ rộng của border bên trái
-        borderLeftColor: '#410fa3', // Màu của border bên trái
+        shadowOpacity: 0.27,
+        shadowRadius: 4.65,
+        elevation: 6,
+        borderLeftWidth: 5,
+        borderLeftColor: '#410fa3',
     },
-    
-    
     imageContainer: {
-        flex: 1, // Chiếm 60% chiều rộng
+        flex: 1,
+        flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between', // Căn đều các phần tử trong container theo chiều dọc và chia đều khoảng cách giữa chúng
-        paddingVertical: 10, // Khoảng cách dọc
-        paddingHorizontal: 5, // Khoảng cách ngang
+        justifyContent: 'space-between',
+        paddingVertical: 10,
+        paddingHorizontal: 5,
     },
     infoContainer: {
-        flex: 5, // Chiếm 40% chiều rộng
-        padding: 10, // Khoảng cách padding
+        flex: 5,
+        padding: 10,
     },
     image: {
         width: '100%',
@@ -203,7 +223,8 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row', // Sắp xếp các button theo hàng ngang
         justifyContent: 'space-between', // Căn đều các button trong hàng ngang
-        marginVertical: 10, // Khoảng cách dọc giữa text input và button container
+         // Khoảng cách dọc giữa text input và button container
+        
       },
       buttonContainer2: {
          // Sắp xếp các button theo hàng ngang
@@ -229,10 +250,11 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: '#5b7bfe',
         borderRadius: 8,
-        height:'200%',
+        height:'100%',
         width: '48%', // Chiếm 48% chiều rộng của parent (SafeAreaView)
         justifyContent: 'center',
         alignItems: 'center',
+        padding:5,
       },
       button2: {
         backgroundColor: '#5b7bfe',
@@ -245,7 +267,7 @@ const styles = StyleSheet.create({
       buttonText: {
         color: 'white',
         fontWeight:"bold",
-        fontSize: 12,
+        fontSize: 16,
       },
       
 })
