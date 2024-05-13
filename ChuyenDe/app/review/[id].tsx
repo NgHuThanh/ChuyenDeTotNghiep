@@ -231,7 +231,8 @@ const styles = StyleSheet.create({
         marginTop:15,
     },
     buttonWrapper: {
-        width: '33.33%', // Chiếm 33.33% chiều rộng
+        width: '30%', // Chiếm 33.33% chiều rộng
+        margin:5,
     },
     button: {
         backgroundColor: '#4CAF50', // Màu nền button mặc định
@@ -243,6 +244,7 @@ const styles = StyleSheet.create({
         color: 'white', // Màu chữ button
         fontSize: 18,
         textAlign: 'center',
+        fontWeight:"bold",
     },
     hardButton: {
         backgroundColor: 'red', // Màu nền button Hard
