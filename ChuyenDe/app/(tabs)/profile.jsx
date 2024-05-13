@@ -114,28 +114,33 @@ const Profile = () => {
   };
 
   const data = {
-    labels: dateLabels.map(({ day }) => day), // Chỉ lấy ra ngày từ mỗi nhãn
-    data: practiceCounts.map(count => [count]), // Chuyển đổi counts thành mảng 2 chiều với mỗi phần tử là một mảng có một phần tử
-    barColors: ["#FFF", "#FFF", "#FFF", "#FFF", "#FFF", "black", "#FFF"]
+    labels: dateLabels.map(({ day }) => day+"th"),
+    legend: ["Practices Times"], // Chỉ lấy ra ngày từ mỗi nhãn
+    data: practiceCounts.map(count => [Math.round(count)]), // Chuyển đổi counts thành mảng 2 chiều với mỗi phần tử là một mảng có một phần tử
+    barColors: ["#8cd8bc", "#8cd8bc", "#8cd8bc", "#8cd8bc", "#8cd8bc", "#8cd8bc", "#8cd8bc"]
   };
 
   const graphStyle = {
-    marginVertical: 8,
+    marginVertical: 0,
     fontWeight: "bold",
-    fontSize: "20",
-
+    fontSize: 30,
+    
+    
     // Bất kỳ style khác bạn muốn áp dụng cho biểu đồ
   };
 
   const chartConfig = {
     backgroundGradientFrom: "#410fa3",
     backgroundGradientTo: "#410fa3",
+    formatYLabel: value => `${Math.round(value)}`,
+  formatXLabel: () => '', // Không hiển thị bất kỳ nhãn nào trên trục ngang
     color: (opacity = 1) => `#410fa3`,
-    labelColor: (opacity = 1) => `#ffffff`,
+    labelColor: (opacity = 1) => `#FFF`,
+    
     formatYLabel: value => `${value.toFixed(0)}`,
-
+    
     strokeWidth: 1,
-    barPercentage: 0.5,
+    barPercentage: 0.8,
     useShadowColorFromDataset: false,
 
   };
@@ -164,8 +169,12 @@ const Profile = () => {
               style={graphStyle}
               data={data}
               width={screenWidth}
-              height={220}
+              height={240}
               chartConfig={chartConfig}
+              withVerticalLabels={true}
+              withHorizontalLabels={false}
+              showLegend={false}
+              fromZero={true}
             />
           </View>
         </ScrollView>
