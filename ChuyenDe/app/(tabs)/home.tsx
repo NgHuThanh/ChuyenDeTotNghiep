@@ -8,12 +8,15 @@ import FeatureCourseWord from '../homeComponent/featureCourseWord';
 import PracticeCourse from '../homeComponent/practiceCourse';
 import PracticeDay, { getPracticeDays } from '@/model/practiceDay';
 import { exportData } from '@/model/asyncStorage';
+import { setAsyncData } from '@/model/word';
 
 const Home = () => {
   const localImageUrl = require('../../assets/images/defaultAvatat.png');
   const [username, setUsername] = useState('');
-  exportData();
+  
+  
   useEffect(() => {
+    
     // Lấy giá trị của 'username' từ AsyncStorage khi component được render
     const getUsername = async () => {
       try {
@@ -53,6 +56,8 @@ const Home = () => {
           <Text style={styles.text2}>Feature Course</Text>
           <FeatureCourse />
           <FeatureCourseWord />
+          
+          
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -70,14 +75,15 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     overflow: 'hidden',
   },
-  headContainer: {
-    backgroundColor: '#410fa3',
-    padding: 20,
-  },
   image: {
     width: 50,
     height: 50,
   },
+  headContainer: {
+    backgroundColor: '#410fa3',
+    padding: 20,
+  },
+  
   text: {
     marginTop: 20,
     color: '#faf9fd',

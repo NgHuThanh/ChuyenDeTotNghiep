@@ -1,6 +1,8 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
 import React from 'react'
 import { router } from 'expo-router';
+import { AntDesign } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 const FeatureCourseWord = () => {
     const localImageUrl = require('../../assets/images/vocab.png');
     const handlePress=()=>{
@@ -9,17 +11,19 @@ const FeatureCourseWord = () => {
     return (
         <TouchableOpacity style={styles.container} onPress={handlePress}>
             <View style={styles.infoContainer}>
-                <Text style={styles.boldText}>Online</Text>
-                <Text style={styles.boldText}>Vocablary</Text>
-                <Text style={styles.secondaryText}>Online set vocablary</Text>
+                <Text style={styles.boldText}>Community</Text>
+                <Text style={styles.boldText}>Learn English</Text>
+                <Text style={styles.secondaryText}>Let see what people out there</Text>
                 
             </View>
             <View style={styles.imageContainer}>
-                <Image
+                {/* <Image
                     source={localImageUrl}
                     style={styles.image}
                     resizeMode="contain" // Đảm bảo hiển thị đủ ảnh
-                />
+                /> */}
+                {/* <AntDesign name="team" size={80} color="black" /> */}
+                <Entypo name="chat" size={80} color="orange" />
             </View>
         </TouchableOpacity>
     )

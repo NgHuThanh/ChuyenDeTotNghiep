@@ -2,7 +2,6 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { TextInput, useTheme } from 'react-native-paper'; // Sử dụng useTheme để truy cập theme của Paper
 import { SetModel, addSet } from '../../model/word';
-import { router } from 'expo-router';
 
 const AddSetComponent = (props:{fetchSets: () => void}) => {
     const [text, setText] = React.useState("");

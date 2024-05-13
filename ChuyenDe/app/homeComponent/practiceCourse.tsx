@@ -48,7 +48,7 @@ const PracticeCourse = () => {
                 <Text style={styles.boldText}>Practice Your Word</Text>
                 <Text style={styles.boldText}></Text>
                 <Text style={styles.secondaryText}>Keep it going!</Text>
-                <Text style={styles.secondaryText}>Today you practice: {practiced.length > 0 ? practiced[0].count : 0} words</Text>
+                <Text style={styles.secondaryText}>Today Practice: {practiced.length > 0 ? practiced[0].count : 0}</Text>
                 {/* <Text style={styles.percentText}><AntDesign name="rocket1" size={24} color="green" /></Text> */}
             </View>
 
@@ -74,7 +74,7 @@ export default PracticeCourse;
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        backgroundColor: '#5b7bfe', // Màu nền xanh
+        backgroundColor: '#2f3d7e', // Màu nền xanh
         borderRadius: 20, // Bo tròn góc
          // Ẩn bất kỳ phần nào vượt ra ngoài giới hạn của container
         marginBottom: 10, // Khoảng cách dưới cùng
@@ -92,8 +92,8 @@ const styles = StyleSheet.create({
     },
     boldText: {
         fontWeight: 'bold', // In đậm
-        fontSize: 18, // Kích thước phông chữ
-        color: '#FFF', // Màu chữ trắng
+        fontSize: 20, // Kích thước phông chữ
+        color: '#8cd8bc', // Màu chữ trắng
     },
     boldText2: {
         fontWeight: 'bold', // In đậm
@@ -108,6 +108,8 @@ const styles = StyleSheet.create({
     secondaryText: {
         marginBottom:20,
         color: '#FFF', // Màu #888
+        fontWeight:"bold",
+        fontSize:20,
     },
     percentText: {
         marginBottom:20,

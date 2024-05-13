@@ -9,11 +9,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 export default function App() {
   const localImageUrl = require('../assets/images/illustrations.png');
-  const [ex,setEx]=useState(false);
+  
   const handleExport=()=>{
     updateUserSource()
   }
-  
+  const [ex,setEx]=useState(false);
   const check=async ()=>{
     const userId=await AsyncStorage.getItem("username");
     if(userId!=null){

@@ -2,6 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
 import React from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { FontAwesome5 } from '@expo/vector-icons';
 const FeatureCourse = () => {
     const localImageUrl = require('../../assets/images/book.png');
     return (
@@ -10,14 +11,15 @@ const FeatureCourse = () => {
                 <Text style={styles.boldText}>Grammar</Text>
                 <Text style={styles.boldText}>Quiz</Text>
                 <Text style={styles.secondaryText}>Grammar and quiz</Text>
-                <Text style={styles.percentText}><AntDesign name="rocket1" size={24} color="green" />100%</Text>
+                
             </View>
             <View style={styles.imageContainer}>
-                <Image
+                {/* <Image
                     source={localImageUrl}
                     style={styles.image}
                     resizeMode="contain" // Đảm bảo hiển thị đủ ảnh
-                />
+                /> */}
+                <FontAwesome5 name="graduation-cap" size={80} color="#273773" />
             </View>
         </TouchableOpacity>
     )
