@@ -40,11 +40,13 @@ const QaaComponent = (props:{qaa:qaa}) => {
         error: '', // Thêm trạng thái lỗi
         
       });
+      const [showAllContent, setShowAllContent] = useState(false); // Trạng thái để hiển thị tất cả nội dung hoặc không
       const fetchReps = async () => {
         const allReps = await getAllRepDocuments(props.qaa.id);
         const name=await getUserInfo(props.qaa.user);
+        const sortedQaas = allReps.sort((a, b) => new Date(b.timecreate).getTime() - new Date(a.timecreate).getTime());
         setUserName(name);
-        setReps(allReps);
+        setReps(sortedQaas);
       };
       useEffect(() => {
         fetchReps();
@@ -56,16 +58,29 @@ const QaaComponent = (props:{qaa:qaa}) => {
         borderRadius:10,
         backgroundColor: 'white',
         padding: 0,
-        
-        
+        shadowColor: '#000', // Màu của shadow
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.27, // Độ mờ của shadow
+        shadowRadius: 4.65,
+        elevation: 6, // Thêm elevation để hiển thị shadow trên Android
         marginHorizontal:10,
     };
     const handlePressRep=()=>{
         writeRepToFirestore(props.qaa.id,form.content);
         fetchReps();
-        
     }
     
+    const handleShowMore = () => {
+        setShowAllContent(true);
+    };
+
+    const handleShowLess = () => {
+        setShowAllContent(false);
+    };
+
     return (
         <>
             <SafeAreaView >
@@ -78,7 +93,16 @@ const QaaComponent = (props:{qaa:qaa}) => {
                                 <Text style={styles.timeAgo}>{calculateTimeAgo(props.qaa.timecreate)}</Text>
                             </View>
                         </View>
-                        <Text style={styles.content}>{props.qaa.content}</Text>
+                        {showAllContent ? (
+                            <Text style={styles.content}>{props.qaa.content}</Text>
+                        ) : (
+                            <Text numberOfLines={3} ellipsizeMode="tail" style={styles.content}>{props.qaa.content}</Text>
+                        )}
+                        {props.qaa.content.length > 100 && (
+                            <TouchableOpacity onPress={showAllContent ? handleShowLess : handleShowMore}>
+                                <Text style={styles.showMore}>{showAllContent ? 'Show less' : 'Show more'}</Text>
+                            </TouchableOpacity>
+                        )}
                         <View style={styles.commentContainer}>
                             <TouchableOpacity style={styles.commentButton} onPress={showModal}>
                                 <Feather name="message-circle" size={24} color="black" />
@@ -92,7 +116,7 @@ const QaaComponent = (props:{qaa:qaa}) => {
                         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
                         <View style={{ flex: 1,padding:10,minHeight:500,maxHeight:550 }}>
                             <View>
-                                <Text style={styles.title}>Title</Text>
+                                <Text style={styles.title}>{props.qaa.title}</Text>
                                 <View style={styles.userInfo}>
                                 <AvatarDetault/>
                                 <View>
@@ -101,7 +125,16 @@ const QaaComponent = (props:{qaa:qaa}) => {
                                 </View>
                                     
                                 </View>
-                                <Text style={styles.content}>{props.qaa.content}</Text>
+                                {showAllContent ? (
+                                    <Text style={styles.content}>{props.qaa.content}</Text>
+                                ) : (
+                                    <Text numberOfLines={3} ellipsizeMode="tail" style={styles.content}>{props.qaa.content}</Text>
+                                )}
+                                {props.qaa.content.length > 100 && (
+                                    <TouchableOpacity onPress={showAllContent ? handleShowLess : handleShowMore}>
+                                        <Text style={styles.showMore}>{showAllContent ? 'Show less' : 'Show more'}</Text>
+                                    </TouchableOpacity>
+                                )}
                                 <View style={styles.commentContainer}>
                                     <TouchableOpacity style={styles.commentButton}>
                                         <Feather name="message-circle" size={24} color="black" />
@@ -114,10 +147,7 @@ const QaaComponent = (props:{qaa:qaa}) => {
                                 {reps.map((rep)=>(
                                    <RepComponent key={rep.id} id={rep.id} content={rep.content} timecreate={rep.timecreate} user={rep.user} ></RepComponent>
                                 ))}
-                                
-                                
                             </ScrollView>
-                           
                         </View>
         
                         <View style={styles.absoluteContainer}>
@@ -127,7 +157,7 @@ const QaaComponent = (props:{qaa:qaa}) => {
                             <View style={styles.absoluteContent}>
                                 <TextInput
                                     mode="outlined"
-                                    label="Add you comment"
+                                    label="Add your comment"
                                     placeholder="Enter your comment"
                                     textColor='black'
                                     value={form.content}
@@ -155,12 +185,10 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginBottom: 10,
         padding:10,
-        // Các kiểu khác...
-        
         width:"100%",
     },
     absoluteContainer: {
-        
+        width:"100%",
         marginBottom: 10,
     },
     absoluteContent: {
@@ -172,7 +200,7 @@ const styles = StyleSheet.create({
         padding: 10,
         flexDirection: 'row',
         alignItems: 'center',
-        width:"95%",
+        width:"100%",
     },
     input: {
         width: "90%",
@@ -181,51 +209,56 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     container2: {
-        backgroundColor: '#eeeee4', // Màu nền trắng
-        borderRadius: 5, // Bo tròn góc
-        marginBottom: 10, // Khoảng cách dưới cùng
-        shadowColor: '#000', // Màu của shadow
+        backgroundColor: '#eeeee4',
+        borderRadius: 5,
+        marginBottom: 10,
+        shadowColor: '#000',
         shadowOffset: {
             width: 0,
             height: 3,
         },
-        shadowOpacity: 0.27, // Độ mờ của shadow
-        shadowRadius: 4.65, // Độ đục của shadow
-        elevation: 6, // Thêm elevation để hiển thị shadow trên Android
+        shadowOpacity: 0.27,
+        shadowRadius: 4.65,
+        elevation: 6,
         padding: 10,
     },
     title: {
-        fontWeight: 'bold', // In đậm
-        fontSize: 20, // Kích thước phông chữ lớn hơn
-        marginBottom: 10, // Khoảng cách dưới cùng của tiêu đề
+        fontWeight: 'bold',
+        fontSize: 20,
+        marginBottom: 10,
     },
     userInfo: {
-        flexDirection: 'row', // Sắp xếp các phần tử theo hàng ngang
-        alignItems: 'center', // Canh chỉnh các phần tử theo trục dọc
-        marginBottom: 10, // Khoảng cách dưới cùng của user info
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
     },
     userName: {
-        fontSize: 16, // Kích thước phông chữ nhỏ hơn
-        marginRight: 10, // Khoảng cách với thời gian
+        fontSize: 16,
+        marginRight: 10,
         fontWeight:"bold"
     },
     timeAgo: {
-        color: '#888', // Màu chữ xám
+        color: '#888',
     },
     content: {
-        marginBottom: 10, // Khoảng cách dưới cùng của nội dung
+        marginBottom: 10,
+    },
+    showMore: {
+        color: 'blue',
+        fontWeight:"bold",
+        fontSize:14,
     },
     commentContainer: {
         borderTopWidth: 1,
         borderTopColor: "gray",
-        flexDirection: 'row', // Sắp xếp các phần tử theo hàng ngang
-        alignItems: 'center', // Canh chỉnh các phần tử theo trục dọc
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     commentButton: {
-        flexDirection: 'row', // Sắp xếp các phần tử theo hàng ngang
-        alignItems: 'center', // Canh chỉnh các phần tử theo trục dọc
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     commentText: {
-        marginLeft: 5, // Khoảng cách với icon comment
+        marginLeft: 5,
     },
 })

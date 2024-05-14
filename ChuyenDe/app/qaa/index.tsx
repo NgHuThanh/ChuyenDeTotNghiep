@@ -49,8 +49,11 @@ export default function qaaa() {
     // Hàm fetch questionandanswer
     const fetchQaas = async () => {
         const allQaas = await getAllQaaDocuments();
-        setQuestionAndAnswer(allQaas);
+        // Sắp xếp mảng theo thời gian giảm dần
+        const sortedQaas = allQaas.sort((a, b) => new Date(b.timecreate).getTime() - new Date(a.timecreate).getTime());
+        setQuestionAndAnswer(sortedQaas);
     };
+    
 
     // Xử lý khi bấm vào "Your post"
     const handleYourPost = () => {
