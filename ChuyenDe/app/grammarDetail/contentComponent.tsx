@@ -34,7 +34,7 @@ const ContentComponent = (props:{id:string,caq:string}) => {
         <View>
             {contents.map((content,index,key)=>(
                 
-                <View style={styles.item}>
+                <View key={index} style={styles.item}>
                 <View style={styles.subItem}>
                     <Text style={styles.text}><Octicons name="light-bulb" size={20} color="yellow" style={{marginRight:5}} />{content.content}</Text>
                 </View>

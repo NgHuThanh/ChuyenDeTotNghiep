@@ -16,11 +16,11 @@ const QuestionComponent = (props:{id:string,caq:string}) => {
                 idCaq: props.caq as string,
             });
             setQuestions(caqListData);
-
-            // Khởi tạo mảng màu sắc cho mỗi câu hỏi
-            const defaultColors = caqListData.map(() => Array(caqListData.length).fill('#3b1564'));
+      
+            // Khởi tạo mảng màu sắc cho mỗi câu hỏi với số lượng câu trả lời tối đa
+            const defaultColors = caqListData.map((question) => Array(question.answers.length).fill('#3b1564'));
             setButtonColors(defaultColors);
-
+      
             setLoading(false);
           } catch (error) {
             console.error("Error fetching product data: ", error);
@@ -64,7 +64,7 @@ const QuestionComponent = (props:{id:string,caq:string}) => {
                     </View>
                     {question.answers.map((answer, answerIndex) => (
                         <TouchableOpacity
-                            key={answerIndex}
+                            key={answer}
                             style={[styles.button, { backgroundColor: buttonColors[questionIndex][answerIndex] }]} // Sử dụng màu sắc từ mảng màu sắc
                             onPress={() => handleButtonPress(questionIndex, answerIndex, question.rightAnswer)}
                         >
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
         margin:10,
     },
     buttonText: {
-        color: 'white',
+        color: '#FFF',
         fontSize: 16,
         textAlign: 'center',
     },

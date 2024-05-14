@@ -42,7 +42,7 @@ export default function GrammarHome() {
               <TouchableOpacity style={{alignSelf:"flex-start"}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
 
         <Text style={styles.text}>Loading...</Text>
-        <div id="root"></div>
+        
       </View>
     );
   }
