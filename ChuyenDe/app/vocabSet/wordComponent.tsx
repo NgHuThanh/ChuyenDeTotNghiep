@@ -10,6 +10,7 @@ import { speak } from '../textToSpech';
 import { format } from 'date-fns';
 import Speak from '@/component/Speech';
 import { Modal, Portal, TextInput } from 'react-native-paper';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // import Speak from '@/component/Speech';
 
 const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void}) => {
@@ -109,7 +110,8 @@ const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void
         }
     }
     return (
-        <TouchableOpacity style={styles.container}>
+        <GestureHandlerRootView>
+            <TouchableOpacity style={styles.container}>
             <View style={styles.infoContainer2}>
             <TouchableOpacity onPress={handleFavoritePress}>
                 {fav ? (
@@ -125,7 +127,7 @@ const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void
                 <Text style={styles.secondaryText}>{props.vocab.definition}</Text>
                 <Text style={[styles.secondaryText2, { color: difficultColor }]}>{props.vocab.difficult}</Text>
                 <Text style={{paddingRight:0}}>Practice at: {formattedDate}</Text>
-                {/* <Speak thingToSay={props.vocab.word}></Speak> */}
+                <Speak thingToSay={props.vocab.word}></Speak>
             </View>
 
             <View style={styles.imageContainer}>
@@ -190,6 +192,8 @@ const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void
                 </Modal>
                 </Portal> */}
         </TouchableOpacity>
+        </GestureHandlerRootView>
+        
     )
 }
 

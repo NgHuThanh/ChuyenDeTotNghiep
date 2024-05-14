@@ -2,7 +2,7 @@ import { View } from "@/components/Themed";
 import { router } from "expo-router";
 import { useState } from "react";
 import {SafeAreaView, Text,Image,StyleSheet, Touchable, TouchableOpacity} from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
 import { ActivityIndicator, TextInput } from "react-native-paper";
 import { login } from "../firebase/config";
 import { importData } from "@/model/asyncStorage";
@@ -33,7 +33,8 @@ const SignIn = () => {
     };
 
     return (
-        <SafeAreaView style={{backgroundColor:"#FFF",height:"100%"}}>
+        <GestureHandlerRootView>
+<SafeAreaView style={{backgroundColor:"#FFF",height:"100%"}}>
             <ScrollView>
                 <View  style={{backgroundColor:"#FFF",height:"100%",padding:10,alignItems:"center"}}>
                     
@@ -76,6 +77,8 @@ const SignIn = () => {
                 </View>
             </ScrollView>
         </SafeAreaView>
+        </GestureHandlerRootView>
+        
     );
 };
 

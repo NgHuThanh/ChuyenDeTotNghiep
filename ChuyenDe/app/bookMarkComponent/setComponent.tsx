@@ -93,6 +93,7 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
     
     };
     return (
+        
         <TouchableOpacity style={styles.container} onPress={goToDestination}>
             <Portal>
                 <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
