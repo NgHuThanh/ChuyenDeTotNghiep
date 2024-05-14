@@ -84,7 +84,8 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
     const containerStyle: ViewStyle = {
     backgroundColor: 'white',
     padding: 10,
-    
+    minHeight:200,
+    maxHeight:600,
     alignSelf: 'center',
     justifyContent: 'center',
     borderRadius:20,
@@ -223,7 +224,7 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row', // Sắp xếp các button theo hàng ngang
         justifyContent: 'space-between', // Căn đều các button trong hàng ngang
-         // Khoảng cách dọc giữa text input và button container
+        //  // Khoảng cách dọc giữa text input và button container
         
       },
       buttonContainer2: {
@@ -250,7 +251,7 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: '#5b7bfe',
         borderRadius: 8,
-        height:'100%',
+        
         width: '48%', // Chiếm 48% chiều rộng của parent (SafeAreaView)
         justifyContent: 'center',
         alignItems: 'center',

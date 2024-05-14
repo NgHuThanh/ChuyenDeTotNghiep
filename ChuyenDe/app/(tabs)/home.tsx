@@ -17,7 +17,7 @@ const Home = () => {
   
   useEffect(() => {
     
-    // Lấy giá trị của 'username' từ AsyncStorage khi component được render
+    // Lấy giá trị của 'username' từ sAsyncStorage khi component được render
     const getUsername = async () => {
       try {
         const storedUsername = await AsyncStorage.getItem('username');
@@ -45,7 +45,7 @@ const Home = () => {
           </View>
           
           
-          <Text style={styles.text}>Hello {username}</Text> {/* Hiển thị username */}
+          <Text style={styles.text}>Hello {username}</Text> 
           <Text style={styles.textSmall}>What would you like to learn today?</Text>
           
           

@@ -87,7 +87,9 @@ const BookMark = () => {
       
       <View style={styles.headContainer}>
         <Text style={styles.text}>Your words {username}</Text>    
-        <TouchableOpacity onPress={showSetvisibleImport}style={styles.button2}><Text style={styles.text3}>Import by ID</Text>  </TouchableOpacity>
+        <TouchableOpacity onPress={showSetvisibleImport} style={styles.button2}>
+        <Text><Text style={styles.text3}>Import by ID</Text></Text>
+        </TouchableOpacity>      
       </View>
       <View style={{padding:10,}}>
       <TextInput

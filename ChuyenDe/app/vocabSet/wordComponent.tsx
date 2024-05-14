@@ -92,12 +92,12 @@ const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void
       const containerStyle: ViewStyle = {
         backgroundColor: 'white',
         padding: 10,
-        
+        minHeight:"25%",
+        maxHeight:"50%",
         alignSelf: 'center',
         justifyContent: 'center',
         borderRadius:20,
         alignItems:"center",
-        
         };
     const handleUpdateWord=async ()=>{
         try {
@@ -125,8 +125,9 @@ const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void
                 <Text style={styles.secondaryText}>{props.vocab.definition}</Text>
                 <Text style={[styles.secondaryText2, { color: difficultColor }]}>{props.vocab.difficult}</Text>
                 <Text style={{paddingRight:0}}>Practice at: {formattedDate}</Text>
-                <Speak thingToSay={props.vocab.word}></Speak>
+                {/* <Speak thingToSay={props.vocab.word}></Speak> */}
             </View>
+
             <View style={styles.imageContainer}>
             <View style={styles.container3}>
                 
@@ -138,10 +139,8 @@ const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void
                 <MaterialIcons name="delete" size={24} color="red" />
                 </TouchableOpacity>
             </View>
-            
-            
-            
             </View>
+            
             <Portal>
                 <Modal visible={visible3} onDismiss={hideModal3} contentContainerStyle={containerStyle}>
                     <View style={styles.infoContainer}>
@@ -159,7 +158,8 @@ const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void
                     
                     </View>
             </Modal></Portal>
-            <Portal>
+
+            {/* <Portal>
                 <Modal visible={visible2} onDismiss={hideModal2} contentContainerStyle={containerStyle}>
                 <View style={styles.container2}>
                     <View>
@@ -188,7 +188,7 @@ const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void
                     </TouchableOpacity>
             </View>
                 </Modal>
-                </Portal>
+                </Portal> */}
         </TouchableOpacity>
     )
 }
@@ -251,6 +251,7 @@ const styles = StyleSheet.create({
     infoContainer: {
         flex: 3, // Chiếm 40% chiều rộng
         padding: 10, // Khoảng cách padding
+        justifyContent:"center",
     },
     infoContainer2: {
         width:30, // Chiếm 40% chiều rộng
@@ -287,7 +288,7 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: '#5b7bfe',
         borderRadius: 8,
-        height:'200%',
+        padding:10,
         width: '48%', // Chiếm 48% chiều rộng của parent (SafeAreaView)
         justifyContent: 'center',
         alignItems: 'center',

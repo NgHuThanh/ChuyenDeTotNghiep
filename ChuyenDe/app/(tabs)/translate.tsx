@@ -89,7 +89,7 @@ const Translate = () => {
         </TouchableOpacity>
             <ScrollView>
             {data.map((word, index,key) => (
-                <View key={word.word}style={styles.container}>
+                <View key={index}style={styles.container}>
                 <View style={styles.row}>
                     <Text style={styles.boldText}>{word.word}</Text>
                     <TouchableOpacity style={styles.iconContainer} onPress={()=>playSound(word.phonetics[0].audio)}>

@@ -54,8 +54,9 @@ export default function SetDetail() {
       };
       const containerStyle: ViewStyle = {
         backgroundColor: 'white',
-        padding: 0,
-        width: 300,
+        padding: 5,
+        height:"50%",
+        width:"80%",
         borderRadius:10,
         alignSelf: 'center',
         justifyContent: 'center',

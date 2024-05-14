@@ -7,6 +7,7 @@ import { updateUserSource } from './firebase/config';
 import { clearAll } from '@/model/asyncStorage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 export default function App() {
   const localImageUrl = require('../assets/images/illustrations.png');
   
@@ -32,7 +33,8 @@ export default function App() {
     </SafeAreaView>);
   }
   return (
-    <SafeAreaView style={{backgroundColor:"#410fa3",height:"100%"}}>
+    <GestureHandlerRootView>
+      <SafeAreaView style={{backgroundColor:"#410fa3",height:"100%"}}>
       
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.imageContainer}>
@@ -61,6 +63,8 @@ export default function App() {
         {/* <StatusBar backgroundColor='' style='light'></StatusBar> */}
       </ScrollView>
     </SafeAreaView>
+    </GestureHandlerRootView>
+    
     // <View style={styles.container}>
     //   <Text>WELCOME TO MY WORLD</Text>
     //   <StatusBar style="auto" />

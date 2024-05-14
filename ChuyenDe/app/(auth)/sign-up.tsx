@@ -3,6 +3,7 @@ import { SafeAreaView, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Vi
 import { Button, TextInput } from "react-native-paper";
 import { addUser } from "../firebase/config";
 import { router } from "expo-router";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -57,7 +58,8 @@ const SignUp = () => {
   
 
   return (
-    <SafeAreaView>
+    
+<SafeAreaView>
       <ScrollView>
         <View style={styles.container}>
           <Text style={styles.text}>Create an account</Text>
@@ -104,6 +106,8 @@ const SignUp = () => {
         </View>
       </ScrollView>
     </SafeAreaView>
+    
+    
   );
 };
 
