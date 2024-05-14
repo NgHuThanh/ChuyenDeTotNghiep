@@ -26,6 +26,11 @@ const SignUp = () => {
 
   const handleSignUp = async () => {
     try {
+      if (form.password.length < 6) {
+        setForm({ ...form, error: "Password needs at least 6 characters" });
+        return;
+      }
+
       if (form.password !== form.confirmPassword) {
         setForm({ ...form, error: "Password does not match" });
         return;
