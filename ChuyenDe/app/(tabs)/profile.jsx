@@ -5,11 +5,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
 import { StackedBarChart } from "react-native-chart-kit";
-import { Dimensions, ViewStyle } from "react-native";
+import { Dimensions } from "react-native";
 import { getPracticeDays } from "../../model/practiceDay";
-import { setAsyncData } from "../../model/word";
-import { Modal, Portal, PaperProvider } from 'react-native-paper';
-import { router, useLocalSearchParams } from "expo-router";
+import { Modal, Portal, Provider as PaperProvider } from 'react-native-paper';
+import { router } from "expo-router";
 import { logout } from "../firebase/config";
 import { clearAll } from "../../model/asyncStorage";
 
@@ -22,7 +21,7 @@ const Profile = () => {
   const [dateLabels, setDateLabels] = useState([]);
   const [selectedDate, setSelectedDate] = useState('');
   const [practiceCounts, setPracticeCounts] = useState([]);
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = useState(false);
 
   const showModal = () => setVisible(true);
 
@@ -103,12 +102,16 @@ const Profile = () => {
 
   const updatePracticeCounts = async (labels) => {
     const practiceDays = await getPracticeDays();
-    const counts = labels.map(({ day, month }) => { // Sử dụng destructuring để lấy ngày và tháng từ mảng nhãn
+    const counts = labels.map(({ day, month }) => {
       const practiceDay = practiceDays.find(dayItem => {
-        console.log("Comparing:", dayItem.day, day, dayItem.month, month, dayItem.year, new Date().getFullYear());
-        return dayItem.day == day && dayItem.month == month && dayItem.year == new Date().getFullYear(); // So sánh ngày và tháng
+        return dayItem.day == day && dayItem.month == month && dayItem.year == new Date().getFullYear();
       });
-      return practiceDay ? practiceDay.count : 0;
+      let count = practiceDay ? practiceDay.count : 0;
+      // Kiểm tra xem count có phải là NaN hay không
+      if (isNaN(count)) {
+        count = 0; // Gán count bằng 0 nếu là NaN
+      }
+      return count;
     });
     setPracticeCounts(counts);
   };
@@ -147,7 +150,7 @@ const Profile = () => {
 
   return (
     <PaperProvider>
-      <SafeAreaView style={{ backgroundColor: '#FFF' }}>
+      <SafeAreaView style={{ backgroundColor: '#410fa3' }}>
         <ScrollView>
           <View style={styles.headContainer}>
             <Text style={styles.text}>PROFILE</Text> {/* Hiển thị username */}
@@ -232,5 +235,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
+    backgroundColor:"#FFF"
   },
 });

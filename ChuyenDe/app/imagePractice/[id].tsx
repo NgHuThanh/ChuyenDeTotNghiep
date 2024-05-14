@@ -163,7 +163,9 @@ export default function ImagePractice() {
                     {data==null&& (
                         <View style={styles.imageContainer}>
                             <Text style={{minHeight:250}}>Loading</Text>
-                            <TouchableOpacity style={{backgroundColor:"green"}} onPress={handleNextImage}><Feather name="refresh-ccw" size={24} color="black" /></TouchableOpacity>
+                            <TouchableOpacity style={{ backgroundColor: "#410fa3", padding: 10, borderRadius: 10, alignItems: "center",marginBottom:10 }} onPress={handleNextImage}>
+                                <Feather name="refresh-ccw" size={18} color="#FFF" />
+                            </TouchableOpacity>
                             <Text>What's it?</Text>
                         </View>
                     )}
@@ -222,6 +224,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10, // Khoảng cách lề ngang
         paddingVertical: 5, // Khoảng cách lề dọc
         alignItems: 'center', // Căn giữa theo chiều ngang
+        borderRadius:10,
     },
     
     photographerText: {
@@ -246,9 +249,9 @@ const styles = StyleSheet.create({
     imageContainer: {
         minWidth:250,
         minHeight:300,
-        borderWidth: 2,
-        borderColor: '#888',
-        borderLeftWidth:5,
+        
+        
+        
         
         
         alignItems:"center",
@@ -257,7 +260,8 @@ const styles = StyleSheet.create({
       image: {
         width: 250,
         height: 250,
-      },
+        borderRadius:10,
+    },
     
     correctAnswer: {
         backgroundColor: 'lightgreen',

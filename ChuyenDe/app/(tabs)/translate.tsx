@@ -88,7 +88,7 @@ const Translate = () => {
         </TouchableOpacity>
             <ScrollView>
             {data.map((word, index,key) => (
-                <View style={styles.container}>
+                <View key={word.word}style={styles.container}>
                 <View style={styles.row}>
                     <Text style={styles.boldText}>{word.word}</Text>
                     <TouchableOpacity style={styles.iconContainer} onPress={()=>playSound(word.phonetics[0].audio)}>
@@ -97,32 +97,29 @@ const Translate = () => {
                 </View>
                 <Text style={styles.lightText}>{word.phonetics[0].text}</Text>
                 <ScrollView>
-                {word.meanings.map((meaning,key)=>(
-                    <>
+                {word.meanings.map((meaning, meaningIndex) => (
+                <View key={meaningIndex}>
                     <View style={styles.row}>
                         <View style={styles.textContainer}>
                             <Text style={styles.lightText}>{meaning.partOfSpeech}</Text>
                         </View>
                     </View>
-                    {meaning.definitions.map((definition, index,key) => (
-                        <View key={index}>
-                            <Text style={styles.description}>
-                                -{definition.definition}
-                            </Text>
-                            {definition.example && (
-                                <View style={styles.infoBox}>
-                                    <Text style={styles.italicText}>
-                                        {definition.example}
-                                    </Text>
-                                </View>
-                            )}
-                        </View>
-                    ))}
-
-                    
-                    </>
-                
+        {meaning.definitions.map((definition, definitionIndex) => (
+            <View key={definitionIndex}>
+                <Text style={styles.description}>
+                    -{definition.definition}
+                </Text>
+                {definition.example && (
+                    <View key={`${definitionIndex}_example`} style={styles.infoBox}>
+                        <Text style={styles.italicText}>
+                            {definition.example}
+                        </Text>
+                    </View>
+                        )}
+                    </View>
                 ))}
+            </View>
+        ))}
                 </ScrollView>
                 
                 

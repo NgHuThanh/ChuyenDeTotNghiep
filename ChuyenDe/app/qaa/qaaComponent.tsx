@@ -112,7 +112,7 @@ const QaaComponent = (props:{qaa:qaa}) => {
                             </View>
                             <ScrollView>
                                 {reps.map((rep)=>(
-                                   <RepComponent id={rep.id} content={rep.content} timecreate={rep.timecreate} user={rep.user} ></RepComponent>
+                                   <RepComponent key={rep.id} id={rep.id} content={rep.content} timecreate={rep.timecreate} user={rep.user} ></RepComponent>
                                 ))}
                                 
                                 
