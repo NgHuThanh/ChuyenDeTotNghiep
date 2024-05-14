@@ -43,7 +43,7 @@ export default function App() {
           style={styles.image} // style để tùy chỉnh kích thước, vị trí, và các thuộc tính khác của hình ảnh
           resizeMode="cover" // resizeMode để chỉ định cách ảnh sẽ được căn chỉnh khi hiển thị (cover, contain, stretch, ...)
             /> */}
-        <Text style={styles.text}>English App</Text>
+        <Text style={styles.text}>Engnote</Text>
         <CustomButton
         title={"Login now"}
         
