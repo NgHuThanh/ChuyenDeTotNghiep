@@ -1,3 +1,4 @@
+import { Word } from './searchEntity';
 import { uploadSet } from '@/app/firebase/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export interface SetModel {
@@ -235,5 +236,49 @@ export async function setAsyncData(name: string) {
         return null;
     }
 }
+export async function updateVocab(name: string, word: string, newWord: string, newDefinition: string, newDifficult: string) {
+    try {
+        const existingSets = await AsyncStorage.getItem('sets');
+        let sets: SetModel[] = existingSets ? JSON.parse(existingSets) : [];
+        
+        // Tìm index của set trong mảng sets
+        const setIndex = sets.findIndex(set => set.name === name);
 
-  
+        if (setIndex !== -1) {
+            // Tìm vocab trong set có word là word đầu vào
+            const vocabIndex = sets[setIndex].vocabs?.findIndex(vocab => vocab.word === word);
+
+            if (setIndex !== -1) {
+    // Kiểm tra nếu vocabs đã được định nghĩa và không phải là null hoặc undefined
+    if (sets[setIndex].vocabs) {
+        // Tìm vocab trong set có word là word đầu vào
+        const vocabIndex = sets[setIndex].vocabs?.findIndex(vocab => vocab.word === word);
+
+        if (vocabIndex !== -1 && sets[setIndex].vocabs) {
+            // Cập nhật từ vựng nếu tìm thấy
+            sets[setIndex].vocabs![vocabIndex as number]!.word = newWord;
+            sets[setIndex].vocabs![vocabIndex as number]!.definition = newDefinition;
+            sets[setIndex].vocabs![vocabIndex as number]!.difficult = newDifficult;
+        
+            // Lưu lại dữ liệu vào AsyncStorage
+            await AsyncStorage.setItem('sets', JSON.stringify(sets));
+        
+            console.log(`Vocab ${word} in set ${name} updated successfully!`);
+        } else {
+            console.error(`Vocab with word ${word} not found in set ${name}`);
+        }
+    } else {
+        console.error(`Vocabs not defined in set ${name}`);
+    }
+} else {
+    console.error(`Set with name ${name} not found`);
+}
+        } else {
+            console.error(`Set with name ${name} not found`);
+        }
+    } catch (error) {
+        console.error('Error updating vocab:', error);
+    }
+}
+
+

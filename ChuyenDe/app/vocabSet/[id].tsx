@@ -56,7 +56,7 @@ export default function SetDetail() {
         backgroundColor: 'white',
         padding: 0,
         width: 300,
-       
+        borderRadius:10,
         alignSelf: 'center',
         justifyContent: 'center',
       };

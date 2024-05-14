@@ -69,6 +69,7 @@ const BookMark = () => {
     height: 200,
     alignSelf: 'center',
     justifyContent: 'center',
+    borderRadius:10,
   };
   return (
     <PaperProvider >

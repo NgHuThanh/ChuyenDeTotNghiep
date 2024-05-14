@@ -38,16 +38,23 @@ const AddVocabComponent = (props:{nameSet:string}) => {
             </View>
             <TextInput
                 label="Input word"
+                mode="outlined"
+                textColor="black"
                 value={textWord}
                 onChangeText={text => setTextWord(text)}
-                theme={{ colors: { background: '#5b7bfe' } }}
+                theme={{ colors: { background: '#FFF' } }}
                 style={[styles.textInput, { color: 'black' }]}
             />
+
+            
+
             <TextInput
                 label="Input definition"
+                mode="outlined"
+                textColor="black"
                 value={textDefinition}
                 onChangeText={text => setTextDefinition(text)}
-                theme={{ colors: { background: '#5b7bfe' } }}
+                theme={{ colors: { background: '#FFF' } }}
                 style={[styles.textInput, { color: 'black' }]}
             />
             <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={handleAddVocab}>
@@ -74,9 +81,9 @@ const styles = StyleSheet.create({
     },
     textInput: {
         width: '100%',
-        backgroundColor: '#410fa3',
+        backgroundColor: '#FFF',
         color:'black',
-        borderWidth:1,
+        
         marginBottom:10,
     },
     button: {
