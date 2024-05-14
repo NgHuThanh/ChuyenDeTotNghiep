@@ -127,14 +127,28 @@ export const getQuestionList = async (props:{idGrammar:string,idCaq:string}): Pr
 };
 export const addUser = async ({ username, password, email }: { username: string; password: string; email: string; }) => {
   try {
+    // Tạo truy vấn để kiểm tra xem email đã tồn tại hay chưa
+    const q = query(collection(firestore, 'users'), where('email', '==', email));
+    const querySnapshot = await getDocs(q);
+
+    // Nếu querySnapshot có ít nhất một tài khoản, email đã tồn tại
+    if (!querySnapshot.empty) {
+      console.log('Email already exists!');
+      return false; // Trả về false để chỉ ra rằng email đã tồn tại
+    }
+
+    // Nếu không có tài khoản nào có email trùng khớp, thêm người dùng mới
     await addDoc(collection(firestore, 'users'), {
       username: username,
       password: password,
       email: email
     });
+    
     console.log('User added successfully!');
+    return true; // Trả về true để chỉ ra rằng người dùng đã được thêm thành công
   } catch (error) {
     console.error('Error adding user: ', error);
+    return false; // Trả về false trong trường hợp có lỗi xảy ra
   }
 }
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { SafeAreaView, Text, Image, StyleSheet, TouchableOpacity, ScrollView, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { addUser } from "../firebase/config";
+import { router } from "expo-router";
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -11,8 +12,8 @@ const SignUp = () => {
     username: "",
     showPassword: false,
     showConfirmPassword: false,
-    error: '', // Thêm trạng thái lỗi
-    loading: false, // Thêm trạng thái loading
+    error: '',
+    loading: false,
   });
 
   const toggleShowPassword = () => {
@@ -36,12 +37,19 @@ const SignUp = () => {
         password: form.password
       };
       
-      // Ghi thông tin người dùng lên Firestore
-      addUser(userData);
+      const check = await addUser(userData);
+      if (!check) {
+        setForm({ ...form, error: "Email already sign up" });
+      } else {
+        // Đăng ký thành công, hiển thị thông báo và điều hướng đến trang khác
+        
+        router.push('/(auth)/sign-in'); // Thay 'Home' bằng tên màn hình bạn muốn điều hướng đến
+      }
     } catch (error) {
       console.error("Error signing up:", error);
     }
   };
+  
 
   return (
     <SafeAreaView>
