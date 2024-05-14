@@ -23,11 +23,15 @@ const AddSetComponent = (props:{fetchSets: () => void}) => {
             </View>
             <TextInput
                 label="Name"
+                mode="outlined"
+                textColor="black"
                 value={text}
+                
                 onChangeText={text => setText(text)}
-                theme={{ colors: { background: '#5b7bfe' } }} // Thiết lập màu nền cho TextInput
+                theme={{ colors: { background: '#FFF' } }} // Thiết lập màu nền cho TextInput
                 style={[styles.textInput, { color: 'black' }]} // Thêm kiểu cho TextInput và đặt màu chữ là đen
             />
+            
             <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={handleAddSet}>
                 <Text style={styles.buttonText}>Add</Text>
             </TouchableOpacity>
@@ -52,9 +56,9 @@ const styles = StyleSheet.create({
     },
     textInput: {
         width: '100%', // TextInput chiếm toàn bộ chiều rộng của parent
-        backgroundColor: '#410fa3',
+        // backgroundColor: '#410fa3',
         color:'black', // Màu nền của TextInput
-        borderWidth:1,
+        
     },
     button: {
         backgroundColor: '#410fa3',

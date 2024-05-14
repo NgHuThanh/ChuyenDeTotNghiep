@@ -39,11 +39,13 @@ const BookMark = () => {
     fetchSets();
   }, []);
   const handleInputChange = (inputText: string) => {
+    // Cập nhật giá trị của text
     setText(inputText);
-    fetchSets();
+    // Lọc các set từ sets dựa trên text và cập nhật filteredSets
     const filteredSets = sets?.filter(set => set.name.toLowerCase().includes(inputText.toLowerCase()));
     setFilteredSets(filteredSets as SetModel[]);
   };
+  
   const [visible, setVisible] = React.useState(false);
   const [visibleImport, setvisibleImport] = React.useState(false);
   const showSetvisibleImport = () => setvisibleImport(true);
@@ -86,11 +88,17 @@ const BookMark = () => {
         <Text style={styles.text}>Your words {username}</Text>    
         <TouchableOpacity onPress={showSetvisibleImport}style={styles.button2}><Text style={styles.text3}>Import by ID</Text>  </TouchableOpacity>
       </View>
+      <View style={{padding:10,}}>
       <TextInput
         label="Find your name set vocab"
         value={text}
         onChangeText={handleInputChange}
+        mode="outlined"
+        textColor="black"
+        style={styles.input}
       />
+      </View>
+      
       <ScrollView style={{ padding: 10 }}>
         {filteredSets?.map((set) => (
           <SetComponent setVocab={set} key={set.name} fetchSets={fetchSets}></SetComponent>
@@ -111,7 +119,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  
+  input:{
+    backgroundColor:"#FFF"
+  },
   headContainer: {
     backgroundColor:'#410fa3',
     padding:20,

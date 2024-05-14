@@ -51,6 +51,7 @@ const Translate = () => {
             placeholder="Search"
             onChangeText={setSearchQuery}
             value={searchQuery}
+            
         />
         <TouchableOpacity style={styles.button} onPress={handlePress} activeOpacity={0.7}>
             <Text style={styles.buttonText}>Search</Text>

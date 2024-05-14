@@ -24,9 +24,11 @@ const fetcher = async (url:string) => {
 export default function SetDetail() {
   const {id}=useLocalSearchParams();
   const [vocabs, setVocabs] = useState<vocab[] | null>(null);
+  const [filteredVocabs, setFilteredVocabs] = useState<vocab[] | null>(null);
   const fetchVocabs = async () => {
     const allVocabs = await getVocabsInSet(id as string);
     setVocabs(allVocabs);
+    setFilteredVocabs(allVocabs);
   };
   useEffect(() => {
     fetchVocabs();
@@ -36,8 +38,13 @@ export default function SetDetail() {
     
     const [text, setText] = useState('');
     const handleInputChange = (inputText: string) => {
-        setText(inputText);
-      };
+      // Cập nhật giá trị của text
+      setText(inputText);
+      // Lọc các từ vựng từ vocabs dựa trên text và cập nhật filteredVocabs
+      const filteredVocabs = vocabs?.filter(vocab => vocab.word.toLowerCase().includes(inputText.toLowerCase()));
+      setFilteredVocabs(filteredVocabs as vocab[]);
+    };
+    
       const [visible, setVisible] = React.useState(false);
       const showModal = () => setVisible(true);
       const hideModal = () => {
@@ -71,16 +78,21 @@ export default function SetDetail() {
             <TouchableOpacity onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="#FFF" /></TouchableOpacity>
                 <Text style={styles.text}>{id}</Text>    
             </View>
+            <View style={{padding:10}}>
             <TextInput
-            label="Find your vocablary"
-            value={text}
-            onChangeText={handleInputChange}
-            />
+                label="Find word"
+                value={text}
+                onChangeText={handleInputChange}
+                mode="outlined"
+                textColor="black"
+                style={styles.input}
+              />
+            </View>
+            
             <ScrollView style={{padding:10}}>
-            {vocabs?.map((vocab, index,key) => (
-              <WordComponent nameSet={id as string} key={vocab.word}vocab={vocab} fetchVocabs={fetchVocabs}></WordComponent>
-            ))}
-                
+              {filteredVocabs?.map((vocab, index) => (
+                <WordComponent nameSet={id as string} key={index} vocab={vocab} fetchVocabs={fetchVocabs}></WordComponent>
+              ))}
             </ScrollView>
             </PaperProvider>
             <TouchableOpacity style={styles.button} activeOpacity={0.7} >
@@ -100,7 +112,10 @@ const styles = StyleSheet.create({
         backgroundColor:'#410fa3',
         padding:5,
       },
-    text: {
+    input:{
+      backgroundColor:"#FFF"
+    }
+,    text: {
     marginTop:20,
     color: '#faf9fd',
     fontWeight:"bold",
