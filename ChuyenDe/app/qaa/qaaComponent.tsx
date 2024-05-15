@@ -69,6 +69,10 @@ const QaaComponent = (props:{qaa:qaa}) => {
         marginHorizontal:10,
     };
     const handlePressRep=()=>{
+        setForm({
+            ...form,
+            content: '', // Xóa nội dung
+        });
         writeRepToFirestore(props.qaa.id,form.content);
         fetchReps();
     }
@@ -186,6 +190,14 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         padding:10,
         width:"100%",
+        shadowColor: '#5b7bfe', // Màu của shadow
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.27, // Độ mờ của shadow
+        shadowRadius: 4.65,
+        elevation: 6, // Thêm elevation để hiển thị shadow trên Android
     },
     absoluteContainer: {
         width:"100%",
@@ -235,7 +247,8 @@ const styles = StyleSheet.create({
     userName: {
         fontSize: 16,
         marginRight: 10,
-        fontWeight:"bold"
+        fontWeight:"bold",
+        color:"#5b7bfe"
     },
     timeAgo: {
         color: '#888',

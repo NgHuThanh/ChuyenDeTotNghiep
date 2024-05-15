@@ -23,16 +23,15 @@ const fetcher = async (url: string) => {
 };
 
 export default function qaaa() {
-
     const [questionandanswer, setQuestionAndAnswer] = useState<qaa[]>([]);
     const [form, setForm] = useState({
         title: "",
         content: "",
         error: '',
     });
-    const [userId, setUserId] = useState<string | null>(null); // Thêm state cho userId
+    const [userId, setUserId] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(true); // Biến trạng thái loading
 
-    // Lấy userId từ AsyncStorage khi component được render
     useEffect(() => {
         const getUserId = async () => {
             const id = await AsyncStorage.getItem("userId");
@@ -41,32 +40,27 @@ export default function qaaa() {
         getUserId();
     }, []);
 
-    // Fetch questionandanswer khi component được render
     useEffect(() => {
         fetchQaas();
     }, []);
 
-    // Hàm fetch questionandanswer
     const fetchQaas = async () => {
+        setIsLoading(true); // Bắt đầu loading
         const allQaas = await getAllQaaDocuments();
-        // Sắp xếp mảng theo thời gian giảm dần
         const sortedQaas = allQaas.sort((a, b) => new Date(b.timecreate).getTime() - new Date(a.timecreate).getTime());
         setQuestionAndAnswer(sortedQaas);
+        setIsLoading(false); // Kết thúc loading sau khi fetch dữ liệu
     };
-    
 
     // Xử lý khi bấm vào "Your post"
     const handleYourPost = () => {
-        if (!userId) return; // Nếu userId không tồn tại, không làm gì cả
-
-        // Lọc các phần tử có user giống với userId và cập nhật state questionandanswer
+        if (!userId) return;
         const filteredQaas = questionandanswer.filter(qa => qa.user == userId);
         setQuestionAndAnswer(filteredQaas);
     };
 
-    // Xử lý khi bấm vào "Word"
     const handleWord = () => {
-        fetchQaas(); // Gọi lại hàm fetchQaas để hiển thị tất cả các phần tử
+        fetchQaas();
     };
 
     const handlePressBack = () => {
@@ -89,17 +83,13 @@ export default function qaaa() {
         marginHorizontal: 10,
     };
     const handlePost = () => {
-        // Ghi dữ liệu lên Firestore
         writeToFirestore(form.title, form.content);
-
-        // Reset lại giá trị của form
         setForm({
             title: "",
             content: "",
-            error: '', // Thêm trạng thái lỗi
+            error: '',
         });
         fetchQaas();
-        // Ẩn modal
         hideModal();
     };
 
@@ -124,11 +114,18 @@ export default function qaaa() {
                     </TouchableOpacity>
                 </View>
 
-                <ScrollView style={{ padding: 10 }}>
-                    {questionandanswer.map((qa, index) => (
-                        <QaaComponent key={index} qaa={qa} />
-                    ))}
-                </ScrollView>
+                {isLoading ? ( // Kiểm tra nếu đang loading, hiển thị văn bản loading
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text>Loading...</Text>
+                    </View>
+                ) : (
+                    <ScrollView style={{ padding: 10 }}>
+                        {questionandanswer.map((qa, index) => (
+                            <QaaComponent key={index} qaa={qa} />
+                        ))}
+                    </ScrollView>
+                )}
+
                 <Portal>
                     <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 10, borderRadius: 10 }}>
@@ -139,18 +136,20 @@ export default function qaaa() {
                                 placeholder="Enter your post title"
                                 value={form.title}
                                 onChangeText={(text) => setForm({ ...form, title: text })}
-                                style={styles.input} // Sửa đổi color thành màu đen
+                                style={styles.input}
                             />
                             <TextInput
                                 mode="outlined"
                                 label="Content"
-                                textColor="black"
+                                textColor='black'
+                                multiline={true}
+                                numberOfLines={4}
                                 placeholder="Enter what are you thinking?"
                                 value={form.content}
                                 onChangeText={(text) => setForm({ ...form, content: text })}
-                                style={[styles.input2, { color: 'black' }]} // Sửa đổi color thành màu đen
+                                style={[styles.input2, { color: 'black' }]}
                             />
-                            <TouchableOpacity onPress={handlePost} style={styles.commentButton}>Post now</TouchableOpacity>
+                            <TouchableOpacity onPress={handlePost} style={styles.commentButton}><Text style={{fontWeight:"bold",fontSize:18,color:"#FFF"}}>Post</Text></TouchableOpacity>
                         </View>
                     </Modal>
                 </Portal>
@@ -158,6 +157,7 @@ export default function qaaa() {
         </PaperProvider>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {

@@ -118,7 +118,8 @@ const styles = StyleSheet.create({
     userName: {
         fontSize: 16, // Kích thước phông chữ nhỏ hơn
         marginRight: 10, // Khoảng cách với thời gian
-        fontWeight:"bold"
+        fontWeight:"bold",
+        color:"#5b7bfe"
     },
     timeAgo: {
         color: '#888', // Màu chữ xám
