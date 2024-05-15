@@ -1,7 +1,9 @@
+import Speak from '@/component/Speech';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, View,TouchableOpacity } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -55,12 +57,14 @@ export default function LongApp() {
     router.push("/(tabs)/translate");
   }
   return (
+    <GestureHandlerRootView>
     <SafeAreaView style={{backgroundColor:"#FFF",height:"100%",padding:10}}>
       <TouchableOpacity style={{alignSelf:"flex-start"}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
 
       <View>
         <TextInput
           label="Input text to translate"
+          mode='outlined'
           value={text}
           onChangeText={handleInputChange}
           multiline={true} // Cho phép nhập nhiều dòng
@@ -81,11 +85,10 @@ export default function LongApp() {
         <Text style={styles.definitionText}>
           {translationText}
         </Text>
-        <TouchableOpacity style={styles.audioButton}>
-          <Feather name="volume-2" size={24} color="#888" />
-        </TouchableOpacity>
+        <Speak thingToSay={translationText}></Speak>
       </View>
     </SafeAreaView>
+    </GestureHandlerRootView>
   );
 }
 
