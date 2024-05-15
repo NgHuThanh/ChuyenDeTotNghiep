@@ -30,7 +30,7 @@ const Home = () => {
     };
     
     getUsername();
-  }, []); // Chỉ chạy một lần khi component được render
+  }, []); // Chỉ chạy một lần khi componesnt được render
 
   return (
     <SafeAreaView style={{ backgroundColor: '#FFF' }}>

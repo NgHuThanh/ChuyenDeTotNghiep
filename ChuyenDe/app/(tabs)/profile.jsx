@@ -7,11 +7,11 @@ import { AntDesign } from '@expo/vector-icons';
 import { StackedBarChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
 import { getPracticeDays } from "../../model/practiceDay";
-import { Modal, Portal, Provider as PaperProvider } from 'react-native-paper';
+import { Modal, Portal,PaperProvider } from 'react-native-paper';
 import { router } from "expo-router";
 import { logout } from "../firebase/config";
 import { clearAll } from "../../model/asyncStorage";
-
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 const screenWidth = Dimensions.get("window").width;
 
 const Profile = () => {
@@ -26,7 +26,7 @@ const Profile = () => {
   const showModal = () => setVisible(true);
 
   const logoutConfirmed = () => {
-    setVisible(false);
+    
     logout();
     handleClear();
     router.push("/(auth)/sign-in");
@@ -149,24 +149,34 @@ const Profile = () => {
   };
 
   return (
-    <PaperProvider>
+    
+    <GestureHandlerRootView>
+      
       <SafeAreaView style={{ backgroundColor: '#410fa3' }}>
+      
         <ScrollView>
           <View style={styles.headContainer}>
-            <Text style={styles.text}>PROFILE</Text> {/* Hiển thị username */}
-            <Text style={styles.textt}>Username: {username}</Text>
-            <Text style={styles.textt}>Email: {email}</Text>
+            <Text style={styles.text}>PROFILE</Text>
+            <Text style={styles.textt}>Username: <Text>{username}</Text></Text>
+            <Text style={styles.textt}>Email: <Text>{email}</Text></Text>
+
             <View style={{ flexDirection: "row" }}>
-              <Text style={styles.textSmall}>Let see your progress</Text>
-              <TouchableOpacity style={{ borderRadius: "50%", padding: 5, backgroundColor: "#FFF", margin: 10 }} onPress={showModal}><AntDesign name="logout" size={24} color="#410fa3" /></TouchableOpacity>
+            <Text style={styles.textSmall}>Let see your progress</Text>
+            <TouchableOpacity style={{ borderRadius: 50, padding: 5, backgroundColor: "#FFF", margin: 10 }} onPress={logoutConfirmed}>
+            <AntDesign name="logout" size={24} color="#410fa3" />
+            </TouchableOpacity>
+
 
             </View>
+            
           </View>
           <View>
             <View style={styles.dateContainer}>
               <TouchableOpacity onPress={handlePreviousDate}><AntDesign name="caretleft" size={24} color="black" /></TouchableOpacity>
-              <Text style={styles.textt2}>{selectedDate}</Text>
+              <Text style={styles.textt2}><Text>{selectedDate}</Text></Text>
+
               <TouchableOpacity onPress={handleNextDate}><AntDesign name="caretright" size={24} color="black" /></TouchableOpacity>
+              
             </View>
             <StackedBarChart
               style={graphStyle}
@@ -181,20 +191,27 @@ const Profile = () => {
             />
           </View>
         </ScrollView>
-        <Portal>
-          <Modal visible={visible} onDismiss={hideModal}>
-            <View style={{ backgroundColor: "#FFF", alignItems: "center", padding: 20 }}>
-              <Text style={{ fontSize: 20, fontWeight: "bold" }}>Are you sure want to log out?</Text>
-              <View style={{ flexDirection: "row" }}>
-                <TouchableOpacity style={{ margin: 10, width: 100, padding: 10, borderRadius: 10, backgroundColor: "blue", color: "#FFF" }} onPress={logoutConfirmed}>Yes</TouchableOpacity>
-                <TouchableOpacity style={{ margin: 10, width: 100, padding: 10, borderRadius: 10, backgroundColor: "blue", color: "#FFF" }} onPress={hideModal}>No</TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-        </Portal>
+        {/* <PaperProvider>
+          <Portal>
+              <Modal visible={visible} onDismiss={hideModal}>
+                <View style={{ backgroundColor: "#FFF", alignItems: "center", padding: 20,height:150,borderRadius:10,margin:20 }}>
+                  <Text style={{ fontSize: 20, fontWeight: "bold" }}>Are you sure want to log out?</Text>
+                  <View style={{ flexDirection: "row" }}>
+                    <TouchableOpacity style={{ margin: 10, width: 100, padding: 10, borderRadius: 10, backgroundColor: "blue", color: "#FFF" }} onPress={logoutConfirmed}><Text>Yes</Text></TouchableOpacity>
+                    <TouchableOpacity style={{ margin: 10, width: 100, padding: 10, borderRadius: 10, backgroundColor: "blue", color: "#FFF" }} onPress={hideModal}><Text>No</Text></TouchableOpacity>
+                  </View>
+                </View>
+              </Modal>
+            </Portal>
+      </PaperProvider> */}
+       
+        
+        
       </SafeAreaView>
-    </PaperProvider>
-
+      
+    </GestureHandlerRootView>
+    
+    
   );
 };
 
@@ -204,6 +221,7 @@ const styles = StyleSheet.create({
   headContainer: {
     backgroundColor: '#410fa3',
     padding: 20,
+    
   },
   text: {
     marginTop: 20,

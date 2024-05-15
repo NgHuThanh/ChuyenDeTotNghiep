@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, router } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View, Image, Button, TouchableOpacity, ViewStyle } from 'react-native';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ProgressBar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -127,8 +128,8 @@ export default function Review() {
         router.push("/(tabs)/bookmark");
     }
     return (
-        <>
-            {vocabs && (
+        <><GestureHandlerRootView>
+{vocabs && (
                 <SafeAreaView style={styles.container}>
                     <TouchableOpacity style={{alignSelf:"flex-start"}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
                     <View style={styles.progressContainer}>
@@ -171,6 +172,8 @@ export default function Review() {
                     <SwipeGestureHandler onSwipeLeft={handleSwipeLeft} onSwipeRight={handleSwipeRight} />
                 </SafeAreaView>
             )}
+        </GestureHandlerRootView>
+            
         </>
     );
 }
@@ -179,10 +182,11 @@ export default function Review() {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        // flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#eaeaea', // Màu nền
+        height:"100%",
     },
     wordContainer: {
         flex: 7, // Chiếm 70% chiều cao (tổng cộng 10 phần)
