@@ -6,6 +6,9 @@ import useSWR from 'swr';
 import { Word } from '@/model/searchEntity';
 import playSound from '@/component/sound';
 import { router } from 'expo-router';
+import { speak } from '../textToSpech';
+import Speak from '@/component/Speech';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 const fetcher = async (url:string) => {
     const response = await fetch(url);
     if (!response.ok) {
@@ -75,7 +78,8 @@ const Translate = () => {
             </View>;
         }
     return (
-        <View style={{ padding: 10,marginTop:30 }}>
+        <GestureHandlerRootView>
+<View style={{ padding: 10,marginTop:30 }}>
             <Searchbar
                 placeholder="Search"
                 onChangeText={setSearchQuery}
@@ -92,9 +96,7 @@ const Translate = () => {
                 <View key={index}style={styles.container}>
                 <View style={styles.row}>
                     <Text style={styles.boldText}>{word.word}</Text>
-                    <TouchableOpacity style={styles.iconContainer} onPress={()=>playSound(word.phonetics[0].audio)}>
-                        <Feather name="volume-2" size={24} color="#888" />
-                    </TouchableOpacity>
+                    <Speak thingToSay={word.word}></Speak>
                 </View>
                 <Text style={styles.lightText}>{word.phonetics[0].text}</Text>
                 <ScrollView>
@@ -131,6 +133,8 @@ const Translate = () => {
             </ScrollView>
             
         </View>
+        </GestureHandlerRootView>
+        
        
     )
 }
