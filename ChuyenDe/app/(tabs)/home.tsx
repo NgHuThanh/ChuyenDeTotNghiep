@@ -33,8 +33,9 @@ const Home = () => {
   }, []); // Chỉ chạy một lần khi componesnt được render
 
   return (
-    <SafeAreaView style={{ backgroundColor: '#FFF' }}>
+    <SafeAreaView style={{ backgroundColor: '#410fa3' }}>
       <ScrollView>
+        <View style={{backgroundColor:"#FFF"}}>
         <View style={styles.headContainer}>
           <View style={styles.imageContainer}>
             <Image
@@ -59,6 +60,8 @@ const Home = () => {
           
           
         </View>
+        </View>
+        
       </ScrollView>
     </SafeAreaView>
   );

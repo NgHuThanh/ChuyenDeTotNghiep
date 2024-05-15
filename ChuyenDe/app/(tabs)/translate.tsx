@@ -75,7 +75,7 @@ const Translate = () => {
             </View>;
         }
     return (
-        <View style={{ padding: 10 }}>
+        <View style={{ padding: 10,marginTop:30 }}>
             <Searchbar
                 placeholder="Search"
                 onChangeText={setSearchQuery}
