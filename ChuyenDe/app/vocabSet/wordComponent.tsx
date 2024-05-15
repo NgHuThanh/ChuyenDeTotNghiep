@@ -134,11 +134,11 @@ const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void
             <View style={styles.container3}>
                 
                 <TouchableOpacity  activeOpacity={0.7} style={{marginRight:10}} onPress={UpdateConfirm}>
-                <Feather name="edit" size={24} color="black" />
+                <Feather name="edit" size={30} color="black" />
                 </TouchableOpacity>
                 
                 <TouchableOpacity  activeOpacity={0.7} onPress={DeleteConfirm}>
-                <MaterialIcons name="delete" size={24} color="red" />
+                <MaterialIcons name="delete" size={30} color="red" />
                 </TouchableOpacity>
             </View>
             </View>
@@ -161,7 +161,7 @@ const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void
                     </View>
             </Modal></Portal>
 
-            {/* <Portal>
+            <Portal>
                 <Modal visible={visible2} onDismiss={hideModal2} contentContainerStyle={containerStyle}>
                 <View style={styles.container2}>
                     <View>
@@ -190,7 +190,7 @@ const WordComponent = (props:{nameSet:string,vocab:vocab,fetchVocabs: () => void
                     </TouchableOpacity>
             </View>
                 </Modal>
-                </Portal> */}
+                </Portal>
         </TouchableOpacity>
         </GestureHandlerRootView>
         
@@ -204,7 +204,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        padding:20,
+        padding:40,
+        minHeight:200,
     },
     container: {
         flexDirection: 'row',
@@ -230,7 +231,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 16,
         fontWeight:"bold",
-        marginBottom: 20,
+        margin: 20,
         textAlign: 'center',
     },
     container3: {
@@ -240,6 +241,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         width: '100%',
+        minWidth:200,
         backgroundColor: '#FFF',
         color:'black',
         

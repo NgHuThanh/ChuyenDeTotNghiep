@@ -4,6 +4,7 @@ import { Button, TextInput } from "react-native-paper";
 import { addUser } from "../firebase/config";
 import { router } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { AntDesign } from "@expo/vector-icons";
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -55,11 +56,16 @@ const SignUp = () => {
       console.error("Error signing up:", error);
     }
   };
-  
+  const handlePressBack=()=>{
+    router.push("/");
+    
+}
 
   return (
     
 <SafeAreaView>
+<TouchableOpacity style={{alignSelf:"flex-start",marginTop:40}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
+
       <ScrollView>
         <View style={styles.container}>
           <Text style={styles.text}>Create an account</Text>
@@ -133,13 +139,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    width: 200,
+    
     marginTop: 40,
     backgroundColor: '#410fa3',
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding:10,
   },
   buttonText: {
     color: '#FFF',

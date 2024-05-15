@@ -16,6 +16,7 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
     const [visible, setVisible] = React.useState(false);
     const [visible2, setVisible2] = React.useState(false);
     const [visible3, setVisible3] = React.useState(false);
+    const [visible4, setVisible4] = React.useState(false);
     const [id, setID] = useState<string | null | undefined>(undefined);
     const showModal = () => setVisible(true);
     const handlePractice = () => {
@@ -51,15 +52,37 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
         router.push(`/review/${props.setVocab.name}`)
     }
     const handleMultipleChoice=()=>{
-        router.push(`/muitiplechoice/${props.setVocab.name}`)
+        if(props.setVocab.vocabs?.length as number < 5){
+            setVisible4(true);
+            hideModal2();
+        }
+        else{
+            router.push(`/muitiplechoice/${props.setVocab.name}`)
+        }
+        
     }
     const handleMatchChoice=()=>{
-        router.push(`/match/${props.setVocab.name}`)
+        if(props.setVocab.vocabs?.length as number < 5){
+            setVisible4(true);
+            hideModal2();
+        }
+        else{
+            router.push(`/match/${props.setVocab.name}`)
+        }
+        
     }
     const handleImagePractice=()=>{
-        router.push(`/imagePractice/${props.setVocab.name}`)
+        if(props.setVocab.vocabs?.length as number < 5){
+            setVisible4(true);
+            hideModal2();
+        }
+        else{
+            router.push(`/imagePractice/${props.setVocab.name}`)
+        }
+        
     }
     const goToDestination = () => {
+        
         router.push(`/vocabSet/${props.setVocab.name}`);
     };
     const handleShare = async () => {
@@ -69,6 +92,11 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
     const hideModal = () => {
         
         setVisible(false)
+        
+      };
+      const hideModal4 = () => {
+        
+        setVisible4(false)
         
       };
       const hideModal2 = () => {
@@ -99,6 +127,10 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
                 <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
                 <Text style={styles.boldText}>ID to share:</Text>
                 <Text style={styles.percentText}>{id}</Text>
+            </Modal></Portal>
+            <Portal>
+                <Modal visible={visible4} onDismiss={hideModal4} contentContainerStyle={containerStyle}>
+                <Text style={{fontWeight:"bold",color:"red"}}>Need at least 5 words!</Text>
             </Modal></Portal>
             <Portal>
                 <Modal visible={visible3} onDismiss={hideModal3} contentContainerStyle={containerStyle}>

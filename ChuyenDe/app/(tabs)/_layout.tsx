@@ -68,7 +68,7 @@ const TabsLayout = () => {
             tabBarShowLabel:false,
             tabBarInactiveTintColor:'#FFF',
             tabBarStyle:{
-                backgroundColor:'#161622'
+                backgroundColor:'#FFF'
             }
         }}
         >

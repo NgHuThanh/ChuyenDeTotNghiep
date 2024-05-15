@@ -43,7 +43,23 @@ export default function qaaa() {
     useEffect(() => {
         fetchQaas();
     }, []);
-
+    useEffect(() => {
+        const getUsername = async () => {
+          try {
+            const storedUsername = await AsyncStorage.getItem('username');
+            const storedEmail = await AsyncStorage.getItem('email');
+            if (storedUsername !== null) {
+              
+            } else {
+              router.push("/(auth)/sign-in"); // Chuyển hướng đến trang đăng nhập nếu không tồn tại username
+            }
+          } catch (error) {
+            console.error('Error retrieving username from AsyncStorage:', error);
+          }
+        };
+    
+        getUsername();
+      }, []);
     const fetchQaas = async () => {
         setIsLoading(true); // Bắt đầu loading
         const allQaas = await getAllQaaDocuments();

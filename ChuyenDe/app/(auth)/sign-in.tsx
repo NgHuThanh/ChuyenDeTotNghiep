@@ -6,6 +6,7 @@ import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler
 import { ActivityIndicator, TextInput } from "react-native-paper";
 import { login } from "../firebase/config";
 import { importData } from "@/model/asyncStorage";
+import { AntDesign } from "@expo/vector-icons";
 
 const SignIn = () => {
     const localImageUrl = require('../../assets/images/illustrations.png');
@@ -31,10 +32,15 @@ const SignIn = () => {
             setForm({ ...form, loading: false, error: 'Email or password incorrect' });
         }
     };
-
+    const handlePressBack=()=>{
+        router.push("/");
+        
+    }
     return (
         <GestureHandlerRootView>
 <SafeAreaView style={{backgroundColor:"#FFF",height:"100%"}}>
+<TouchableOpacity style={{alignSelf:"flex-start",marginTop:40}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
+
             <ScrollView>
                 <View  style={{backgroundColor:"#FFF",height:"100%",padding:10,alignItems:"center"}}>
                     
@@ -51,6 +57,7 @@ const SignIn = () => {
                         mode="outlined"
                         label="Password"
                         placeholder="Enter your password"
+                        secureTextEntry={true}
                         value={form.password}
                         onChangeText={(text) => setForm({ ...form, password: text })}
                         style={styles.input}
@@ -98,6 +105,7 @@ const styles = StyleSheet.create({
     rowContainer: {
         flexDirection: 'row', // Sắp xếp các phần tử theo hàng ngang
         alignItems: 'center', // Canh chỉnh các phần tử theo trục dọc
+        backgroundColor:"#FFF"
     },
     scrollViewContent: {
       flexGrow: 1,
@@ -129,6 +137,7 @@ const styles = StyleSheet.create({
         fontWeight:"bold",
         marginBottom:20,
         marginRight:10,
+        backgroundColor:"#FFF"
       },
     button: {
         width:200,

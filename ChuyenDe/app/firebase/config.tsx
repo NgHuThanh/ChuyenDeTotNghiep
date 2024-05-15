@@ -201,11 +201,11 @@ export const updateUserSource = async () => {
       // Lấy userId từ AsyncStorage
       const userId = await AsyncStorage.getItem('userId');
       if (!userId) {
-          console.error('User ID not found in AsyncStorage.');
+          
           return;
       }
-
-      // Thực hiện truy vấn để lấy tài liệu người dùng từ Firestore
+      else{
+        // Thực hiện truy vấn để lấy tài liệu người dùng từ Firestore
       const userDocRef = doc(firestore, 'users', userId);
       const userDocSnap = await getDoc(userDocRef);
       const data= await exportData();
@@ -220,6 +220,8 @@ export const updateUserSource = async () => {
       } else {
           console.error('User document does not exist in Firestore.');
       }
+      }
+      
   } catch (error) {
       console.error('Error updating user source:', error);
   }
