@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
     finishedContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 20,
+        marginTop: 100,
     },
     finishedText: {
         fontSize: 24,

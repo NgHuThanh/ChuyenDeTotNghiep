@@ -20,6 +20,7 @@ const ImportSet = (props:{fetchSets: () => void}) => {
             </View>
             <TextInput
                 label="ID of vocab"
+                mode="outlined"
                 value={text}
                 onChangeText={text => setText(text)}
                 theme={{ colors: { background: '#5b7bfe' } }} // Thiết lập màu nền cho TextInput
@@ -49,9 +50,9 @@ const styles = StyleSheet.create({
     },
     textInput: {
         width: '100%', // TextInput chiếm toàn bộ chiều rộng của parent
-        backgroundColor: '#410fa3',
+        backgroundColor:"#FFF",
         color:'black', // Màu nền của TextInput
-        borderWidth:1,
+        
     },
     button: {
         backgroundColor: '#410fa3',

@@ -160,7 +160,7 @@ export default function Match() {
 
                     <View style={styles.progressContainer}>
                     <ProgressBar
-                        progress={currentVocabIndex / (vocabs ? vocabs.length : 1)}
+                        progress={currentVocabIndex /  vocabs.length }
                         color={'green'}
                         style={styles.progressBar}
                     />
@@ -225,7 +225,8 @@ const styles = StyleSheet.create({
         padding:10,
     },
     progressBar: {
-        
+        maxWidth:400,
+        margin:10,
         height:20,
         borderRadius: 20,
         borderWidth: 1,

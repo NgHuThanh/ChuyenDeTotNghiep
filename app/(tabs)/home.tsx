@@ -9,6 +9,7 @@ import PracticeCourse from '../homeComponent/practiceCourse';
 import PracticeDay, { getPracticeDays } from '@/model/practiceDay';
 import { exportData } from '@/model/asyncStorage';
 import { setAsyncData } from '@/model/word';
+import { AntDesign } from '@expo/vector-icons';
 
 const Home = () => {
   const localImageUrl = require('../../assets/images/defaultAvatat.png');
@@ -38,11 +39,7 @@ const Home = () => {
         <View style={{backgroundColor:"#FFF"}}>
         <View style={styles.headContainer}>
           <View style={styles.imageContainer}>
-            <Image
-              source={localImageUrl}
-              style={styles.image}
-              resizeMode="cover"
-            />
+          <AntDesign name="aliwangwang" size={24} color="#FFF" />
           </View>
           
           
@@ -77,6 +74,8 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderRadius: 100,
     overflow: 'hidden',
+    alignItems:"center",
+    justifyContent:"center"
   },
   image: {
     width: 50,

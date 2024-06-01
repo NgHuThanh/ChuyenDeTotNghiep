@@ -249,6 +249,7 @@ const styles = StyleSheet.create({
     infoContainer: {
         flex: 5,
         padding: 10,
+        justifyContent:"center",
     },
     image: {
         width: '100%',
