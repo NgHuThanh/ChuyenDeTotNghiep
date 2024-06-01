@@ -158,16 +158,17 @@ const Profile = () => {
           <View style={styles.headContainer}>
             <Text style={styles.text}>PROFILE</Text>
             <Text style={styles.textt}>Username: <Text>{username}</Text></Text>
-            <Text style={styles.textt}>Email: <Text>{email}</Text></Text>
+
 
             <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textSmall}>Let see your progress</Text>
+            
+            
+
             <TouchableOpacity style={{ borderRadius: 50, padding: 5, backgroundColor: "#FFF", margin: 10 }} onPress={logoutConfirmed}>
             <AntDesign name="logout" size={24} color="#410fa3" />
             </TouchableOpacity>
-
-
             </View>
+            
             
           </View>
           <View>

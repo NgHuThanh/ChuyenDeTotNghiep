@@ -38,32 +38,29 @@ const Home = () => {
   }, []); // Chỉ chạy một lần khi componesnt được render
 
   return (
-    <SafeAreaView style={{ backgroundColor: '#410fa3' }}>
-      <ScrollView>
-        <View style={{backgroundColor:"#FFF"}}>
-        <View style={styles.headContainer}>
-          <View style={styles.imageContainer}>
-          <Image 
-                source={avatar ? { uri: avatar } : localImageUrl} 
-                style={styles.image} 
-              />
+    <SafeAreaView style={{ backgroundColor: '#410fa3',height:"100%" }}>
+      <ScrollView >
+        <View style={{backgroundColor:"#FFF",minHeight:1000}}>
+          <View style={styles.headContainer}>
+            <View style={styles.imageContainer}>
+            <Image 
+                  source={avatar ? { uri: avatar } : localImageUrl} 
+                  style={styles.image} 
+                />
+            </View>
+            
+            <Text style={styles.text}>Hello {username}</Text> 
+            <Text style={styles.textSmall}>What would you like to learn today?</Text>
+            
+            
           </View>
-          
-          
-          <Text style={styles.text}>Hello {username}</Text> 
-          <Text style={styles.textSmall}>What would you like to learn today?</Text>
-          
-          
-        </View>
-        <View style={{ padding: 20 }}>
-          <Text style={styles.text2}>Daily Course</Text>
-          <PracticeCourse />
-          <Text style={styles.text2}>Feature Course</Text>
-          <FeatureCourse />
-          <FeatureCourseWord />
-          
-          
-        </View>
+          <View style={{ padding: 20 ,height:"100%"}}>
+            <Text style={styles.text2}>Daily Course</Text>
+            <PracticeCourse />
+            <Text style={styles.text2}>Feature Course</Text>
+            <FeatureCourse />
+            <FeatureCourseWord />
+          </View>
         </View>
         
       </ScrollView>
