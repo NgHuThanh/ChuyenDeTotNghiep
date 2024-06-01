@@ -24,8 +24,8 @@ export default AvatarDetault
 const styles = StyleSheet.create({
     imageContainer: {
         overflow:"hidden",
-        borderWidth: 3,
-        borderColor: '#410fa3',
+        borderWidth: 2,
+        borderColor: '#FFF',
         borderRadius: 100,
         alignItems:"center",
         marginRight:10,

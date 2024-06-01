@@ -205,6 +205,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 10,
+        backgroundColor:"#2596be"
     },
     input: {
         width: "100%",
