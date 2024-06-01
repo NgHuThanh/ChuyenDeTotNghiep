@@ -4,6 +4,7 @@ import { qaa, rep } from '@/model/qaa';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
 import {addDoc, collection, doc, getDoc, getDocs, getFirestore, query, updateDoc, where } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 const firebaseConfig = {
     apiKey: "AIzaSyD4Bom8T2LsEnlv1uqgFMJJgq5Z6M0Y4Cg",
     authDomain: "databasechuyende.firebaseapp.com",
@@ -15,7 +16,8 @@ const firebaseConfig = {
   };
   const firebaseApp = initializeApp(firebaseConfig);
   const firestore = getFirestore(firebaseApp);
-  
+
+  const storage = getStorage(firebaseApp);
   export const addDocument = async () => {
     try {
       await addDoc(collection(firestore, 'grammar'), {
@@ -125,23 +127,30 @@ export const getQuestionList = async (props:{idGrammar:string,idCaq:string}): Pr
       return []; // Trả về một mảng trống nếu có lỗi
   }
 };
-export const addUser = async ({ username, password, email }: { username: string; password: string; email: string; }) => {
+export const addUser = async ({ username, password,avatarUri }: { username: string; password: string; avatarUri:string|null  }) => {
   try {
     // Tạo truy vấn để kiểm tra xem email đã tồn tại hay chưa
-    const q = query(collection(firestore, 'users'), where('email', '==', email));
+    const q = query(collection(firestore, 'users'), where('username', '==', username));
     const querySnapshot = await getDocs(q);
 
     // Nếu querySnapshot có ít nhất một tài khoản, email đã tồn tại
     if (!querySnapshot.empty) {
-      console.log('Email already exists!');
+      console.log('Username already exists!');
       return false; // Trả về false để chỉ ra rằng email đã tồn tại
     }
-
+    let avatarUrl = null;
+    if (avatarUri) {
+      const response = await fetch(avatarUri);
+      const blob = await response.blob();
+      const storageRef = ref(storage, `avatars/${username}`);
+      await uploadBytes(storageRef, blob);
+      avatarUrl = await getDownloadURL(storageRef);
+    }
     // Nếu không có tài khoản nào có email trùng khớp, thêm người dùng mới
     await addDoc(collection(firestore, 'users'), {
       username: username,
       password: password,
-      email: email
+      avatar: avatarUrl
     });
     
     console.log('User added successfully!');
@@ -152,10 +161,10 @@ export const addUser = async ({ username, password, email }: { username: string;
   }
 }
 
-export const login = async (email:string, password:string) => {
+export const login = async (username:string, password:string) => {
   try {
     // Tạo truy vấn để lấy tất cả tài khoản trong collection "users" có email và password khớp với thông tin đăng nhập
-    const q = query(collection(firestore, "users"), where("email", "==", email), where("password", "==", password));
+    const q = query(collection(firestore, "users"), where("username", "==", username), where("password", "==", password));
 
     // Thực hiện truy vấn
     const querySnapshot = await getDocs(q);
@@ -166,9 +175,10 @@ export const login = async (email:string, password:string) => {
       const doc = querySnapshot.docs[0];
       const userId = doc.id;
       const username = doc.data().username;
-      await AsyncStorage.setItem('email',email)
+      const avatar=doc.data().avatar;
       await AsyncStorage.setItem('userId', userId);
       await AsyncStorage.setItem('username', username);
+      await AsyncStorage.setItem('avatar', avatar);
       importData(doc.data().source);
       // Trả về true
       return true;

@@ -47,8 +47,8 @@ const SignIn = () => {
                     <Text style={styles.text}>Log in Engnote</Text>
                     <TextInput
                         mode="outlined"
-                        label="Email"
-                        placeholder="Enter your Email"
+                        label="Username"
+                        placeholder="Enter your Username"
                         value={form.email}
                         onChangeText={(text) => setForm({ ...form, email: text })}
                         style={styles.input}

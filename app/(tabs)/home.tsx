@@ -12,9 +12,9 @@ import { setAsyncData } from '@/model/word';
 import { AntDesign } from '@expo/vector-icons';
 
 const Home = () => {
-  const localImageUrl = require('../../assets/images/defaultAvatat.png');
-  const [username, setUsername] = useState('');
-  
+  const localImageUrl = require('../../assets/images/book.png');
+  const [username, setUsername] = useState<string>();
+  const [avatar, setAvatar] = useState<string>();
   
   useEffect(() => {
     
@@ -22,8 +22,12 @@ const Home = () => {
     const getUsername = async () => {
       try {
         const storedUsername = await AsyncStorage.getItem('username');
+        const storedAvatar = await AsyncStorage.getItem('avatar');
         if (storedUsername !== null) {
           setUsername(storedUsername);
+        }
+        if (storedAvatar !== null) {
+          setAvatar(storedAvatar);
         }
       } catch (error) {
         console.error('Error retrieving username from AsyncStorage:', error);
@@ -39,7 +43,10 @@ const Home = () => {
         <View style={{backgroundColor:"#FFF"}}>
         <View style={styles.headContainer}>
           <View style={styles.imageContainer}>
-          <AntDesign name="aliwangwang" size={24} color="#FFF" />
+          <Image 
+                source={avatar ? { uri: avatar } : localImageUrl} 
+                style={styles.image} 
+              />
           </View>
           
           
