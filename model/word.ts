@@ -6,11 +6,12 @@ export interface SetModel {
     create: Date;
     name: string;
 }
+export type DifficultType = 'hard' | 'good' | 'easy' | 'skip';
 export interface vocab{
     word:string;
     definition:string;
     lastPractice:Date;
-    difficult:string;
+    difficult:DifficultType;
     favorite:boolean;
     source:string;
 } 
@@ -123,6 +124,22 @@ export const getVocabsInSet = async (setName: string): Promise<vocab[] | null> =
         return null;
     }
 };
+export const getVocabsInSet2 = async (setName: string): Promise<vocab[] | null> => {
+    try {
+        const existingSets = await AsyncStorage.getItem('sets');
+        const sets: SetModel[] = existingSets ? JSON.parse(existingSets) : [];
+        const set = sets.find(set => set.name === setName);
+        if (set) {
+            const favoriteVocabs = (set.vocabs as vocab[]).filter(vocab => vocab.favorite);
+            return favoriteVocabs.length > 0 ? favoriteVocabs : null;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error('Error getting vocabs in set:', error);
+        return null;
+    }
+};
 export const deleteVocab = async (setName: string, vocabWord: string) => {
     try {
         const existingSets = await AsyncStorage.getItem('sets');
@@ -171,7 +188,7 @@ export const updateVocabDifficulty = async (setName: string, vocabWord: string, 
                 if (set.name === setName && set.vocabs) {
                     set.vocabs = set.vocabs.map((vocab: vocab) => {
                         if (vocab.word === vocabWord) {
-                            vocab.difficult = difficulty;
+                            vocab.difficult = difficulty as DifficultType;
                         }
                         return vocab;
                     });
@@ -258,7 +275,7 @@ export async function updateVocab(name: string, word: string, newWord: string, n
             // Cập nhật từ vựng nếu tìm thấy
             sets[setIndex].vocabs![vocabIndex as number]!.word = newWord;
             sets[setIndex].vocabs![vocabIndex as number]!.definition = newDefinition;
-            sets[setIndex].vocabs![vocabIndex as number]!.difficult = newDifficult;
+            sets[setIndex].vocabs![vocabIndex as number]!.difficult = newDifficult as DifficultType;
         
             // Lưu lại dữ liệu vào AsyncStorage
             await AsyncStorage.setItem('sets', JSON.stringify(sets));

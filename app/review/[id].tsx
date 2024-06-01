@@ -9,7 +9,7 @@ import { ScrollView, StyleSheet, Text, View, Image, Button, TouchableOpacity, Vi
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ProgressBar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+type DifficultType = 'hard' | 'good' | 'easy' | 'skip';
 export default function Review() {
     const { id } = useLocalSearchParams();
     const [vocabs, setVocabs] = useState<vocab[] | null>(null);
@@ -81,7 +81,7 @@ export default function Review() {
                         if (set.name === setName && set.vocabs) {
                             set.vocabs = set.vocabs.map((vocab: vocab) => {
                                 if (vocab.word === vocabWord) {
-                                    vocab.difficult = difficulty;
+                                    vocab.difficult = difficulty as DifficultType;
                                     // Cập nhật ngày lastPractice
                                     const today = new Date();
                                     let daysToAdd = 0;
@@ -91,6 +91,8 @@ export default function Review() {
                                         daysToAdd = 7;
                                     } else if (difficulty === "easy") {
                                         daysToAdd = 10;
+                                    }else if (difficulty === "skip") {
+                                        daysToAdd = 9000;
                                     }
                                     const futureDate = new Date(today.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
                                     vocab.lastPractice = futureDate;
@@ -168,6 +170,11 @@ export default function Review() {
                             </TouchableOpacity>
                         </View>
                     </View>
+                    <View style={styles.buttonWrapper}>
+                            <TouchableOpacity style={[styles.button, styles.skipButton]} onPress={() => handleUpdateDifficulty("skip")}>
+                                <Text style={styles.buttonText}>Skip</Text>
+                            </TouchableOpacity>
+                        </View>
                     
                     <SwipeGestureHandler onSwipeLeft={handleSwipeLeft} onSwipeRight={handleSwipeRight} />
                 </SafeAreaView>
@@ -258,6 +265,9 @@ const styles = StyleSheet.create({
     },
     easyButton: {
         backgroundColor: 'green', // Màu nền button Easy
+    },
+    skipButton: {
+        backgroundColor: 'gray', // Màu nền button Easy
     },
     favoriteIcon: {
         position: 'absolute',
