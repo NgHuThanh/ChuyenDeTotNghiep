@@ -1,14 +1,14 @@
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ViewStyle } from 'react-native';
-import { Modal, PaperProvider, Portal, TextInput } from 'react-native-paper';
+import { Modal, PaperProvider, Portal, TextInput, Snackbar } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import QaaComponent from './qaaComponent';
 import { router } from 'expo-router';
 import React from 'react';
 import AvatarDetault from './avatarComponent';
 import { getAllQaaDocuments, writeToFirestore } from '../firebase/config';
-import { qaa } from '../../model/qaa'; // Đường dẫn này có thể đã trùng với đường dẫn của một tên khác trong index.tsx
+import { qaa } from '../../model/qaa';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
@@ -32,6 +32,8 @@ export default function qaaa() {
     const [userId, setUserId] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true); // Biến trạng thái loading
     const [avatar, setAvatar] = useState<string>();
+    const [visibleSnackbar, setVisibleSnackbar] = useState(false); // Snackbar visibility
+
     useEffect(() => {
         const getUserId = async () => {
             const id = await AsyncStorage.getItem("userId");
@@ -45,23 +47,24 @@ export default function qaaa() {
     useEffect(() => {
         fetchQaas();
     }, []);
+
     useEffect(() => {
         const getUsername = async () => {
-          try {
-            const storedUsername = await AsyncStorage.getItem('username');
-            const storedEmail = await AsyncStorage.getItem('email');
-            if (storedUsername !== null) {
-              
-            } else {
-              router.push("/(auth)/sign-in"); // Chuyển hướng đến trang đăng nhập nếu không tồn tại username
+            try {
+                const storedUsername = await AsyncStorage.getItem('username');
+                const storedEmail = await AsyncStorage.getItem('email');
+                if (storedUsername !== null) {
+                    // Do nothing if username exists
+                } else {
+                    router.push("/(auth)/sign-in"); // Redirect to sign-in page if username doesn't exist
+                }
+            } catch (error) {
+                console.error('Error retrieving username from AsyncStorage:', error);
             }
-          } catch (error) {
-            console.error('Error retrieving username from AsyncStorage:', error);
-          }
         };
-    
         getUsername();
-      }, []);
+    }, []);
+
     const fetchQaas = async () => {
         setIsLoading(true); // Bắt đầu loading
         const allQaas = await getAllQaaDocuments();
@@ -100,7 +103,13 @@ export default function qaaa() {
         justifyContent: 'center',
         marginHorizontal: 10,
     };
+
     const handlePost = () => {
+        if (form.title.trim() === "" || form.content.trim() === "") {
+            setVisibleSnackbar(true); // Show Snackbar if either field is empty
+            return;
+        }
+
         writeToFirestore(form.title, form.content);
         setForm({
             title: "",
@@ -110,6 +119,8 @@ export default function qaaa() {
         fetchQaas();
         hideModal();
     };
+
+    const onDismissSnackbar = () => setVisibleSnackbar(false);
 
     return (
         <PaperProvider>
@@ -146,7 +157,11 @@ export default function qaaa() {
 
                 <Portal>
                     <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+                    
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 10, borderRadius: 10 }}>
+                            
+                        
+                            
                             <TextInput
                                 mode="outlined"
                                 label="Title"
@@ -168,14 +183,23 @@ export default function qaaa() {
                                 style={[styles.input2, { color: 'black' }]}
                             />
                             <TouchableOpacity onPress={handlePost} style={styles.commentButton}><Text style={{fontWeight:"bold",fontSize:18,color:"#FFF"}}>Post</Text></TouchableOpacity>
+                            <Snackbar
+                            visible={visibleSnackbar}
+                            onDismiss={onDismissSnackbar}
+                            duration={2000}
+                            style={styles.snackbar}
+                            >
+                                Please enter both title and content.
+                            </Snackbar>
                         </View>
                     </Modal>
                 </Portal>
+
+               
             </SafeAreaView>
         </PaperProvider>
     );
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -187,7 +211,6 @@ const styles = StyleSheet.create({
         margin: 10,
         backgroundColor: "#FFF",
         color: "primary"
-
     },
     commentButton: {
         flexDirection: 'row', // Sắp xếp các phần tử theo hàng ngang
@@ -202,7 +225,6 @@ const styles = StyleSheet.create({
         margin: 10,
         backgroundColor: "#FFF",
         minHeight: 300,
-
     },
     buttonsContainer: {
         flexDirection: 'row', // Hiển thị các phần tử ngang hàng
@@ -239,5 +261,9 @@ const styles = StyleSheet.create({
     },
     text: {
         color: "gray",
+    },
+    snackbar: {
+        backgroundColor: 'red',
+        margin:10,
     },
 });
