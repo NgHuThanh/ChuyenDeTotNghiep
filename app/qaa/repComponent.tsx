@@ -6,7 +6,7 @@ import { Feather } from '@expo/vector-icons';
 import { Modal, PaperProvider, Portal, TextInput } from 'react-native-paper';
 import AvatarDetault from './avatarComponent';
 import { qaa, rep } from '../../model/qaa';
-import { getAllRepDocuments, getUserInfo, writeRepToFirestore } from '../firebase/config';
+import { getAllRepDocuments, getUserInfo, getUserInfo2, writeRepToFirestore } from '../firebase/config';
 export const calculateTimeAgo = (time: Date) => {
     const now = new Date();
     const diff = now.getTime() - time.getTime(); // Sử dụng getTime để lấy giá trị thời gian ở đơn vị milliseconds
@@ -28,12 +28,13 @@ export const calculateTimeAgo = (time: Date) => {
 };
 const RepComponent = (rep:rep) => {
     const [user,setUser]=useState();
-
+    const [avatar, setAvatar] = useState<string>();
     const fetchReps = async () => {
         
         const name=await getUserInfo(rep.user);
+        const avatar=await getUserInfo2(rep.user);
         setUser(name);
-        
+        setAvatar(avatar);
       };
       useEffect(() => {
         fetchReps();
@@ -43,7 +44,7 @@ const RepComponent = (rep:rep) => {
             <View>
                 <View style={styles.container2}>
                 <View style={styles.userInfo}>
-                    <AvatarDetault/>
+                <AvatarDetault src={avatar} />
                     
                     <View>
                                 <Text style={styles.userName}>{user}</Text>

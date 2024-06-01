@@ -31,10 +31,12 @@ export default function qaaa() {
     });
     const [userId, setUserId] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true); // Biến trạng thái loading
-
+    const [avatar, setAvatar] = useState<string>();
     useEffect(() => {
         const getUserId = async () => {
             const id = await AsyncStorage.getItem("userId");
+            const storedAvatar = await AsyncStorage.getItem('avatar');
+            setAvatar(storedAvatar as string);
             setUserId(id);
         };
         getUserId();
@@ -114,7 +116,7 @@ export default function qaaa() {
             <SafeAreaView style={styles.container}>
                 <TouchableOpacity style={{ alignSelf: "flex-start" }} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
                 <View style={styles.header}>
-                    <AvatarDetault />
+                    <AvatarDetault src={avatar} />
                     <TouchableOpacity onPress={showModal} style={styles.boxQaa}>
                         <Text style={styles.text}>What are you thinking now?</Text>
                     </TouchableOpacity>

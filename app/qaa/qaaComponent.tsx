@@ -6,7 +6,7 @@ import { Feather } from '@expo/vector-icons';
 import { Modal, PaperProvider, Portal, TextInput } from 'react-native-paper';
 import AvatarDetault from './avatarComponent';
 import { qaa, rep } from '../../model/qaa';
-import { getAllRepDocuments, getUserInfo, writeRepToFirestore } from '../firebase/config';
+import { getAllRepDocuments, getUserInfo, getUserInfo2, writeRepToFirestore } from '../firebase/config';
 import RepComponent from './repComponent';
 import { Entypo } from '@expo/vector-icons';
 export const calculateTimeAgo = (time: Date) => {
@@ -34,6 +34,7 @@ const QaaComponent = (props:{qaa:qaa}) => {
     const hideModal = () => setVisible(false);
     const [reps,setReps]=useState<rep[]>([]);
     const [userName,setUserName]=useState();
+    const [avatar, setAvatar] = useState<string>();
     const [form, setForm] = useState({
         
         content: "",
@@ -44,8 +45,10 @@ const QaaComponent = (props:{qaa:qaa}) => {
       const fetchReps = async () => {
         const allReps = await getAllRepDocuments(props.qaa.id);
         const name=await getUserInfo(props.qaa.user);
+        const avatar=await getUserInfo2(props.qaa.user);
         const sortedQaas = allReps.sort((a, b) => new Date(b.timecreate).getTime() - new Date(a.timecreate).getTime());
         setUserName(name);
+        setAvatar(avatar);
         setReps(sortedQaas);
       };
       useEffect(() => {
@@ -91,7 +94,7 @@ const QaaComponent = (props:{qaa:qaa}) => {
                     <View style={styles.container}>
                         <Text style={styles.title}>{props.qaa.title}</Text>
                         <View style={styles.userInfo}>
-                            <AvatarDetault/>
+                            <AvatarDetault src={avatar} />
                             <View>
                                 <Text style={styles.userName}>{userName}</Text>
                                 <Text style={styles.timeAgo}>{calculateTimeAgo(props.qaa.timecreate)}</Text>
@@ -122,7 +125,7 @@ const QaaComponent = (props:{qaa:qaa}) => {
                             <View>
                                 <Text style={styles.title}>{props.qaa.title}</Text>
                                 <View style={styles.userInfo}>
-                                <AvatarDetault/>
+                                <AvatarDetault src={avatar} />
                                 <View>
                                 <Text style={styles.userName}>{userName}</Text>
                                 <Text style={styles.timeAgo}>{calculateTimeAgo(props.qaa.timecreate)}</Text>

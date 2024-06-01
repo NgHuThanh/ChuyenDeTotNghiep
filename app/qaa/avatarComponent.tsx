@@ -5,12 +5,15 @@ import { router } from 'expo-router';
 import { Octicons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 
-const AvatarDetault = () => {
-    const localImageUrl = require('../../assets/images/defaultAvatat.png');
+const AvatarDetault = ({ src }: { src: string | undefined }) => {
+    const localImageUrl = require('../../assets/images/book.png');
     return (
         <>
         <View style={styles.imageContainer}>
-        <AntDesign name="aliwangwang" size={24} color="#410fa3" />
+        <Image 
+                source={src ? { uri: src } : localImageUrl} 
+                style={styles.image} 
+              />
           </View>
         </>
     )
@@ -20,8 +23,7 @@ export default AvatarDetault
 
 const styles = StyleSheet.create({
     imageContainer: {
-        width: 40,
-        height: 40,
+        overflow:"hidden",
         borderWidth: 3,
         borderColor: '#410fa3',
         borderRadius: 100,
@@ -30,7 +32,7 @@ const styles = StyleSheet.create({
         justifyContent:"center"
       },
       image: {
-        width: 50,
-        height: 50,
+        width: 40,
+        height: 40,
       },
 })

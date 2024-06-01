@@ -377,3 +377,26 @@ export const getUserInfo = async (id: string) => {
       return null;
   }
 };
+export const getUserInfo2 = async (id: string) => {
+  try {
+      // Tạo tham chiếu đến tài liệu trong collection "onlineWord" với ID được cung cấp
+      const userDocRef = doc(firestore, 'users', id);
+      
+      // Lấy dữ liệu của tài liệu
+      const userDocSnap = await getDoc(userDocRef);
+
+      // Kiểm tra xem tài liệu có tồn tại không
+      if (userDocSnap.exists()) {
+          // Trả về thuộc tính "source" của tài liệu
+          const source = userDocSnap.data()?.avatar;
+          console.log(source);
+          return source;
+      } else {
+          console.error('Document does not exist in Firestore.');
+          
+      }
+  } catch (error) {
+      console.error('Error importing set:', error);
+      return null;
+  }
+};
