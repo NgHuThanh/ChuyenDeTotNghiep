@@ -75,7 +75,7 @@ const SignUp = () => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{height:"100%",backgroundColor:"#FFF"}}>
       <TouchableOpacity style={{ alignSelf: "flex-start", marginTop: 40 }} onPress={handlePressBack}>
         <AntDesign name="arrowleft" size={30} color="black" />
       </TouchableOpacity>

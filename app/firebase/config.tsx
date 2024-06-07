@@ -161,7 +161,7 @@ export const addUser = async ({ username, password,avatarUri }: { username: stri
   }
 }
 
-export const login = async (username:string, password:string) => {
+export const login = async (username: string, password: string) => {
   try {
     // Tạo truy vấn để lấy tất cả tài khoản trong collection "users" có email và password khớp với thông tin đăng nhập
     const q = query(collection(firestore, "users"), where("username", "==", username), where("password", "==", password));
@@ -175,11 +175,13 @@ export const login = async (username:string, password:string) => {
       const doc = querySnapshot.docs[0];
       const userId = doc.id;
       const username = doc.data().username;
-      const avatar=doc.data().avatar;
+      const avatar = doc.data().avatar;
+
       await AsyncStorage.setItem('userId', userId);
       await AsyncStorage.setItem('username', username);
-      await AsyncStorage.setItem('avatar', avatar);
+      await AsyncStorage.setItem('avatar', avatar || ''); // Sử dụng chuỗi rỗng nếu avatar là null hoặc undefined
       importData(doc.data().source);
+
       // Trả về true
       return true;
     } else {
