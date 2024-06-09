@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getVocabsInSet, vocab } from '@/model/word';
+import { DifficultType, SetModel, getVocabsInSet, vocab } from '@/model/word';
 import { AntDesign } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -21,7 +21,45 @@ export default function MultipleChoice() {
         const allVocabs = await getVocabsInSet(id as string);
         setVocabs(allVocabs);
     };
-
+    const handleUpdateDifficulty = async () => {
+        const time = await AsyncStorage.getItem('mulpractice');
+        if (vocabs && vocabs[currentIndex]) {
+            const vocabWord = vocabs[currentIndex].word;
+            const setName = vocabs[currentIndex].source; // Thay thế bằng tên của set của bạn
+            try {
+                let sets: SetModel[] = [];
+                const existingSets = await AsyncStorage.getItem('sets');
+                if (existingSets) {
+                    sets = JSON.parse(existingSets).map((set: SetModel) => {
+                        if (set.name === setName && set.vocabs) {
+                            set.vocabs = set.vocabs.map((vocab: vocab) => {
+                                if (vocab.word === vocabWord) {
+                                    
+                                    // Cập nhật ngày lastPractice
+                                    const today = new Date();
+                                    let daysToAdd = 0;
+                                    
+                                        daysToAdd = time ? parseInt(time) : 7
+                                    
+                                    const futureDate = new Date(today.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
+                                    vocab.lastPractice = futureDate;
+                                }
+                                return vocab;
+                            });
+                        }
+                        return set;
+                    });
+                    await AsyncStorage.setItem('sets', JSON.stringify(sets));
+                    console.log('Vocab difficulty updated successfully!');
+                }
+            } catch (error) {
+                console.error('Error updating vocab difficulty:', error);
+            }
+        } else {
+            console.error('vocabs is null or empty');
+        }
+        
+    };
     useEffect(() => {
         const fetchMinWordCount = async () => {
             const minWordCountFromStorage = await AsyncStorage.getItem('multioption');
@@ -45,9 +83,7 @@ export default function MultipleChoice() {
     const handleNext = () => {
         if (currentIndex === (vocabs ? vocabs.length - 1 : 0)) {
             setFinishedReview(true);
-            setTimeout(() => {
-                router.back();
-            }, 3000);
+            
         } else {
             setCurrentIndex(prevIndex => (prevIndex + 1) % (vocabs ? vocabs.length : 0));
             setSelectedAnswer('');
@@ -59,6 +95,7 @@ export default function MultipleChoice() {
         setSelectedAnswer(answer);
         if (vocabs && answer === vocabs[currentIndex]?.definition) {
             setIsCorrect(true);
+            handleUpdateDifficulty();
             setTimeout(handleNext, 1500);
         } else {
             setIsCorrect(false);
@@ -178,7 +215,7 @@ const styles = StyleSheet.create({
     finishedContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 20,
+        marginTop: 80,
     },
     finishedText: {
         fontSize: 24,
