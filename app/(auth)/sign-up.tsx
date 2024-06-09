@@ -61,7 +61,6 @@ const SignUp = () => {
   };
 
   const pickImage = async () => {
-    // Không cần quyền truy cập camera
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,

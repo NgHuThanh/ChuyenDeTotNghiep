@@ -38,8 +38,8 @@ const SignIn = () => {
     }
     return (
         <GestureHandlerRootView>
-<SafeAreaView style={{backgroundColor:"#FFF",height:"100%"}}>
-<TouchableOpacity style={{alignSelf:"flex-start",marginTop:40}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
+            <SafeAreaView style={{backgroundColor:"#FFF",height:"100%"}}>
+            <TouchableOpacity style={{alignSelf:"flex-start",marginTop:40}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
 
             <ScrollView>
                 <View  style={{backgroundColor:"#FFF",height:"100%",padding:10,alignItems:"center"}}>

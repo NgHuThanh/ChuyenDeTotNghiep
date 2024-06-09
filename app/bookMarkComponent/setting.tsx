@@ -203,7 +203,7 @@ const SettingComponent = (props: { fetchSets: () => void }) => {
                                 onDismiss={() => setVisibleOrderIG(false)}
                                 anchor={<Button style={styles.button1} onPress={() => setVisibleOrderIG(true)}>{imageOption} options</Button>}
                             >
-                                {["2", "3", "4", "5", "6", "7", "8"].map((item) => (
+                                {["2", "4", "6", "8"].map((item) => (
                                     <Menu.Item
                                         key={item}
                                         title={item}

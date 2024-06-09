@@ -9,13 +9,11 @@ export async function exportData() {
         // Lấy giá trị tương ứng với mỗi key
         const keyValuePair = await AsyncStorage.multiGet(keys);
 
-        // Chuyển đổi thành văn bản
+        // Chuyển đổi thành dạng văn bản
         const dataText = JSON.stringify(keyValuePair);
-        console.log(dataText)
+        
         // In ra ngoài hoặc lưu vào một file
         return dataText;
-
-        // Nếu muốn lưu vào file, bạn có thể sử dụng một thư viện hoặc phương thức của Node.js để làm điều này.
     } catch (error) {
         console.error('Error exporting data:', error);
     }

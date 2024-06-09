@@ -1,5 +1,5 @@
 import { imageGame } from '@/model/image';
-import { getVocabsInSet, vocab } from '@/model/word';
+import { SetModel, getVocabsInSet, vocab } from '@/model/word';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity,Image } from 'react-native';
@@ -8,6 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import useSWR from "swr";
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { updatePracticeDays } from '@/model/practiceDay';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const apiKey = 'NGvxJOgt1mEPidUdOGOh9lOTrmwoTizDjXo6dCU7jUtXYNpdWwjPuy3p';
 const fetcher = async (url:string) => {
     const response = await fetch(url, {
@@ -54,7 +55,7 @@ export default function ImagePractice() {
 
     useEffect(() => {
         if (vocabs) {
-            setRandomAnswers(getRandomAnswers());
+            getRandomAnswers().then(answers => setRandomAnswers(answers));
         }
     }, [vocabs, currentIndex]);
 
@@ -84,29 +85,74 @@ export default function ImagePractice() {
     };
     const handleAnswerSelection = (answer: string) => {
         setSelectedAnswer(answer);
-        // Check if the selected answer is correct
-        if (vocabs && answer === vocabs[currentIndex]?.word) {
+        if (vocabs && answer === vocabs[currentIndex]?.definition) {
             setIsCorrect(true);
-            setTimeout(handleNext, 1500); // Dừng 1.5 giây trước khi gọi handleNext
+            handleUpdateDifficulty();
+            setTimeout(handleNext, 1500);
         } else {
             setIsCorrect(false);
         }
     };
-
-    const getRandomAnswers = () => {
-        // Ensure vocabs is defined
-        if (!vocabs) return [];
-        // Get a random index different from currentIndex
-        let randomIndex1 = Math.floor(Math.random() * vocabs.length);
-        let randomIndex2 = Math.floor(Math.random() * vocabs.length);
-        let randomIndex3 = Math.floor(Math.random() * vocabs.length);
-        while (randomIndex1 === currentIndex || randomIndex2 === currentIndex || randomIndex3 === currentIndex || randomIndex1 === randomIndex2 || randomIndex1 === randomIndex3 || randomIndex2 === randomIndex3) {
-            randomIndex1 = Math.floor(Math.random() * vocabs.length);
-            randomIndex2 = Math.floor(Math.random() * vocabs.length);
-            randomIndex3 = Math.floor(Math.random() * vocabs.length);
+    const handleUpdateDifficulty = async () => {
+        const time = await AsyncStorage.getItem('imagepractice');
+        if (vocabs && vocabs[currentIndex]) {
+            const vocabWord = vocabs[currentIndex].word;
+            const setName = vocabs[currentIndex].source; // Thay thế bằng tên của set của bạn
+            try {
+                let sets: SetModel[] = [];
+                const existingSets = await AsyncStorage.getItem('sets');
+                if (existingSets) {
+                    sets = JSON.parse(existingSets).map((set: SetModel) => {
+                        if (set.name === setName && set.vocabs) {
+                            set.vocabs = set.vocabs.map((vocab: vocab) => {
+                                if (vocab.word === vocabWord) {
+                                    
+                                    // Cập nhật ngày lastPractice
+                                    const today = new Date();
+                                    let daysToAdd = 0;
+                                    
+                                        daysToAdd = time ? parseInt(time) : 7
+                                    
+                                    const futureDate = new Date(today.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
+                                    vocab.lastPractice = futureDate;
+                                }
+                                return vocab;
+                            });
+                        }
+                        return set;
+                    });
+                    await AsyncStorage.setItem('sets', JSON.stringify(sets));
+                    console.log('Vocab difficulty updated successfully!');
+                }
+            } catch (error) {
+                console.error('Error updating vocab difficulty:', error);
+            }
+        } else {
+            console.error('vocabs is null or empty');
         }
-        // Return the definitions of the randomly chosen vocabs
-        return [vocabs[currentIndex].word, vocabs[randomIndex1].word, vocabs[randomIndex2].word, vocabs[randomIndex3].word].sort(() => Math.random() - 0.5);
+        
+    };
+    const getRandomAnswers = async (): Promise<string[]> => {
+        if (!vocabs) return [];
+        const multioption = await AsyncStorage.getItem('imageoption');
+        const numberOfOptions = multioption ? parseInt(multioption) : 4;
+        const randomIndexes = await generateRandomIndexes(numberOfOptions - 1);
+        const answers = [vocabs[currentIndex].definition];
+        for (const index of randomIndexes) {
+            answers.push(vocabs[index].definition);
+        }
+        return answers.sort(() => Math.random() - 0.5);
+    };
+    const generateRandomIndexes = async (numberOfIndexes: number): Promise<number[]> => {
+        const indexes: number[] = [];
+        if (!vocabs) return indexes; // Xử lý trường hợp vocabs có thể là null
+        while (indexes.length < numberOfIndexes) {
+            const randomIndex = Math.floor(Math.random() * vocabs.length);
+            if (randomIndex !== currentIndex && !indexes.includes(randomIndex)) {
+                indexes.push(randomIndex);
+            }
+        }
+        return indexes;
     };
     if(isLoading){
         <Text>Loading...</Text>
@@ -149,12 +195,12 @@ export default function ImagePractice() {
             resizeMode="stretch"
         />
     ) : (
-        <Text style={{minHeight:200}}>Image not found</Text>
+        <Text style={{minHeight:200,marginTop:50}}>Image not found</Text>
     )}
     <View style={styles.photographerContainer}>
         <Text style={styles.photographerText}>By: {data.photos[currentImageIndex]?.photographer}</Text>
     </View>
-    <TouchableOpacity style={{ backgroundColor: "#410fa3", padding: 10, borderRadius: 10, alignItems: "center" }} onPress={handleNextImage}>
+    <TouchableOpacity style={{marginTop:5, backgroundColor: "#410fa3", padding: 10, borderRadius: 10, alignItems: "center" }} onPress={handleNextImage}>
         <Feather name="refresh-ccw" size={18} color="#FFF" />
     </TouchableOpacity>
     <Text style={{ fontWeight: "bold", fontSize: 20 }}>What's it?</Text>
@@ -202,11 +248,10 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     containerBottom: {
-        position: 'absolute',
-        bottom: 0,
+        marginTop:10,
+        height:200,
         marginBottom:20,
         width: '100%',
-        backgroundColor: 'rgba(255, 255, 255, 0.9)', // Điều này giúp tạo một lớp nền cho containerBottom, giúp nó nổi bật và dễ nhận biết
         paddingHorizontal: 10, // Điều chỉnh khoảng cách giữa các phần tử bên trong containerBottom
     },
     answerContainer: {
@@ -278,7 +323,7 @@ const styles = StyleSheet.create({
     finishedContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 20,
+        marginTop: 80,
     },
     finishedText: {
         fontSize: 24,
