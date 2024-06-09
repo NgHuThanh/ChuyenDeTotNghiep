@@ -40,7 +40,7 @@ export default function App() {
         <View style={styles.imageContainer}>
         {/* <Image
           source={localImageUrl} // source là một psrop để truyền đường dẫn của hình ảnh
-          style={styles.image} // style để tùy chỉnsh kích thước,s vị trí, và các thuộc tính khác của hình ảnh
+          style={styles.image} // stylse để tùy chỉnsh kísch thước,s vị trí, và các thuộc tính khác của hình ảnh
           resizeMode="cover" // resizeMode để chỉ định cách ảnh sẽ được căn chỉnh khi hiển thị (cover, contain, stretch, ...)
             /> */}
         <Text style={styles.text}>Engnote</Text>
