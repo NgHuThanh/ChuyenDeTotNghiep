@@ -57,10 +57,10 @@ const SettingComponent = (props: { fetchSets: () => void }) => {
 
     return (
         <View style={styles.container}>
-            <View>
+            <View >
                 <Text style={styles.maintitle}>Setting</Text>
                 <ScrollView>
-                    <View>
+                    <View style={styles.part}>
                         <Text style={styles.main}>Basic review</Text>
                         <Text style={styles.title}>Set practice time:</Text>
                         <View style={styles.row}>
@@ -131,10 +131,10 @@ const SettingComponent = (props: { fetchSets: () => void }) => {
                             />
                         </View>
                     </View>
-                    <View>
+                    <View style={styles.part}>
                         <Text style={styles.main}>Multiple choices</Text>
                         <View style={styles.row}>
-                            <Text style={styles.title}>Quantity option</Text>
+                            <Text style={styles.title}>Quantity options</Text>
                             <Menu
                                 visible={visibleOrderMul}
                                 onDismiss={() => setVisibleOrderMul(false)}
@@ -172,7 +172,7 @@ const SettingComponent = (props: { fetchSets: () => void }) => {
                             </Menu>
                         </View>
                     </View>
-                    <View>
+                    <View style={styles.part}>
                         <Text style={styles.main}>Match</Text>
                         <View style={styles.row}>
                             <Text style={styles.title}>Set practice time</Text>
@@ -194,10 +194,10 @@ const SettingComponent = (props: { fetchSets: () => void }) => {
                             </Menu>
                         </View>
                     </View>
-                    <View>
+                    <View style={styles.part}>
                         <Text style={styles.main}>Image guess</Text>
                         <View style={styles.row}>
-                            <Text style={styles.title}>Quantity option</Text>
+                            <Text style={styles.title}>Quantity options</Text>
                             <Menu
                                 visible={visibleOrderIG}
                                 onDismiss={() => setVisibleOrderIG(false)}
@@ -252,6 +252,12 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
     },
+    part:{
+        borderBottomWidth:1,
+        borderBottomColor:"blue",
+        marginBottom:20,
+        padding:10,
+    },
     maintitle: {
         fontSize: 26,
         fontWeight: "bold",
@@ -264,9 +270,11 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 20,
+        
     },
     main: {
+        marginTop:30,
+        marginBottom:10,
         fontSize: 16,
         fontWeight: "bold",
         marginRight: 10,
@@ -286,8 +294,9 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     button1: {
-        backgroundColor: '#410fa3',
-        borderRadius: 0,
+        backgroundColor: '#6495ED',
+        marginLeft:10,
+        borderRadius: 20,
         alignItems: 'center',
     },
     buttonText: {
