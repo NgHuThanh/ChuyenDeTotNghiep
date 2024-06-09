@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { TextInput, useTheme } from 'react-native-paper'; // Sử dụng useTheme để truy cập theme của Paper
-import { SetModel, addVocabToSet } from '../../model/word';
+import { SetModel, addVocabToSet, vocab } from '../../model/word';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { updateUserSource } from '../firebase/config';
@@ -23,7 +23,7 @@ const AddVocabComponent = (props:{nameSet:string}) => {
         };
 
         // Gọi hàm addVocabToSet để thêm từ vựng mới vào set
-        await addVocabToSet(props.nameSet, newVocab);
+        await addVocabToSet(props.nameSet, newVocab as vocab);
         updateUserSource();
         router.push(`/vocabSet/${props.nameSet}`);
         // Sau khi thêm thành công, reset các trường input về giá trị mặc định

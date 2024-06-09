@@ -8,7 +8,8 @@ import { SetModel, getAllSets } from '@/model/word';
 import { exportData } from '@/model/asyncStorage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImportSet from '../bookMarkComponent/import';
-
+import { MaterialIcons } from '@expo/vector-icons';
+import SettingComponent from '../bookMarkComponent/setting';
 const BookMark = () => {
   const [text, setText] = useState('');
   const [sets, setSets] = useState<SetModel[] | null>(null);
@@ -48,6 +49,7 @@ const BookMark = () => {
   
   const [visible, setVisible] = React.useState(false);
   const [visibleImport, setvisibleImport] = React.useState(false);
+  const [visibleSetting, setvisibleSetting] = React.useState(false);
   const showSetvisibleImport = () => setvisibleImport(true);
   const showModal = () => setVisible(true);
   const hideModal = () => {
@@ -62,11 +64,29 @@ const BookMark = () => {
     setvisibleImport(false)
     
   };
+  const hideModal3 = () => {
+    
+    setvisibleSetting(false);
+    
+  };
+  
+  const showSetvisibleSetting =()=>{
+    setvisibleSetting(true);
+  };
   const containerStyle: ViewStyle = {
     backgroundColor: 'white',
     padding: 0,
     width: 300,
     height: 200,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    borderRadius:10,
+  };
+  const containerStyle2: ViewStyle = {
+    backgroundColor: 'white',
+    padding: 0,
+    width: "90%",
+    height: "80%",
     alignSelf: 'center',
     justifyContent: 'center',
     borderRadius:10,
@@ -82,7 +102,11 @@ const BookMark = () => {
         <Modal visible={visibleImport} onDismiss={hideModal2} contentContainerStyle={containerStyle}>
           <ImportSet fetchSets={fetchSets} />
         </Modal>
+        <Modal visible={visibleSetting} onDismiss={hideModal3} contentContainerStyle={containerStyle2}>
+          <SettingComponent fetchSets={fetchSets} />
+        </Modal>
       </Portal>
+      
       
       
       <View style={styles.headContainer}>
@@ -90,6 +114,10 @@ const BookMark = () => {
         <TouchableOpacity onPress={showSetvisibleImport} style={styles.button2}>
         <Text><Text style={styles.text3}>Import by ID</Text></Text>
         </TouchableOpacity>      
+        <TouchableOpacity onPress={showSetvisibleSetting} style={styles.button3}>
+        <MaterialIcons name="settings" size={24} color="white" />
+        </TouchableOpacity>
+        
       </View>
       <View style={{padding:10,}}>
       <TextInput
@@ -146,7 +174,18 @@ const styles = StyleSheet.create({
     height:40,
     position: 'absolute',
     marginTop:30,
-    right: 20,
+    right: 55,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding:5,
+  },
+  button3: {
+    
+    borderRadius: 10,
+    height:40,
+    position: 'absolute',
+    marginTop:30,
+    right: 10,
     justifyContent: 'center',
     alignItems: 'center',
     padding:5,

@@ -176,7 +176,17 @@ export const login = async (username: string, password: string) => {
       const userId = doc.id;
       const username = doc.data().username;
       const avatar = doc.data().avatar;
-
+      
+      await AsyncStorage.setItem('showDef', "false");
+      await AsyncStorage.setItem('easy', "10");
+      await AsyncStorage.setItem('good', "5");
+      await AsyncStorage.setItem('hard', "3");
+      await AsyncStorage.setItem('multioption', "4");
+      await AsyncStorage.setItem('imageoption', "4");
+      await AsyncStorage.setItem('mulpractice', "7");
+      await AsyncStorage.setItem('matchpractice', "7");
+      await AsyncStorage.setItem('imagepractice', "7");
+      
       await AsyncStorage.setItem('userId', userId);
       await AsyncStorage.setItem('username', username);
       await AsyncStorage.setItem('avatar', avatar || ''); // Sử dụng chuỗi rỗng nếu avatar là null hoặc undefined
