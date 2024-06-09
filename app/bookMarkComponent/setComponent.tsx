@@ -13,6 +13,7 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
     const localImageUrl = require('../../assets/images/book.png');
     const [exist,setExist]=useState(true);
     const [practicePressed, setPracticePressed] = useState(false);
+    const [needWord,setNeedWord]=useState(false);
     const [visible, setVisible] = React.useState(false);
     const [visible2, setVisible2] = React.useState(false);
     const [visible3, setVisible3] = React.useState(false);

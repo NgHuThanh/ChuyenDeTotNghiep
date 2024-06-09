@@ -5,44 +5,62 @@ import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, router } from "expo-router";
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View, Image, Button, TouchableOpacity, ViewStyle } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ProgressBar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 type DifficultType = 'hard' | 'good' | 'easy' | 'skip';
+
 export default function Review() {
     const { id } = useLocalSearchParams();
     const [vocabs, setVocabs] = useState<vocab[] | null>(null);
     const [currentVocabIndex, setCurrentVocabIndex] = useState<number>(0);
     const [showDefinition, setShowDefinition] = useState<boolean>(false);
+    const [showInvert, setShowInvert] = useState<boolean>(false);
     const [finishedReview, setFinishedReview] = useState(false);
+    const [easyDays, setEasyDays] = useState(10);
+    const [goodDays, setGoodDays] = useState(7);
+    const [hardDays, setHardDays] = useState(3);
+
     const fetchVocabs = async () => {
-        if(id=="practice"){
+        if (id == "practice") {
             const allVocabs = await findVocabsWithLastPracticeBeforeNow();
             setVocabs(allVocabs);
-        }else{
+        } else {
             const allVocabs = await getVocabsInSet(id as string);
             setVocabs(allVocabs);
         }
-        
     };
+
     const handleSwipeLeft = () => {
         handleGoBack();
-      };
-    
-      const handleSwipeRight = () => {
+    };
+
+    const handleSwipeRight = () => {
         handleNext();
-      };
+    };
+
     useEffect(() => {
         fetchVocabs();
+        fetchPracticeDays();
     }, []);
+
+    const fetchPracticeDays = async () => {
+        const easy = await AsyncStorage.getItem('easy');
+        const good = await AsyncStorage.getItem('good');
+        const hard = await AsyncStorage.getItem('hard');
+        const showInvert=await AsyncStorage.getItem('showDef');
+        console.log(showInvert);
+        setShowInvert(showInvert === 'true');
+        setEasyDays(easy ? parseInt(easy) : 10);
+        setGoodDays(good ? parseInt(good) : 7);
+        setHardDays(hard ? parseInt(hard) : 3);
+    };
 
     const handleNext = () => {
         if (currentVocabIndex === (vocabs ? vocabs.length - 1 : 0)) {
             setFinishedReview(true);
-            
-            // Thực hiện hàm callback sau 3 giây để thực hiện router.back()
-            
         } else {
             setCurrentVocabIndex((prevIndex) => prevIndex + 1);
             setShowDefinition(false); // Reset showDefinition khi chuyển sang từ tiếp theo
@@ -68,7 +86,8 @@ export default function Review() {
             setVocabs(updatedVocabs);
             await updateVocabFavorite(vocabToUpdate.source, vocabToUpdate.word);
         }
-    }; 
+    };
+
     const handleUpdateDifficulty = async (difficulty: string) => {
         if (vocabs && vocabs[currentVocabIndex]) {
             const vocabWord = vocabs[currentVocabIndex].word;
@@ -86,12 +105,12 @@ export default function Review() {
                                     const today = new Date();
                                     let daysToAdd = 0;
                                     if (difficulty === "hard") {
-                                        daysToAdd = 3;
+                                        daysToAdd = hardDays;
                                     } else if (difficulty === "good") {
-                                        daysToAdd = 7;
+                                        daysToAdd = goodDays;
                                     } else if (difficulty === "easy") {
-                                        daysToAdd = 10;
-                                    }else if (difficulty === "skip") {
+                                        daysToAdd = easyDays;
+                                    } else if (difficulty === "skip") {
                                         daysToAdd = 9000;
                                     }
                                     const futureDate = new Date(today.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
@@ -113,40 +132,63 @@ export default function Review() {
         }
         handleNext();
     };
+
     const handleFinish = () => {
         updatePracticeDays({ times: vocabs?.length as number }); // Truyền số lần luyện tập cần cập nhật vào tham số `times`
         router.push("/(tabs)/bookmark");
     }
-    
-    if(finishedReview){
+
+    if (finishedReview) {
         return <View style={styles.finishedContainer}>
-        <Text style={styles.finishedText}>You finished practice {vocabs?.length} word</Text>
-        <TouchableOpacity style={styles.finishedButton} onPress={handleFinish}>
-            <Text style={styles.finishedButtonText}>Finished</Text>
-        </TouchableOpacity>
-    </View>
+            <Text style={styles.finishedText}>You finished practice {vocabs?.length} word</Text>
+            <TouchableOpacity style={styles.finishedButton} onPress={handleFinish}>
+                <Text style={styles.finishedButtonText}>Finished</Text>
+            </TouchableOpacity>
+        </View>
     }
-    const handlePressBack=()=>{
+
+    const handlePressBack = () => {
         router.push("/(tabs)/bookmark");
     }
+
     return (
-        <><GestureHandlerRootView>
-{vocabs && (
+        <GestureHandlerRootView>
+            {vocabs && (
                 <SafeAreaView style={styles.container}>
-                    <TouchableOpacity style={{alignSelf:"flex-start"}} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
+                    <TouchableOpacity style={{ alignSelf: "flex-start" }} onPress={handlePressBack}><AntDesign name="arrowleft" size={30} color="black" /></TouchableOpacity>
                     <View style={styles.progressContainer}>
-                        <ProgressBar progress={currentVocabIndex / (vocabs ? vocabs.length : 1)} color={'green'} style={{ height: 20, borderRadius: 20,width:280,borderWidth:1 }} />
+                        <ProgressBar progress={currentVocabIndex / (vocabs ? vocabs.length : 1)} color={'green'} style={{ height: 20, borderRadius: 20, width: 280, borderWidth: 1 }} />
                     </View>
                     <View style={styles.wordContainer}>
-                    <View style={styles.favoriteIcon}>
-                        <TouchableOpacity onPress={handleToggleFavorite}>
-                            <AntDesign name={vocabs[currentVocabIndex].favorite ? "heart" : "hearto"} size={24} color={vocabs[currentVocabIndex].favorite ? "red" : "black"} />
-                        </TouchableOpacity>
-                    </View>
-                        <Text style={styles.wordText}>{vocabs[currentVocabIndex].word}</Text>
-                        {showDefinition && (
+                        <View style={styles.favoriteIcon}>
+                            <TouchableOpacity onPress={handleToggleFavorite}>
+                                <AntDesign name={vocabs[currentVocabIndex].favorite ? "heart" : "hearto"} size={24} color={vocabs[currentVocabIndex].favorite ? "red" : "black"} />
+                            </TouchableOpacity>
+                        </View>
+                        {
+                            showInvert && (
+                                <View>
+                                    <Text style={styles.wordText}>{vocabs[currentVocabIndex].definition}</Text>
+                                    {showDefinition && (
+                                        <Text style={styles.definitionText}>Word: {vocabs[currentVocabIndex].word}</Text>
+                                    )}
+                                </View>
+                            )
+                        }
+                        {
+                            !showInvert && (
+                                <View>
+                                    <Text style={styles.wordText}>{vocabs[currentVocabIndex].word}</Text>
+                                    {showDefinition && (
+                                        <Text style={styles.definitionText}>Definition: {vocabs[currentVocabIndex].definition}</Text>
+                                    )}
+                                </View>
+                            )
+                        }
+                        
+                        {/* {showDefinition && (
                             <Text style={styles.definitionText}>Definition: {vocabs[currentVocabIndex].definition}</Text>
-                        )}
+                        )} */}
                     </View>
                     <View>
                         <TouchableOpacity style={styles.button} onPress={handleToggleDefinition}>
@@ -154,7 +196,7 @@ export default function Review() {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.buttonsContainer}>
-                    <View style={styles.buttonWrapper}>
+                        <View style={styles.buttonWrapper}>
                             <TouchableOpacity style={[styles.button, styles.hardButton]} onPress={() => handleUpdateDifficulty("hard")}>
                                 <Text style={styles.buttonText}>Hard</Text>
                             </TouchableOpacity>
@@ -171,38 +213,32 @@ export default function Review() {
                         </View>
                     </View>
                     <View style={styles.buttonWrapper}>
-                            <TouchableOpacity style={[styles.button, styles.skipButton]} onPress={() => handleUpdateDifficulty("skip")}>
-                                <Text style={styles.buttonText}>Skip</Text>
-                            </TouchableOpacity>
-                        </View>
-                    
+                        <TouchableOpacity style={[styles.button, styles.skipButton]} onPress={() => handleUpdateDifficulty("skip")}>
+                            <Text style={styles.buttonText}>Skip</Text>
+                        </TouchableOpacity>
+                    </View>
                     <SwipeGestureHandler onSwipeLeft={handleSwipeLeft} onSwipeRight={handleSwipeRight} />
                 </SafeAreaView>
             )}
         </GestureHandlerRootView>
-            
-        </>
     );
 }
 
-
-
 const styles = StyleSheet.create({
     container: {
-        // flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#eaeaea', // Màu nền
-        height:"100%",
+        backgroundColor: '#eaeaea',
+        height: "100%",
     },
     wordContainer: {
-        flex: 7, // Chiếm 70% chiều cao (tổng cộng 10 phần)
+        flex: 7,
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 2,
         borderRadius: 20,
-        marginVertical: 10, // Margin dọc (top và bottom)
-        marginHorizontal: 20, // Margin ngang (left và right)
+        marginVertical: 10,
+        marginHorizontal: 20,
         borderColor: "black",
         minWidth: 300,
         backgroundColor: "#91afed",
@@ -217,12 +253,11 @@ const styles = StyleSheet.create({
         borderLeftWidth: 10,
         borderLeftColor: "black",
     },
-    
     wordText: {
         fontSize: 32,
         textAlign: 'center',
-        fontWeight:"bold",
-        color:"#FFF"
+        fontWeight: "bold",
+        color: "#FFF"
     },
     definitionText: {
         fontSize: 18,
@@ -230,44 +265,44 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     buttonsContainer: {
-        flex: 2, // Chiếm 10% chiều cao
+        flex: 2,
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
         marginBottom: 20,
-        width: '100%', // Chiếm 100% chiều rộng
+        width: '100%',
     },
-    progressContainer:{
-        flex:1,
-        marginTop:15,
+    progressContainer: {
+        flex: 1,
+        marginTop: 15,
     },
     buttonWrapper: {
-        width: '30%', // Chiếm 33.33% chiều rộng
-        margin:5,
+        width: '30%',
+        margin: 5,
     },
     button: {
-        backgroundColor: '#4CAF50', // Màu nền button mặc định
-        borderRadius: 20, // Bo tròn góc
+        backgroundColor: '#4CAF50',
+        borderRadius: 20,
         paddingVertical: 10,
         paddingHorizontal: 20,
     },
     buttonText: {
-        color: 'white', // Màu chữ button
+        color: 'white',
         fontSize: 18,
         textAlign: 'center',
-        fontWeight:"bold",
+        fontWeight: "bold",
     },
     hardButton: {
-        backgroundColor: 'red', // Màu nền button Hard
+        backgroundColor: 'red',
     },
     goodButton: {
-        backgroundColor: 'yellow', // Màu nền button Good
+        backgroundColor: 'yellow',
     },
     easyButton: {
-        backgroundColor: 'green', // Màu nền button Easy
+        backgroundColor: 'green',
     },
     skipButton: {
-        backgroundColor: 'gray', // Màu nền button Easy
+        backgroundColor: 'gray',
     },
     favoriteIcon: {
         position: 'absolute',
