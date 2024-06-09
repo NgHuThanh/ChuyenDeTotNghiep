@@ -8,12 +8,13 @@ import { Modal, Portal } from 'react-native-paper';
 import { Foundation } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
     const localImageUrl = require('../../assets/images/book.png');
     const [exist,setExist]=useState(true);
     const [practicePressed, setPracticePressed] = useState(false);
-    const [needWord,setNeedWord]=useState(false);
+    const [needWord,setNeedWord]=useState(0);
     const [visible, setVisible] = React.useState(false);
     const [visible2, setVisible2] = React.useState(false);
     const [visible3, setVisible3] = React.useState(false);
@@ -52,18 +53,20 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
     const handleReview=()=>{
         router.push(`/review/${props.setVocab.name}`)
     }
-    const handleMultipleChoice=()=>{
-        if(props.setVocab.vocabs?.length as number < 5){
+    const handleMultipleChoice = async () => {
+        const multiOption = await AsyncStorage.getItem('multioption');
+        const minimumWords = parseInt(multiOption as string);
+        if (props.setVocab.vocabs?.length as number < minimumWords) {
+            setNeedWord(minimumWords);
             setVisible4(true);
             hideModal2();
+        } else {
+            router.push(`/muitiplechoice/${props.setVocab.name}`);
         }
-        else{
-            router.push(`/muitiplechoice/${props.setVocab.name}`)
-        }
-        
     }
     const handleMatchChoice=()=>{
         if(props.setVocab.vocabs?.length as number < 5){
+            setNeedWord(5);
             setVisible4(true);
             hideModal2();
         }
@@ -72,8 +75,11 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
         }
         
     }
-    const handleImagePractice=()=>{
-        if(props.setVocab.vocabs?.length as number < 5){
+    const handleImagePractice=async ()=>{
+        const multiOption = await AsyncStorage.getItem('imageoption');
+        const minimumWords = parseInt(multiOption as string);
+        if(props.setVocab.vocabs?.length as number < minimumWords){
+            setNeedWord(minimumWords);
             setVisible4(true);
             hideModal2();
         }
@@ -131,7 +137,7 @@ const SetComponent = (props:{setVocab:SetModel, fetchSets: () => void}) => {
             </Modal></Portal>
             <Portal>
                 <Modal visible={visible4} onDismiss={hideModal4} contentContainerStyle={containerStyle}>
-                <Text style={{fontWeight:"bold",color:"red"}}>Need at least 5 words!</Text>
+                <Text style={{fontWeight:"bold",color:"red"}}>Need at least {needWord} words!</Text>
             </Modal></Portal>
             <Portal>
                 <Modal visible={visible3} onDismiss={hideModal3} contentContainerStyle={containerStyle}>
